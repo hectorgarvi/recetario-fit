@@ -477,6 +477,7 @@ tr.hl td { background: var(--ok-bg); }
             <option value="g">grasa</option>
             <option value="c">carbohidratos</option>
             <option value="p100">lo que más llena</option>
+            <option value="nivel">dificultad</option>
             <option value="min">tiempo</option>
             <option value="nombre">nombre</option>
           </select>
@@ -1680,7 +1681,7 @@ const sabor = r => r.sabor || SABOR[r.id] || SABOR_MOMENTO[r.cat[0]] || "avena";
 const CATS = ["Desayuno", "Tentempié", "Comida", "Merienda", "Postre", "Cena"];
 const METS = ["Sin cocinar", "Sin horno", "Airfryer", "Sartén", "Cazo", "Microondas", "Tostadora", "Batidora"];
 const EXTS = ["Para empezar", "Favoritas", "Cena ligera", "Sin huevo", "Sin gluten", "Sin lácteos", "Aprovechamiento"];
-const KEY_LABEL = { kcal: "calorías", p: "proteína", g: "grasa", c: "carbohidratos", p100: "lo que más llena", min: "tiempo", nombre: "nombre" };
+const KEY_LABEL = { kcal: "calorías", p: "proteína", g: "grasa", c: "carbohidratos", p100: "lo que más llena", min: "tiempo", nombre: "nombre", nivel: "dificultad" };
 const LIM = { kcal: 500, p: 0, g: 20 }; // valores de "sin límite" de los deslizadores
 const DIAS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
 const HUECOS = [["desayuno", "Desayuno", ["Desayuno"]], ["media", "Media mañana", ["Tentempié"]], ["comida", "Comida", ["Comida"]], ["merienda", "Merienda", ["Merienda", "Tentempié"]], ["cena", "Cena", ["Cena"]], ["postre", "Postre", ["Postre"]]];
@@ -1958,6 +1959,7 @@ function sortVal(r) {
   const v = valores(r, state.base);
   if (state.sort === "p100") return p100(v);
   if (state.sort === "min") return r.min;
+  if (state.sort === "nivel") return nivel(r) * 1000 + r.min; // a igual dificultad, la más rápida primero
   if (state.sort === "nombre") return norm(r.nombre);
   return v[state.sort];
 }
@@ -2013,14 +2015,14 @@ function listRow(r) {
   </button>`;
 }
 function cmpTable(list) {
-  const cols = [["nombre", "Receta"], ["kcal", "kcal"], ["p", "Proteína"], ["g", "Grasa"], ["c", "Carb."], ["p100", "Prot./100 kcal"], ["min", "Tiempo"]];
+  const cols = [["nombre", "Receta"], ["kcal", "kcal"], ["p", "Proteína"], ["g", "Grasa"], ["c", "Carb."], ["p100", "Prot./100 kcal"], ["nivel", "Dificultad"], ["min", "Tiempo"]];
   const arrow = state.dir === "asc" ? " ↑" : " ↓";
   const head = cols.map(([k, t], i) => `<th class="${i ? "n" : ""}"${state.sort === k ? ` aria-sort="${state.dir === "asc" ? "ascending" : "descending"}"` : ""}><button type="button" data-sortkey="${k}">${t}${state.sort === k ? arrow : ""}</button></th>`).join("");
   const mins = m => (m < 60 ? m + " min" : fmt(Math.round(m / 30) / 2) + " h");
   const rows = list.map(r => {
     const v = valores(r, state.base);
     return `<tr class="f-${sabor(r)}"><td class="name"><button type="button" data-open="${r.id}"><i></i>${r.nombre}${r.opciones ? " (B)" : ""}${Saved.receta(r.id).fav ? " ♥" : ""}</button></td>
-      <td class="n">${fmt(v.kcal)}</td><td class="n p">${fmt(v.p)} g</td><td class="n g">${fmt(v.g)} g</td><td class="n c">${fmt(v.c)} g</td><td class="n">${fmt(p100(v))} g</td><td class="n">${mins(r.min)}</td></tr>`;
+      <td class="n">${fmt(v.kcal)}</td><td class="n p">${fmt(v.p)} g</td><td class="n g">${fmt(v.g)} g</td><td class="n c">${fmt(v.c)} g</td><td class="n">${fmt(p100(v))} g</td><td class="n">${NIVEL_TXT[nivel(r)]}</td><td class="n">${mins(r.min)}</td></tr>`;
   }).join("");
   return `<div class="cmp-wrap"><table class="cmp"><thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table></div>`;
 }
