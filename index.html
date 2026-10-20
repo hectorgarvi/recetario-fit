@@ -311,6 +311,17 @@ tr.hl td { background: var(--ok-bg); }
 .scale button[aria-pressed="true"] { background: var(--ci); color: var(--c); }
 .timer-btn { border: 0; background: var(--pill); color: var(--ink); border-radius: 999px; padding: 3px 10px; font-weight: 700; font-size: .85rem; cursor: pointer; margin-left: 4px; white-space: nowrap; }
 .timer-btn:hover { background: var(--accent); color: var(--on-accent); }
+.gl { border: 0; background: none; padding: 0; font: inherit; color: inherit; text-decoration: underline dotted; text-decoration-thickness: 2px; text-underline-offset: 3px; cursor: help; }
+.cook .gl { text-decoration-color: currentColor; }
+.glpop { position: fixed; z-index: 45; left: 50%; transform: translateX(-50%); bottom: calc(80px + env(safe-area-inset-bottom, 0px)); width: min(440px, calc(100% - 32px)); background: var(--ink); color: var(--bg); border-radius: 18px; padding: 14px 16px; box-shadow: 0 10px 30px rgba(0, 0, 0, .3); display: grid; gap: 6px; }
+.glpop > div { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.glpop b { font-family: var(--display); font-size: 1.1rem; }
+.glpop .x { color: inherit; }
+.glpop p { font-size: .95rem; line-height: 1.45; }
+.before { background: var(--warn-bg); color: var(--warn-ink); border-radius: 14px; padding: 10px 14px; font-size: .93rem; margin-bottom: 14px; }
+.gltable { display: grid; gap: 8px; }
+.gltable div { display: grid; gap: 2px; }
+.gltable span { color: var(--ink-soft); font-size: .92rem; }
 .tools { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
 .tools li { display: grid; gap: 2px; padding: 10px 14px; border-radius: 14px; background: var(--pill); }
 .tools li span { font-size: .9rem; color: var(--ink-soft); }
@@ -538,6 +549,7 @@ tr.hl td { background: var(--ok-bg); }
 <div class="cook" id="cook" role="dialog" aria-modal="true" aria-label="Modo cocina" hidden></div>
 <div class="timers" id="timers" aria-live="polite"></div>
 <div class="toast" id="toast" role="status" hidden></div>
+<div class="glpop" id="glpop" role="dialog" aria-labelledby="glpop-t" hidden><div><b id="glpop-t"></b><button type="button" class="x" id="glpop-x" aria-label="Cerrar">✕</button></div><p id="glpop-d"></p></div>
 
 <script>
 /* ===================== RECETAS =====================
@@ -1374,6 +1386,60 @@ const RECETAS = [
   }
 ];
 
+/* ===================== PARA EMPEZAR: GLOSARIO, NIVEL Y PASO 0 ===================== */
+// Palabras de cocina que se subrayan en los pasos; al tocarlas se explican.
+const GLOSARIO = [
+  ["fuego-bajo", /fuego (?:bajo|suave|medio-bajo)/i, "Fuego bajo", "En una vitro o inducción del 1 al 9: entre 2 y 4. Apenas burbujea; sirve para cocinar despacio sin quemar."],
+  ["fuego-fuerte", /fuego (?:fuerte|medio-alto)|muy caliente/i, "Fuego fuerte", "Entre 7 y 9 de 9. Para saltear y hacer a la plancha. La sartén está lista cuando unas gotas de agua «bailan» y se evaporan enseguida."],
+  ["fuego-medio", /fuego medio(?!-)/i, "Fuego medio", "Entre 5 y 6 de 9. Lo normal para sofreír y cocinar sin prisa."],
+  ["sofreir", /sofr(?:íe|eír|ito)/i, "Sofreír", "Cocinar en la sartén o el cazo con un poco de aceite a fuego medio (5–6 de 9), removiendo de vez en cuando. La cebolla está lista cuando se ve blanda y transparente, sin quemarse: unos 5 min."],
+  ["rehogar", /rehoga/i, "Rehogar", "Como sofreír pero más corto: unos minutos en la sartén con poco aceite para que se ablande un poco, sin llegar a dorarse."],
+  ["pochar", /pocha/i, "Pochar", "Cocinar despacio, a fuego medio-bajo (3–4 de 9) y a menudo tapado, hasta que la verdura esté muy blanda. Sin prisa: no tiene que dorarse."],
+  ["saltear", /saltea/i, "Saltear", "Cocinar rápido a fuego fuerte (7–8 de 9) con muy poco aceite, removiendo a menudo, para que se dore por fuera y quede algo crujiente."],
+  ["plancha", /a la plancha/i, "A la plancha", "En una sartén muy caliente con apenas una pulverización de aceite. No muevas el alimento hasta que se dore por debajo; luego dale la vuelta."],
+  ["atemperar", /atempera/i, "Atemperar", "Juntar poco a poco algo caliente con algo frío para igualar temperaturas: así no salen grumos ni se cuaja el huevo de golpe. También significa sacar algo de la nevera un rato antes."],
+  ["tamizar", /tamizad/i, "Tamizar", "Pasar la harina y la levadura por un colador fino para que no queden grumos. Si no tienes colador, mézclalas bien con un tenedor antes de añadirlas."],
+  ["golpes", /a golpes/i, "A golpes", "Encender y apagar la picadora o la batidora en toques cortos de 1 segundo, para controlar el punto y no hacer una pasta."],
+  ["majado", /majado/i, "Majado", "Ajo, perejil y otros ingredientes picados muy finos (o machacados en un mortero), mezclados con un poco de aceite o limón para ponerlos por encima."],
+  ["infusionar", /infusiona/i, "Infusionar", "Calentar un líquido con algo aromático (canela, piel de limón) y dejarlo reposar para que coja su sabor. Después se retira lo aromático."],
+  ["dados", /en dados/i, "En dados", "En cubitos de 1–2 cm, como un dado de parchís. Corta primero en tiras y luego las tiras en cuadraditos."],
+  ["vapor", /al vapor/i, "Al vapor", "Cocinar con el vapor del agua, sin que el alimento toque el agua: en una vaporera, o tapado sobre algo húmedo (como el pescado sobre el pisto)."],
+  ["escurrir", /esc[uú]rr(?:e|elo|ela|elos|idos|ida|irlo)/i, "Escurrir", "Quitar el agua o el líquido con un colador sobre el fregadero. Con la pasta y el arroz, sacude un poco el colador."],
+  ["desmigar", /desmiga/i, "Desmigar", "Separar en hebras o trocitos con dos tenedores, tirando en direcciones contrarias."],
+  ["cuajar", /cuaj(?:a|en|ar)\b/i, "Cuajar", "Que un líquido se vuelva sólido: el huevo al cocinarse, la gelatina al enfriarse en la nevera."],
+  ["montar", /sin montar/i, "Sin montar", "Batir solo lo justo para mezclar, sin meter aire. Si metes mucho aire, la cheesecake sube en el horno y luego se agrieta."],
+  ["hervir", /(?:hierva|hervir)\b/i, "Hervir", "El líquido burbujea con fuerza. «Sin que hierva»: retíralo cuando salgan las primeras burbujitas en el borde."],
+  ["pulverizacion", /pulverizaci[oó]n/i, "Una pulverización", "Un apretón corto del spray, de 1 segundo, repartido por la sartén o la bandeja."],
+  ["palillo", /palillo/i, "Prueba del palillo", "Pincha el centro con un palillo de dientes o un cuchillo fino. Si sale limpio (o con miga húmeda en el brownie), está hecho; si sale masa líquida, le falta."],
+  ["desmoldar", /desmoldar/i, "Desmoldar", "Sacar del molde: pasa un cuchillo por el borde y dale la vuelta sobre un plato. Si lleva papel de horno, tira del papel."]
+];
+function glos(html) {
+  // Solo en el texto, nunca dentro de etiquetas; cada palabra se marca una vez por paso
+  const usados = new Set();
+  return html.split(/(<[^>]+>)/).map(part => {
+    if (part.startsWith("<")) return part;
+    GLOSARIO.forEach(([k, re]) => {
+      if (usados.has(k)) return;
+      const m = part.match(re); if (!m) return;
+      usados.add(k);
+      let fin = m.index + m[0].length;
+      while (fin < part.length && /[a-záéíóúüñ]/i.test(part[fin])) fin++; // la palabra entera
+      part = part.slice(0, m.index) + `\u0001${k}\u0002${part.slice(m.index, fin)}\u0003` + part.slice(fin);
+    });
+    return part;
+  }).join("").replace(/\u0001([a-z-]+)\u0002([^\u0003]*)\u0003/g, (x, k, w) => `<button type="button" class="gl" data-gl="${k}">${w}</button>`);
+}
+// Dificultad: 1 muy fácil, 2 fácil, 3 requiere un poco de mano
+const NIVEL = {
+  "overnight-oats": 1, "tostada-aguacate": 1, "tostada-salmon": 1, "bol-queso-fruta": 1, "fruta-frutos-secos": 1, "bocadillo-pavo": 1, "helado-frutos-rojos": 1, "batido-platano": 1, "porridge-manzana": 1,
+  "revuelto-claras": 2, "pavo-verduras": 2, "tortitas": 2, "caldo-pollo": 2, "pasta-atun": 2, "garbanzos-espinacas": 2, "pollo": 2, "merluza": 2, "salmon-patata": 2, "brochetas-pollo": 2, "sepia-plancha": 2,
+  "crema-calabacin": 2, "merluza-coliflor": 2, "bizcocho-yogur": 2, "brownie-fit": 2, "galletas-avena": 2, "albondigas-pollo": 2, "pollo-curry": 2, "arroz-pollo": 2, "lentejas": 2, "hamburguesas": 2, "pescado-pisto": 2,
+  "natillas": 3, "tortilla": 3, "tortilla-calabacin": 3, "cheesecake-nevera": 3, "cheesecake-airfryer": 3, "mousse": 3
+};
+const NIVEL_TXT = { 1: "Muy fácil", 2: "Fácil", 3: "Con un poco de mano" };
+const nivel = r => NIVEL[r.id] || 2;
+const ANTES = "<b>Antes de empezar:</b> lee la receta entera. Saca y pesa todos los ingredientes y déjalos a mano (ve marcándolos en la lista). Prepara los utensilios de «Qué necesitas». Así no se te pasa nada mientras buscas algo.";
+
 /* ===================== UTENSILIOS =====================
    Por receta: [utensilio, qué hacer si no lo tienes (opcional)]. */
 const AF_HORNO = t => `Horno convencional: unos 15–20 °C más que en la airfryer y un 20–25 % más de tiempo (${t}). Es aproximado: vigila los últimos minutos.`;
@@ -1613,7 +1679,7 @@ const SABOR_MOMENTO = { Tentempié: "avena", Desayuno: "avena", Comida: "melocot
 const sabor = r => r.sabor || SABOR[r.id] || SABOR_MOMENTO[r.cat[0]] || "avena";
 const CATS = ["Desayuno", "Tentempié", "Comida", "Merienda", "Postre", "Cena"];
 const METS = ["Sin cocinar", "Sin horno", "Airfryer", "Sartén", "Cazo", "Microondas", "Tostadora", "Batidora"];
-const EXTS = ["Favoritas", "Cena ligera", "Sin huevo", "Sin gluten", "Sin lácteos", "Aprovechamiento"];
+const EXTS = ["Para empezar", "Favoritas", "Cena ligera", "Sin huevo", "Sin gluten", "Sin lácteos", "Aprovechamiento"];
 const KEY_LABEL = { kcal: "calorías", p: "proteína", g: "grasa", c: "carbohidratos", p100: "lo que más llena", min: "tiempo", nombre: "nombre" };
 const LIM = { kcal: 500, p: 0, g: 20 }; // valores de "sin límite" de los deslizadores
 const DIAS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
@@ -1875,6 +1941,7 @@ function matches(r) {
   if (state.met.size && !r.met.some(c => state.met.has(c))) return false;
   for (const x of state.ext) {
     if (x === "Favoritas") { if (!Saved.receta(r.id).fav) return false; }
+    else if (x === "Para empezar") { if (nivel(r) !== 1) return false; }
     else if (!r.ext.includes(x)) return false;
   }
   const v = valores(r, "racion");
@@ -1921,7 +1988,7 @@ function renderGrid() {
     const sub = r.opciones ? "Valores de la opción B" : (state.base === "racion" && r.raciones > 1 ? `1 ración de ${r.raciones}` : (r.min < 60 ? r.min + " min" : ""));
     return `<button type="button" class="card f-${sabor(r)}" data-open="${r.id}" aria-label="${esc(r.nombre)}, ${fmt(v.kcal)} kcal">
       <span class="blob"></span>${favMark(r)}
-      <div class="kind">${[...r.cat.slice(0, 1), ...r.met].map(t => `<span>${t}</span>`).join("")}</div>
+      <div class="kind">${[...r.cat.slice(0, 1), ...r.met, NIVEL_TXT[nivel(r)]].map(t => `<span>${t}</span>`).join("")}</div>
       <div><h3>${r.nombre}</h3></div>
       <div style="display:grid;gap:8px">
         <div class="kcal">${fmt(v.kcal)}<small>kcal</small></div>
@@ -2006,7 +2073,7 @@ function renderDetail(r) {
     <div class="hero">
       <div class="hero-bar"><button class="close" id="back" type="button">Cerrar</button>
         <div class="hero-actions"><button type="button" class="hbtn" id="fav-btn" aria-pressed="false">♡ Favorita</button></div></div>
-      <div class="facts">${[...r.cat, ...r.met].map(x => `<span>${x}</span>`).join("")}</div>
+      <div class="facts">${[...r.cat, ...r.met, NIVEL_TXT[nivel(r)]].map(x => `<span>${x}</span>`).join("")}</div>
       <h2 id="d-title">${r.nombre}</h2>
       <div class="facts"><span>${r.tiempoTxt}</span><span>Raciones: ${r.racionesTxt}</span>${r.molde ? `<span>${r.molde}</span>` : ""}</div>
       ${optSel}
@@ -2018,7 +2085,7 @@ function renderDetail(r) {
     <div class="body">
       ${(UTENSILIOS[r.id] || []).length ? `<section><h3>Qué necesitas</h3><ul class="tools">${UTENSILIOS[r.id].map(([u, alt]) => `<li><b>${u}</b>${alt ? `<span><em>Si no tienes:</em> ${alt.replace(/^Sin báscula: /, "")}</span>` : ""}</li>`).join("")}</ul></section>` : ""}
       <section><h3>Ingredientes</h3><div id="ings">${ingHTML(r, m)}</div></section>
-      <section><h3>Cómo se hace</h3><ol class="steps">${r.pasos.map((p, i) => `<li><div>${timersIn(refs(p), r.corto + ", paso " + (i + 1))}</div></li>`).join("")}</ol></section>
+      <section><h3>Cómo se hace</h3><div class="before">${ANTES}</div><ol class="steps">${r.pasos.map((p, i) => `<li><div>${timersIn(refs(glos(p)), r.corto + ", paso " + (i + 1))}</div></li>`).join("")}</ol><p class="note">Las palabras subrayadas con puntos se explican si las tocas.</p></section>
       <section><h3>Valores aproximados</h3><div class="tbl-wrap"><table>${head}${body}</table></div>${r.notaTabla ? `<p class="note">${r.notaTabla}</p>` : ""}${m !== 1 ? `<p class="note">Haciendo ×${fmtQ(m)}, la receta entera son unas ${fmt(Math.round(vc.kcal * m))} kcal; cada ración sigue igual.</p>` : ""}</section>
       ${r.tips.length ? `<div class="tip">${r.tips.map(x => `<p>${refs(x)}</p>`).join("")}</div>` : ""}
       <section><h3>Conservación e intolerancias</h3><div class="facts2">
@@ -2121,18 +2188,18 @@ function openCook() {
 }
 function closeCook() { $("#cook").hidden = true; try { wake && wake.release(); } catch (e) {} wake = null; $("#sheet").focus?.(); }
 function renderCook() {
-  const r = byId(state.abierta), i = state.cookIdx, n = r.pasos.length;
+  const r = byId(state.abierta), i = state.cookIdx, pasos = [ANTES, ...r.pasos], n = pasos.length;
   const c = $("#cook");
   c.className = "cook f-" + sabor(r);
   c.innerHTML = `
-    <div class="cook-top"><button type="button" class="close" data-cookclose>Salir</button><span class="prog">Paso ${i + 1} de ${n}</span><button type="button" class="close" data-cookings aria-expanded="false">Ingredientes</button></div>
+    <div class="cook-top"><button type="button" class="close" data-cookclose>Salir</button><span class="prog">${i === 0 ? "Antes de empezar" : `Paso ${i} de ${n - 1}`}</span><button type="button" class="close" data-cookings aria-expanded="false">Ingredientes</button></div>
     <div class="cook-body">
       <div class="cook-ings" id="cook-ings" hidden>${ingHTML(r, state.mult)}</div>
-      <div class="stepnum">${i + 1}</div>
-      <div class="steptxt">${timersIn(refs(r.pasos[i]), r.corto + ", paso " + (i + 1))}</div>
+      <div class="stepnum">${i === 0 ? "0" : i}</div>
+      <div class="steptxt">${i === 0 ? ANTES : timersIn(refs(glos(pasos[i])), r.corto + ", paso " + i)}</div>
       <p class="wake" id="wake"></p>
     </div>
-    <div class="cook-nav"><button type="button" data-cookprev ${i === 0 ? "disabled" : ""}>Anterior</button><button type="button" class="next" data-cooknext>${i === n - 1 ? "Terminar" : "Siguiente"}</button></div>`;
+    <div class="cook-nav"><button type="button" data-cookprev ${i === 0 ? "disabled" : ""}>Anterior</button><button type="button" class="next" data-cooknext>${i === n - 1 ? "Terminar" : i === 0 ? "Empezar" : "Siguiente"}</button></div>`;
   pintarWake();
 }
 
@@ -2295,6 +2362,21 @@ function renderIngredientes() {
 function renderGuide() {
   $("#guide").innerHTML = refs(`
     <h2>Trucos</h2>
+    <div class="gcard"><h3>Si estás empezando</h3>
+      <p>Ve de menos a más. En Recetas, el filtro <b>«Para empezar»</b> te enseña las muy fáciles.</p>
+      <ul>
+        <li><b>Semana 1, sin fuego:</b> [[overnight-oats]], [[bol-queso-fruta]], [[tostada-aguacate]] y el [[helado-frutos-rojos]].</li>
+        <li><b>Semana 2, sartén sencilla:</b> [[revuelto-claras]], [[pavo-verduras]], [[pasta-atun]] y [[garbanzos-espinacas]].</li>
+        <li><b>Semana 3, airfryer:</b> [[pollo]], [[merluza]], [[galletas-avena]] y el [[bizcocho-yogur]].</li>
+        <li><b>Cuando ya te suelte:</b> [[natillas]], [[cheesecake-nevera]] y [[tortilla-calabacin]], que necesitan un poco de mano.</li>
+      </ul>
+      <p><b>Cuatro costumbres que lo cambian todo:</b> lee la receta entera antes de empezar; saca y pesa todo antes de encender el fuego; limpia sobre la marcha mientras algo se cocina; y prueba de sal al final, que siempre se puede añadir y no quitar.</p></div>
+    <div class="gcard"><h3>Guía de fuego y medidas</h3>
+      <div class="tbl-wrap"><table><tr><th>Lo que pone la receta</th><th>En una vitro o inducción del 1 al 9</th></tr>
+        <tr><td>Fuego bajo / suave</td><td>2–4</td></tr><tr><td>Fuego medio-bajo</td><td>4</td></tr><tr><td>Fuego medio</td><td>5–6</td></tr><tr><td>Fuego medio-alto</td><td>7</td></tr><tr><td>Fuego fuerte / muy caliente</td><td>8–9</td></tr></table></div>
+      <p><b>¿Está caliente la sartén?</b> Echa unas gotas de agua: si «bailan» y se evaporan enseguida, está lista para la plancha. La vitro tarda más en calentarse y en enfriarse que la inducción: si se te pasa, aparta la sartén del fuego.</p>
+      <p><b>Medidas sin báscula:</b> 1 cucharada sopera ≈ 15 ml; 1 cucharadita (de café) ≈ 5 ml; 1 vaso de agua ≈ 200–250 ml.</p></div>
+    <div class="gcard"><h3>Palabras de cocina</h3><div class="gltable">${GLOSARIO.map(([, , t, d]) => `<div><b>${t}</b><span>${d}</span></div>`).join("")}</div></div>
     <div class="gcard"><h3>Para que llene</h3>
       <p>Lo que más sacia es la proteína, la fibra (avena, fruta, verdura) y el volumen. Por eso las recetas llevan frutos rojos y verdura en vez de mermelada o salsas. Ordena por <b>lo que más llena</b> para ver qué recetas dan más proteína por cada caloría.</p></div>
     <div class="gcard"><h3>No se tira nada</h3>
@@ -2359,6 +2441,11 @@ function route() {
 function irAMarca(id) { closeRecipe(); history.replaceState(null, "", "#ing-" + id); showTab("compra", "ing-" + id); }
 
 document.addEventListener("click", e => {
+  const g = e.target.closest("[data-gl]");
+  if (g) { const it = GLOSARIO.find(x => x[0] === g.dataset.gl); $("#glpop-t").textContent = it[2]; $("#glpop-d").textContent = it[3]; $("#glpop").hidden = false; return; }
+  if (e.target.closest("#glpop-x") || !e.target.closest("#glpop")) $("#glpop").hidden = true;
+});
+document.addEventListener("click", e => {
   const T = sel => e.target.closest(sel);
   let b;
   if ((b = T("[data-timer]"))) { addTimer(+b.dataset.timer, b.dataset.label); return; }
@@ -2385,7 +2472,7 @@ document.addEventListener("click", e => {
   if (T("[data-cook]")) { openCook(); return; }
   if (T("[data-cookclose]")) { closeCook(); return; }
   if (T("[data-cookprev]")) { state.cookIdx = Math.max(0, state.cookIdx - 1); renderCook(); return; }
-  if (T("[data-cooknext]")) { const n = byId(state.abierta).pasos.length; if (state.cookIdx >= n - 1) { closeCook(); toast("¡Que aproveche! Puedes marcarla como hecha abajo."); } else { state.cookIdx++; renderCook(); } return; }
+  if (T("[data-cooknext]")) { const n = byId(state.abierta).pasos.length + 1; if (state.cookIdx >= n - 1) { closeCook(); toast("¡Que aproveche! Puedes marcarla como hecha abajo."); } else { state.cookIdx++; renderCook(); } return; }
   if ((b = T("[data-cookings]"))) { const box = $("#cook-ings"); box.hidden = !box.hidden; b.setAttribute("aria-expanded", !box.hidden); return; }
   if (T("[data-addshop]")) { addToShop(state.abierta, state.mult, state.opcion); toast(`Añadida a la compra (×${fmtQ(state.mult)})`); return; }
   if ((b = T("[data-shopplus]"))) { Saved.compra.recetas[b.dataset.shopplus].mult += 0.5; Saved.setCompra(); renderCompra(); return; }

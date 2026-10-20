@@ -29,6 +29,8 @@ Recetas con mucha proteína y poca grasa que sacien, con filtros, plan semanal, 
   - `[[t:5]]` pone un temporizador de 5 minutos.
   - Evita plurales que se rompan al escalar: escribe «Claras de huevo: {1}», no «{1} clara».
 - `UTENSILIOS` (objeto por id de receta): lista de `[utensilio, qué hacer si no lo tienes]`. Toda receta nueva debe tener su entrada; cuando un aparato eléctrico es imprescindible (batidora, picadora, airfryer), da la alternativa a mano o con otro aparato. `AF_HORNO(...)` y `BASCULA(...)` generan los textos de horno convencional y de medidas con cucharas.
+- `NIVEL` (objeto por id): 1 = muy fácil, 2 = fácil, 3 = con un poco de mano. Las de nivel 1 salen con el filtro «Para empezar». Toda receta nueva necesita su nivel.
+- `GLOSARIO`: palabras de cocina que se subrayan solas en los pasos y se explican al tocarlas. El usuario está empezando a cocinar: si una receta nueva usa otro término técnico, añádelo aquí con una explicación sencilla (y, si es de fuego, con el número de la vitro del 1 al 9).
 - `INGREDIENTES`: la guía de marcas, con criterio de etiqueta y `productos`. Cada producto lleva `[kcal, prot, grasa, carb]` por 100 g y un enlace a su ficha.
 - `EXTRA_ING`: ingredientes de la lista de la compra que no tienen ficha de marca.
 - `PASILLOS`: el orden de las zonas del súper en la lista de la compra.
