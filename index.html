@@ -1,0 +1,1691 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Recetas fit con mucha proteína y poca grasa: plan semanal, lista de la compra y modo cocina.">
+<meta name="theme-color" content="#f4f7f5">
+<title>Libro de Recetas Fit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Onest:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: app de cocina móvil primero. Cabecera con buscador, fila de momentos deslizable, mosaico de fichas
+   del color del sabor de cada receta (la primera, doble). La receta se abre como hoja que sube desde abajo. */
+:root {
+  --bg: #f4f7f5;
+  --paper: #ffffff;
+  --ink: #1d2233;
+  --ink-soft: #5c6478;
+  --line: #e1e6e3;
+  --pill: #e9eeeb;
+  --accent: #e2336b;
+  --on-accent: #ffffff;
+  --prot: #1f8a70;
+  --carb: #e0a526;
+  --fat: #8c5bd6;
+  --ok-bg: #e3f4ec; --ok-ink: #145c49;
+  --warn-bg: #fff1d6; --warn-ink: #7a4d00;
+  /* Sabores: fondo y tinta de cada ficha */
+  --avena: #f5d48a;      --avena-ink: #3d2c07;
+  --frambuesa: #f7a3bd;  --frambuesa-ink: #4a0c22;
+  --melocoton: #ffb98a;  --melocoton-ink: #4a1f04;
+  --cacao: #6b4433;      --cacao-ink: #fbeee6;
+  --vainilla: #f6e7a1;   --vainilla-ink: #3e3505;
+  --espinaca: #a7d98b;   --espinaca-ink: #163a0b;
+  --display: "Bricolage Grotesque", "Arial Rounded MT Bold", system-ui, sans-serif;
+  --body: "Onest", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14171f; --paper: #1c2029; --ink: #edf0f6; --ink-soft: #a2a9ba; --line: #2c3240; --pill: #262b36;
+    --accent: #ff6b97; --on-accent: #22070f;
+    --prot: #4cc9a6; --carb: #f0be4f; --fat: #b38cf0;
+    --ok-bg: #16352c; --ok-ink: #9be3c8; --warn-bg: #3a2c10; --warn-ink: #f5d38c;
+    --avena: #e8c26f; --frambuesa: #f08aab; --melocoton: #f8a46f; --cacao: #7a4f3c; --vainilla: #eadb86; --espinaca: #93cb74;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #14171f; --paper: #1c2029; --ink: #edf0f6; --ink-soft: #a2a9ba; --line: #2c3240; --pill: #262b36;
+  --accent: #ff6b97; --on-accent: #22070f;
+  --prot: #4cc9a6; --carb: #f0be4f; --fat: #b38cf0;
+  --ok-bg: #16352c; --ok-ink: #9be3c8; --warn-bg: #3a2c10; --warn-ink: #f5d38c;
+  --avena: #e8c26f; --frambuesa: #f08aab; --melocoton: #f8a46f; --cacao: #7a4f3c; --vainilla: #eadb86; --espinaca: #93cb74;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; }
+[hidden] { display: none !important; }
+img { max-width: 100%; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+html { -webkit-text-size-adjust: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.5; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+h1, h2, h3, .big { font-family: var(--display); text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
+p { margin: 0; }
+a { color: var(--accent); }
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+.num { font-variant-numeric: tabular-nums; }
+.wrap { max-width: 1080px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+/* ---------- Cabecera ---------- */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); }
+.top .wrap { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; padding-block: 14px 10px; }
+.top .wrap > * { min-width: 0; }
+.title-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.title-row h1 { font-size: clamp(1.35rem, 5vw, 2.1rem); font-weight: 800; line-height: 1; white-space: nowrap; }
+@media (max-width: 420px) { .tabs a { padding: 7px 10px; font-size: .86rem; } }
+.title-row h1 span { color: var(--accent); }
+.tabs { display: flex; gap: 4px; background: var(--pill); padding: 4px; border-radius: 999px; width: fit-content; }
+.tabs a { text-decoration: none; color: var(--ink-soft); font-weight: 600; font-size: .92rem; padding: 7px 14px; border-radius: 999px; }
+.tabs a[aria-current="page"] { background: var(--paper); color: var(--ink); box-shadow: 0 1px 2px rgba(29, 34, 51, .12); }
+
+main { padding-block: 6px 64px; }
+.panel[hidden] { display: none; }
+
+/* ---------- Buscador y filtros ---------- */
+.searchbar { display: flex; gap: 8px; }
+.search { flex: 1; min-width: 0; border: 0; background: var(--paper); border-radius: 14px; padding: 12px 16px; box-shadow: inset 0 0 0 1.5px var(--line); }
+.search::placeholder { color: var(--ink-soft); }
+.filter-btn { border: 0; background: var(--ink); color: var(--bg); border-radius: 14px; padding: 0 16px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+.filter-btn b { display: inline-grid; place-items: center; min-width: 20px; height: 20px; border-radius: 10px; background: var(--accent); color: var(--on-accent); font-size: .75rem; margin-left: 6px; }
+.moments { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+.moments::-webkit-scrollbar { display: none; }
+.moment { flex: none; border: 0; background: var(--paper); box-shadow: inset 0 0 0 1.5px var(--line); border-radius: 999px; padding: 8px 16px; font-weight: 600; cursor: pointer; }
+.moment[aria-pressed="true"] { background: var(--ink); color: var(--bg); box-shadow: none; }
+
+.sheet-filters { background: var(--paper); border-radius: 20px; padding: 18px; display: grid; gap: 16px; margin-top: 4px; box-shadow: inset 0 0 0 1.5px var(--line); }
+.sheet-filters[hidden] { display: none; }
+.fgroup { display: grid; gap: 8px; }
+.fgroup > span { font-weight: 700; font-size: .95rem; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { border: 0; background: var(--pill); border-radius: 999px; padding: 7px 14px; font-size: .92rem; cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); font-weight: 600; }
+.sheet-foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.btn-text { border: 0; background: none; color: var(--accent); font-weight: 700; cursor: pointer; padding: 6px 0; }
+
+.listhead { display: flex; justify-content: space-between; align-items: baseline; gap: 8px 16px; flex-wrap: wrap; margin: 18px 2px 12px; }
+.listhead p { color: var(--ink-soft); font-size: .92rem; }
+.sortline { display: flex; align-items: center; gap: 6px; font-size: .92rem; color: var(--ink-soft); }
+.sortline select { border: 0; background: var(--paper); box-shadow: inset 0 0 0 1.5px var(--line); border-radius: 10px; padding: 6px 8px; color: var(--ink); font-weight: 600; }
+.dirbtn { border: 0; background: var(--paper); box-shadow: inset 0 0 0 1.5px var(--line); border-radius: 10px; width: 34px; height: 32px; cursor: pointer; font-weight: 700; }
+
+/* ---------- Mosaico de recetas ---------- */
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+@media (min-width: 760px) { .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; } }
+.card { --c: var(--avena); --ci: var(--avena-ink);
+  position: relative; display: flex; flex-direction: column; justify-content: space-between; gap: 18px;
+  min-height: 210px; border: 0; border-radius: 24px; padding: 16px; text-align: left; cursor: pointer;
+  background: var(--c); color: var(--ci); overflow: hidden; }
+.card:first-child { grid-column: 1 / -1; min-height: 230px; }
+@media (min-width: 760px) { .grid.tall .card:first-child { grid-row: span 2; } .grid.tall .card:first-child .kcal { font-size: 5rem; } }
+@media (min-width: 760px) { .card:first-child { grid-column: span 2; } }
+.card .kind { display: flex; flex-wrap: wrap; gap: 4px; }
+.card .kind span { background: rgba(255, 255, 255, .55); color: inherit; border-radius: 999px; padding: 2px 9px; font-size: .78rem; font-weight: 600; }
+.card h3 { font-size: 1.15rem; font-weight: 700; line-height: 1.15; }
+.card:first-child h3 { font-size: clamp(1.4rem, 4.5vw, 1.9rem); max-width: 18ch; }
+.card .kcal { font-family: var(--display); font-weight: 800; font-size: 2.6rem; line-height: .9; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.card:first-child .kcal { font-size: 3.6rem; }
+.card .kcal small { font-size: .9rem; font-weight: 700; letter-spacing: 0; margin-left: 3px; }
+.card .mac { display: flex; flex-wrap: wrap; gap: 4px 10px; font-size: .85rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.card .mac span.on { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+.card .sub { font-size: .78rem; opacity: .8; }
+.card .blob { position: absolute; right: -36px; top: -36px; width: 120px; height: 120px; border-radius: 50%; background: rgba(255, 255, 255, .28); pointer-events: none; }
+.f-avena { --c: var(--avena); --ci: var(--avena-ink); }
+.f-frambuesa { --c: var(--frambuesa); --ci: var(--frambuesa-ink); }
+.f-melocoton { --c: var(--melocoton); --ci: var(--melocoton-ink); }
+.f-cacao { --c: var(--cacao); --ci: var(--cacao-ink); }
+.f-cacao .kind span { background: rgba(255, 255, 255, .16); }
+.f-cacao .blob { background: rgba(255, 255, 255, .08); }
+.f-vainilla { --c: var(--vainilla); --ci: var(--vainilla-ink); }
+.f-espinaca { --c: var(--espinaca); --ci: var(--espinaca-ink); }
+.empty { grid-column: 1 / -1; background: var(--paper); border-radius: 24px; padding: 36px 20px; text-align: center; color: var(--ink-soft); }
+@media (max-width: 380px) { .grid { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- Selector de vista ---------- */
+.listtools { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.views { display: flex; background: var(--pill); padding: 3px; border-radius: 12px; gap: 2px; }
+.views button { border: 0; background: none; border-radius: 9px; padding: 5px 10px; font-size: .86rem; font-weight: 600; color: var(--ink-soft); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.views button[aria-pressed="true"] { background: var(--paper); color: var(--ink); box-shadow: 0 1px 2px rgba(29, 34, 51, .12); }
+.views svg { width: 15px; height: 15px; fill: currentColor; }
+
+/* ---------- Vista lista ---------- */
+.list { display: grid; gap: 10px; }
+.lrow { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 14px; align-items: center; width: 100%; border: 0; background: var(--paper); color: var(--ink); border-radius: 20px; padding: 8px 14px 8px 8px; text-align: left; cursor: pointer; box-shadow: inset 0 0 0 1.5px var(--line); }
+.lrow:hover { box-shadow: inset 0 0 0 2px var(--accent); }
+.lrow .sw { background: var(--c); color: var(--ci); border-radius: 14px; aspect-ratio: 1; display: grid; place-content: center; text-align: center; }
+.lrow .sw b { font-family: var(--display); font-weight: 800; font-size: 1.7rem; line-height: .9; font-variant-numeric: tabular-nums; }
+.lrow .sw span { font-size: .75rem; font-weight: 700; }
+.lrow .info { display: grid; gap: 4px; min-width: 0; }
+.lrow h3 { font-size: 1.08rem; font-weight: 700; line-height: 1.2; }
+.lrow .kind { display: flex; flex-wrap: wrap; gap: 4px; }
+.lrow .kind span { background: var(--pill); border-radius: 999px; padding: 1px 8px; font-size: .75rem; font-weight: 600; color: var(--ink-soft); }
+.lrow .mac { display: flex; flex-wrap: wrap; gap: 2px 12px; font-size: .86rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.lrow .mac .p { color: var(--prot); } .lrow .mac .g { color: var(--fat); } .lrow .mac .c { color: var(--carb); }
+.lrow .mac .on { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+
+/* ---------- Vista tabla ---------- */
+.cmp-wrap { overflow-x: auto; background: var(--paper); border-radius: 20px; box-shadow: inset 0 0 0 1.5px var(--line); }
+.cmp { min-width: 620px; }
+.cmp th, .cmp td { padding: 10px 12px; }
+.cmp th button { border: 0; background: none; padding: 0; font: inherit; color: inherit; cursor: pointer; font-weight: 700; white-space: nowrap; }
+.cmp th[aria-sort] button { color: var(--accent); }
+.cmp td.name button { border: 0; background: none; padding: 0; cursor: pointer; text-align: left; font-weight: 700; color: var(--ink); display: flex; align-items: center; gap: 10px; }
+.cmp td.name i { flex: none; width: 14px; height: 14px; border-radius: 5px; background: var(--c); }
+.cmp td.name button:hover { color: var(--accent); }
+.cmp tbody tr:last-child td { border-bottom: 0; }
+.cmp .p { color: var(--prot); font-weight: 700; } .cmp .g { color: var(--fat); font-weight: 700; } .cmp .c { color: var(--carb); font-weight: 700; }
+
+/* ---------- Ficha de receta (hoja) ---------- */
+.overlay { position: fixed; inset: 0; z-index: 20; background: rgba(20, 23, 31, .45); }
+.overlay[hidden] { display: none; }
+.sheet { position: absolute; inset: 0; overflow-y: auto; background: var(--c); color: var(--ci); padding-top: env(safe-area-inset-top, 0px); }
+@media (min-width: 760px) { .sheet { inset: 24px auto 0 50%; width: min(760px, 94vw); transform: translateX(-50%); border-radius: 28px 28px 0 0; } }
+@media (prefers-reduced-motion: no-preference) {
+  .overlay:not([hidden]) .sheet { animation: rise .32s cubic-bezier(.2, .8, .2, 1); }
+  @keyframes rise { from { transform: translateY(40px); opacity: 0; } }
+  @media (min-width: 760px) { @keyframes rise { from { transform: translate(-50%, 40px); opacity: 0; } } }
+}
+.hero { padding: 14px max(20px, env(safe-area-inset-left, 0px)) 26px max(20px, env(safe-area-inset-right, 0px)); display: grid; gap: 14px; position: relative; }
+.hero-bar { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.close { border: 0; background: rgba(255, 255, 255, .6); color: inherit; border-radius: 999px; padding: 8px 16px; font-weight: 700; cursor: pointer; }
+.f-cacao .close { background: rgba(255, 255, 255, .16); }
+.hero h2 { font-size: clamp(1.9rem, 7vw, 2.8rem); font-weight: 800; line-height: 1.02; max-width: 16ch; }
+.hero .facts { display: flex; flex-wrap: wrap; gap: 6px; }
+.hero .facts span { background: rgba(255, 255, 255, .55); border-radius: 999px; padding: 4px 11px; font-size: .85rem; font-weight: 600; }
+.f-cacao .hero .facts span { background: rgba(255, 255, 255, .16); }
+.hero-num { display: flex; align-items: flex-end; gap: 18px; flex-wrap: wrap; }
+.hero-num .big { font-size: 4.2rem; font-weight: 800; line-height: .85; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
+.hero-num .big small { font-size: 1.1rem; letter-spacing: 0; margin-left: 4px; }
+.hero-num .per { font-size: .85rem; font-weight: 600; opacity: .85; padding-bottom: 4px; }
+.split { display: grid; gap: 6px; }
+.split .bar { display: flex; height: 14px; border-radius: 7px; overflow: hidden; background: rgba(255, 255, 255, .5); }
+.split .bar i { display: block; height: 100%; }
+.split .bar .bp { background: var(--prot); } .split .bar .bc { background: var(--carb); } .split .bar .bg { background: var(--fat); }
+.split .legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: .9rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.split .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: 0; }
+.optsel { display: grid; gap: 8px; }
+.optsel .opts { display: flex; flex-wrap: wrap; gap: 6px; }
+.optsel button { border: 0; background: rgba(255, 255, 255, .55); color: inherit; border-radius: 12px; padding: 8px 12px; font-weight: 600; cursor: pointer; text-align: left; }
+.optsel button[aria-pressed="true"] { background: var(--ci); color: var(--c); }
+.optsel p { font-size: .9rem; }
+
+.body { background: var(--paper); color: var(--ink); border-radius: 28px 28px 0 0; padding: 26px max(20px, env(safe-area-inset-left, 0px)) calc(48px + env(safe-area-inset-bottom, 0px)) max(20px, env(safe-area-inset-right, 0px)); display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; min-height: 60vh; }
+.body > * { min-width: 0; }
+.body h3 { font-size: 1.4rem; font-weight: 800; margin-bottom: 10px; }
+.body h4 { font-size: 1rem; font-weight: 700; margin: 14px 0 6px; color: var(--ink-soft); }
+.checklist { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.checklist li label { display: flex; gap: 12px; align-items: flex-start; padding: 8px 4px; border-radius: 10px; cursor: pointer; }
+.checklist input { appearance: none; flex: none; width: 22px; height: 22px; margin: 1px 0 0; border-radius: 7px; box-shadow: inset 0 0 0 2px var(--line); cursor: pointer; display: grid; place-items: center; }
+.checklist input:checked { background: var(--prot); box-shadow: none; }
+.checklist input:checked::after { content: ""; width: 6px; height: 11px; border: solid #fff; border-width: 0 2.5px 2.5px 0; transform: rotate(45deg) translate(-1px, -1px); }
+.checklist input:checked + span { color: var(--ink-soft); text-decoration: line-through; }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; counter-reset: s; }
+.steps li { counter-increment: s; display: grid; grid-template-columns: 38px minmax(0, 1fr); gap: 12px; }
+.steps li::before { content: counter(s); font-family: var(--display); font-weight: 800; font-size: 1.1rem; width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; background: var(--c); color: var(--ci); }
+.tbl-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: .93rem; }
+th, td { padding: 9px 8px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+th { font-size: .82rem; color: var(--ink-soft); font-weight: 600; }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr.hl td { background: var(--ok-bg); }
+.note { color: var(--ink-soft); font-size: .92rem; margin-top: 10px; }
+.tip { background: var(--pill); border-radius: 18px; padding: 16px 18px; display: grid; gap: 10px; }
+.buy { background: var(--ok-bg); color: var(--ok-ink); border-radius: 18px; padding: 16px 18px; display: grid; gap: 8px; }
+.buy .links { display: flex; flex-wrap: wrap; gap: 6px; }
+.buy a { background: var(--paper); color: var(--ok-ink); text-decoration: none; border-radius: 999px; padding: 5px 12px; font-weight: 600; font-size: .9rem; }
+.xref { border: 0; background: none; padding: 0; color: var(--accent); text-decoration: underline; text-underline-offset: 2px; cursor: pointer; font-weight: 700; }
+
+/* ---------- Ingredientes ---------- */
+.intro { max-width: 62ch; display: grid; gap: 8px; margin: 14px 2px 18px; }
+.intro h2 { font-size: clamp(1.6rem, 5vw, 2.2rem); font-weight: 800; }
+.intro p { color: var(--ink-soft); }
+.ing-list { display: grid; gap: 14px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 900px) { .ing-list { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; } }
+.ing { background: var(--paper); border-radius: 24px; padding: 20px; display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr); scroll-margin-top: 150px; }
+.ing > * { min-width: 0; }
+.ing h3 { font-size: 1.3rem; font-weight: 800; }
+.ing .rol { color: var(--ink-soft); font-size: .95rem; }
+.look { background: var(--ok-bg); color: var(--ok-ink); border-radius: 14px; padding: 10px 14px; font-size: .93rem; }
+.warn { background: var(--warn-bg); color: var(--warn-ink); border-radius: 14px; padding: 10px 14px; font-size: .93rem; }
+.prods { display: grid; gap: 8px; }
+.prod { border-radius: 16px; box-shadow: inset 0 0 0 1.5px var(--line); padding: 12px 14px; display: grid; gap: 8px; }
+.prod-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.prod-top b { font-size: 1rem; }
+.prod-top .name { color: var(--ink-soft); font-size: .9rem; }
+.store { flex: none; background: var(--pill); border-radius: 999px; padding: 3px 10px; font-size: .8rem; font-weight: 600; text-align: right; max-width: 52%; }
+.pv { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; }
+.pv div { text-align: center; background: var(--bg); border-radius: 10px; padding: 5px 2px; }
+.pv b { display: block; font-variant-numeric: tabular-nums; font-size: .98rem; }
+.pv span { font-size: .72rem; color: var(--ink-soft); }
+.pv .p b { color: var(--prot); } .pv .g b { color: var(--fat); } .pv .c b { color: var(--carb); }
+.prod-foot { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: .84rem; color: var(--ink-soft); flex-wrap: wrap; }
+.prod-foot a { font-weight: 700; }
+.unv { background: var(--warn-bg); color: var(--warn-ink); border-radius: 6px; padding: 1px 7px; font-size: .75rem; font-weight: 700; margin-left: 4px; }
+.usedin { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: .9rem; color: var(--ink-soft); }
+.usedin .dot { border: 0; cursor: pointer; border-radius: 999px; padding: 4px 11px; font-size: .85rem; font-weight: 600; background: var(--c); color: var(--ci); }
+
+/* ---------- Trucos ---------- */
+.guide { max-width: 720px; display: grid; gap: 14px; margin-top: 14px; }
+.guide h2 { font-size: clamp(1.6rem, 5vw, 2.2rem); font-weight: 800; margin: 0 2px 4px; }
+.gcard { background: var(--paper); border-radius: 24px; padding: 20px; display: grid; gap: 10px; }
+.gcard h3 { font-size: 1.25rem; font-weight: 800; }
+.gcard ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+.flow { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; align-items: center; gap: 6px; }
+.flow .box { border-radius: 16px; padding: 12px 8px; text-align: center; font-size: .88rem; background: var(--c); color: var(--ci); }
+.flow .box b { display: block; font-family: var(--display); font-size: 1.05rem; }
+.flow .arr { font-weight: 800; color: var(--ink-soft); }
+@media (max-width: 480px) { .flow { grid-template-columns: 1fr; } .flow .arr { transform: rotate(90deg); justify-self: center; } }
+
+@media (prefers-reduced-motion: no-preference) {
+  .card { transition: transform .15s ease; }
+  .card:active { transform: scale(.98); }
+}
+
+/* ---------- Añadidos v4: guardado, escala, cocina, compra, plan ---------- */
+.savebar { display: flex; align-items: center; gap: 8px; font-size: .82rem; color: var(--ink-soft); }
+.savebar i { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-soft); }
+.savebar.on i { background: var(--prot); }
+.tabs { flex-wrap: nowrap; }
+@media (max-width: 560px) { .title-row { flex-wrap: wrap; } .tabs { width: 100%; justify-content: space-between; } .tabs a { flex: 1; text-align: center; padding: 7px 6px; } }
+.timer-btn svg { width: 13px; height: 13px; fill: currentColor; vertical-align: -2px; margin-right: 4px; }
+.card .fav, .lrow .fav { position: absolute; right: 12px; top: 10px; font-size: 1.1rem; line-height: 1; }
+.lrow { position: relative; }
+.range { display: grid; gap: 4px; }
+.range label { display: flex; justify-content: space-between; gap: 8px; font-size: .92rem; }
+.range label b { font-variant-numeric: tabular-nums; }
+.range input { width: 100%; accent-color: var(--accent); }
+
+.hero-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.hbtn { border: 0; background: rgba(255, 255, 255, .6); color: inherit; border-radius: 999px; padding: 8px 14px; font-weight: 700; cursor: pointer; }
+.f-cacao .hbtn { background: rgba(255, 255, 255, .16); }
+.hbtn[aria-pressed="true"] { background: var(--ci); color: var(--c); }
+.hbtn.big { background: var(--ci); color: var(--c); }
+.scale { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.scale .opts { display: flex; gap: 4px; }
+.scale button { border: 0; background: rgba(255, 255, 255, .55); color: inherit; border-radius: 10px; min-width: 44px; padding: 6px 10px; font-weight: 700; cursor: pointer; }
+.f-cacao .scale button, .f-cacao .optsel button { background: rgba(255, 255, 255, .16); }
+.scale button[aria-pressed="true"] { background: var(--ci); color: var(--c); }
+.timer-btn { border: 0; background: var(--pill); color: var(--ink); border-radius: 999px; padding: 3px 10px; font-weight: 700; font-size: .85rem; cursor: pointer; margin-left: 4px; white-space: nowrap; }
+.timer-btn:hover { background: var(--accent); color: var(--on-accent); }
+.facts2 { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); }
+.facts2 > div { background: var(--pill); border-radius: 16px; padding: 12px 14px; display: grid; gap: 4px; }
+.facts2 b { font-size: .95rem; }
+.facts2 p { font-size: .92rem; color: var(--ink-soft); }
+.notes textarea { width: 100%; min-height: 90px; border: 0; border-radius: 14px; padding: 12px 14px; background: var(--bg); box-shadow: inset 0 0 0 1.5px var(--line); resize: vertical; }
+.notes .st { font-size: .82rem; color: var(--ink-soft); margin-top: 4px; min-height: 1.2em; }
+.photos { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; }
+.photo { position: relative; aspect-ratio: 1; border-radius: 14px; overflow: hidden; background: var(--pill); }
+.photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.photo button { position: absolute; right: 6px; top: 6px; border: 0; border-radius: 999px; background: rgba(0, 0, 0, .55); color: #fff; font-size: .75rem; padding: 3px 8px; cursor: pointer; }
+.upload { display: grid; place-items: center; aspect-ratio: 1; border-radius: 14px; border: 2px dashed var(--line); color: var(--ink-soft); font-weight: 600; font-size: .9rem; cursor: pointer; text-align: center; padding: 8px; }
+.upload input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.muted { color: var(--ink-soft); font-size: .9rem; }
+
+/* Modo cocina */
+.cook { position: fixed; inset: 0; z-index: 30; background: var(--c); color: var(--ci); display: grid; grid-template-rows: auto 1fr auto; padding: calc(12px + env(safe-area-inset-top, 0px)) max(20px, env(safe-area-inset-right, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)) max(20px, env(safe-area-inset-left, 0px)); }
+.cook[hidden] { display: none; }
+.cook-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.cook-top .prog { font-weight: 700; }
+.cook-body { overflow-y: auto; display: grid; align-content: center; gap: 18px; max-width: 760px; width: 100%; margin: 0 auto; padding-block: 16px; }
+.cook-body .stepnum { font-family: var(--display); font-weight: 800; font-size: 4.5rem; line-height: .9; }
+.cook-body .steptxt { font-size: clamp(1.25rem, 4.6vw, 1.75rem); line-height: 1.4; }
+.cook-body .steptxt .timer-btn { font-size: 1rem; padding: 6px 14px; }
+.cook-ings { background: var(--paper); color: var(--ink); border-radius: 20px; padding: 16px 18px; }
+.cook-ings[hidden] { display: none; }
+.cook-nav { display: flex; gap: 10px; max-width: 760px; width: 100%; margin: 0 auto; }
+.cook-nav button { flex: 1; border: 0; border-radius: 18px; padding: 16px; font-weight: 800; font-size: 1.05rem; cursor: pointer; background: rgba(255, 255, 255, .55); color: inherit; }
+.cook-nav button.next { background: var(--ci); color: var(--c); }
+.cook-nav button:disabled { opacity: .4; cursor: default; }
+.wake { font-size: .82rem; opacity: .85; }
+
+/* Temporizadores */
+.timers { position: fixed; z-index: 40; left: 50%; transform: translateX(-50%); bottom: calc(14px + env(safe-area-inset-bottom, 0px)); display: grid; gap: 6px; width: min(420px, calc(100% - 32px)); }
+.timer { display: flex; align-items: center; gap: 10px; background: var(--ink); color: var(--bg); border-radius: 16px; padding: 10px 12px 10px 16px; box-shadow: 0 6px 20px rgba(0, 0, 0, .25); }
+.timer .t { font-family: var(--display); font-weight: 800; font-size: 1.4rem; font-variant-numeric: tabular-nums; min-width: 4.2ch; }
+.timer .l { flex: 1; min-width: 0; font-size: .85rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.timer button { border: 0; background: rgba(255, 255, 255, .15); color: inherit; border-radius: 10px; padding: 6px 10px; font-weight: 700; cursor: pointer; }
+.timer.done { background: var(--accent); color: var(--on-accent); }
+@media (prefers-reduced-motion: no-preference) { .timer.done { animation: pulse 1s ease-in-out infinite; } @keyframes pulse { 50% { transform: scale(1.03); } } }
+
+/* Lista de la compra */
+.shop { display: grid; gap: 14px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 900px) { .shop { grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); align-items: start; } }
+.panelcard { background: var(--paper); border-radius: 24px; padding: 18px; display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr); }
+.panelcard > * { min-width: 0; }
+.panelcard h3 { font-size: 1.25rem; font-weight: 800; }
+.inlist { display: grid; gap: 8px; }
+.inrow { display: flex; align-items: center; gap: 10px; border-radius: 14px; padding: 8px 10px; background: var(--bg); }
+.inrow .sw { flex: none; width: 14px; height: 14px; border-radius: 5px; background: var(--c); }
+.inrow .n { flex: 1; min-width: 0; font-weight: 600; }
+.stepper { display: flex; align-items: center; gap: 4px; }
+.stepper button { border: 0; width: 30px; height: 30px; border-radius: 9px; background: var(--pill); font-weight: 800; cursor: pointer; }
+.stepper span { min-width: 3.2ch; text-align: center; font-weight: 700; font-variant-numeric: tabular-nums; }
+.aisle h4 { font-size: .95rem; font-weight: 700; color: var(--ink-soft); margin: 6px 0 2px; }
+.shop .checklist li label { justify-content: space-between; }
+.shop .checklist .q { margin-left: auto; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; padding-left: 8px; }
+.shop .checklist input:checked ~ .q { color: var(--ink-soft); text-decoration: line-through; }
+.shop .checklist .lbl { flex: 1; min-width: 0; }
+.shop .checklist .lbl a { font-size: .8rem; margin-left: 6px; }
+.addrow { display: flex; gap: 8px; }
+.addrow input { flex: 1; min-width: 0; border: 0; border-radius: 12px; padding: 10px 12px; background: var(--bg); box-shadow: inset 0 0 0 1.5px var(--line); }
+.pbtn { border: 0; background: var(--ink); color: var(--bg); border-radius: 12px; padding: 10px 16px; font-weight: 700; cursor: pointer; }
+.pbtn.alt { background: var(--pill); color: var(--ink); }
+.pbtn.acc { background: var(--accent); color: var(--on-accent); }
+.rowbtns { display: flex; gap: 8px; flex-wrap: wrap; }
+.x { border: 0; background: none; color: var(--ink-soft); cursor: pointer; font-weight: 700; padding: 4px 6px; }
+.guide-toggle { margin-top: 26px; }
+
+/* Plan semanal */
+.plan { display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 900px) { .plan { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.day { background: var(--paper); border-radius: 22px; padding: 16px; display: grid; gap: 10px; }
+.day-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.day-head h3 { font-size: 1.2rem; font-weight: 800; }
+.day-tot { font-size: .85rem; font-weight: 600; font-variant-numeric: tabular-nums; display: flex; gap: 10px; flex-wrap: wrap; }
+.day-tot .p { color: var(--prot); } .day-tot .g { color: var(--fat); }
+.slot { display: grid; grid-template-columns: 82px minmax(0, 1fr); align-items: center; gap: 8px; }
+.slot span { font-size: .88rem; color: var(--ink-soft); font-weight: 600; }
+.slot select { width: 100%; min-width: 0; border: 0; border-radius: 12px; padding: 9px 10px; background: var(--bg); box-shadow: inset 0 0 0 1.5px var(--line); font-weight: 600; }
+.slot select.set { box-shadow: inset 0 0 0 2px var(--c); background: var(--paper); }
+.weeksum { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.weeksum div { background: var(--bg); border-radius: 14px; padding: 10px; text-align: center; }
+.weeksum b { display: block; font-family: var(--display); font-size: 1.5rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+.weeksum span { font-size: .8rem; color: var(--ink-soft); }
+.notice { background: var(--warn-bg); color: var(--warn-ink); border-radius: 14px; padding: 10px 14px; font-size: .9rem; }
+.toast { position: fixed; z-index: 50; left: 50%; top: calc(14px + env(safe-area-inset-top, 0px)); transform: translateX(-50%); background: var(--ink); color: var(--bg); border-radius: 999px; padding: 9px 18px; font-weight: 600; font-size: .92rem; box-shadow: 0 6px 20px rgba(0, 0, 0, .2); max-width: calc(100% - 32px); }
+.toast[hidden] { display: none; }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="title-row">
+      <h1>Recetas <span>fit</span></h1>
+      <nav class="tabs" aria-label="Secciones">
+        <a href="#recetas" data-tab="recetas">Recetas</a>
+        <a href="#plan" data-tab="plan">Plan</a>
+        <a href="#compra" data-tab="compra">Compra</a>
+        <a href="#trucos" data-tab="trucos">Trucos</a>
+      </nav>
+    </div>
+    <div id="recipe-tools">
+      <div class="searchbar">
+        <input class="search" id="q" type="search" placeholder="Busca por receta o ingrediente" aria-label="Buscar recetas">
+        <button class="filter-btn" id="toggle-filters" type="button" aria-expanded="false" aria-controls="filters">Filtros<b id="nfilters" hidden>0</b></button>
+      </div>
+      <div class="moments" id="f-cat" role="group" aria-label="Momento del día" style="margin-top:10px"></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- ================= RECETAS ================= -->
+  <section class="panel" id="panel-recetas" aria-label="Recetas">
+    <div class="sheet-filters" id="filters" hidden>
+      <div class="fgroup"><span>Cómo se hace</span><div class="chips" id="f-met"></div></div>
+      <div class="fgroup"><span>Extras</span><div class="chips" id="f-ext"></div></div>
+      <div class="fgroup"><span>Tu objetivo (valores por ración)</span>
+        <div class="range"><label for="r-kcal">Máximo de calorías <b id="r-kcal-v"></b></label><input type="range" id="r-kcal" min="100" max="500" step="10"></div>
+        <div class="range"><label for="r-p">Mínimo de proteína <b id="r-p-v"></b></label><input type="range" id="r-p" min="0" max="45" step="1"></div>
+        <div class="range"><label for="r-g">Máximo de grasa <b id="r-g-v"></b></label><input type="range" id="r-g" min="1" max="20" step="1"></div>
+      </div>
+      <div class="fgroup"><span>Valores en las fichas</span><div class="chips" id="f-base">
+        <button type="button" class="chip" data-base="racion">Por ración</button>
+        <button type="button" class="chip" data-base="completa">Receta completa</button>
+      </div></div>
+      <div class="sheet-foot"><button type="button" class="btn-text" id="clear">Quitar filtros</button><button type="button" class="filter-btn" id="close-filters" style="padding:10px 18px">Ver recetas</button></div>
+    </div>
+    <div class="listhead">
+      <p id="count"></p>
+      <div class="listtools">
+        <div class="views" role="group" aria-label="Vista">
+          <button type="button" data-view="mosaico"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1" y="1" width="14" height="6" rx="2"/><rect x="1" y="9" width="6.5" height="6" rx="2"/><rect x="8.5" y="9" width="6.5" height="6" rx="2"/></svg>Mosaico</button>
+          <button type="button" data-view="lista"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1" y="1.5" width="4" height="4" rx="1.2"/><rect x="6.5" y="2.5" width="8.5" height="2" rx="1"/><rect x="1" y="6" width="4" height="4" rx="1.2"/><rect x="6.5" y="7" width="8.5" height="2" rx="1"/><rect x="1" y="10.5" width="4" height="4" rx="1.2"/><rect x="6.5" y="11.5" width="8.5" height="2" rx="1"/></svg>Lista</button>
+          <button type="button" data-view="tabla"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1" y="1.5" width="14" height="3" rx="1"/><rect x="1" y="6.5" width="14" height="2" rx="1"/><rect x="1" y="10" width="14" height="2" rx="1"/><rect x="1" y="13.5" width="14" height="1.5" rx=".75"/></svg>Comparar</button>
+        </div>
+        <div class="sortline">
+          <label for="sort">Ordenar por</label>
+          <select id="sort">
+            <option value="kcal">calorías</option>
+            <option value="p">proteína</option>
+            <option value="g">grasa</option>
+            <option value="c">carbohidratos</option>
+            <option value="p100">lo que más llena</option>
+            <option value="min">tiempo</option>
+            <option value="nombre">nombre</option>
+          </select>
+          <button type="button" class="dirbtn" id="dir" aria-label="Cambiar sentido"></button>
+        </div>
+      </div>
+    </div>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <!-- ================= PLAN ================= -->
+  <section class="panel" id="panel-plan" aria-label="Plan semanal" hidden>
+    <div class="intro">
+      <h2>Plan de la semana</h2>
+      <p>Elige qué vas a tomar cada día. Cada hueco cuenta como una ración, y los totales salen solos.</p>
+      <p class="savebar" id="save-plan"><i></i><span></span></p>
+    </div>
+    <div class="panelcard" style="margin-bottom:14px">
+      <div class="weeksum" id="weeksum"></div>
+      <div class="rowbtns"><button type="button" class="pbtn acc" id="plan-to-shop">Añadir el plan a la compra</button><button type="button" class="pbtn alt" id="plan-clear">Vaciar el plan</button></div>
+      <p class="muted" id="plan-confirm" hidden></p>
+    </div>
+    <div class="plan" id="plan"></div>
+  </section>
+
+  <!-- ================= COMPRA ================= -->
+  <section class="panel" id="panel-compra" aria-label="Lista de la compra" hidden>
+    <div class="intro">
+      <h2>Lista de la compra</h2>
+      <p>Añade recetas desde su ficha o desde el plan. Los ingredientes se suman y se ordenan por zona del súper.</p>
+      <p class="savebar" id="save-shop"><i></i><span></span></p>
+    </div>
+    <div class="shop">
+      <div class="panelcard">
+        <h3>Recetas en la lista</h3>
+        <div class="inlist" id="shop-recipes"></div>
+        <div class="rowbtns"><button type="button" class="pbtn alt" id="shop-clear-done">Quitar lo tachado</button><button type="button" class="pbtn alt" id="shop-clear">Vaciar la lista</button></div>
+        <p class="muted" id="shop-confirm" hidden></p>
+      </div>
+      <div class="panelcard">
+        <h3>Qué comprar</h3>
+        <div id="shop-items"></div>
+        <div class="addrow"><input id="shop-add" type="text" placeholder="Añadir algo más (p. ej. café)" aria-label="Añadir producto a la lista"><button type="button" class="pbtn" id="shop-add-btn">Añadir</button></div>
+      </div>
+    </div>
+
+    <div class="intro guide-toggle" id="marcas">
+      <h2>Qué marca comprar</h2>
+      <p>Qué mirar en la etiqueta y productos concretos con su tienda y sus valores por 100 g.</p>
+      <p class="note">Datos de <a href="https://es.openfoodfacts.org" target="_blank" rel="noopener">Open Food Facts</a> y fichas de tiendas, consultados el 19/10/2026. Open Food Facts es colaborativo y puede tener erratas: si tu envase dice otra cosa, manda la etiqueta. La tienda es la de la ficha; puede haberlo en más sitios.</p>
+    </div>
+    <div class="ing-list" id="ing-list"></div>
+  </section>
+
+  <!-- ================= TRUCOS ================= -->
+  <section class="panel" id="panel-trucos" aria-label="Trucos" hidden>
+    <div class="guide" id="guide"></div>
+  </section>
+</main>
+
+<div class="overlay" id="overlay" hidden>
+  <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="d-title"></div>
+</div>
+
+<div class="cook" id="cook" role="dialog" aria-modal="true" aria-label="Modo cocina" hidden></div>
+<div class="timers" id="timers" aria-live="polite"></div>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+/* ===================== RECETAS =====================
+   Valores aproximados: completa = receta entera, racion = una ración.
+   En los textos: {300} es una cantidad que se escala con las raciones, [[id]] enlaza otra receta,
+   [[t:5]] pone un temporizador de 5 minutos en ese paso.
+   compra: [ingrediente, cantidad para la receta entera, unidad]; cantidad null = al gusto. */
+const RECETAS = [
+  {
+    id: "tortitas", corto: "tortitas", nombre: "Tortitas de avena y claras",
+    cat: ["Desayuno"], met: ["Sartén"], ext: ["Genera yemas"], tags: ["Alta proteína", "Sacia mucho"],
+    gluten: "avena", lacteos: true,
+    raciones: 1, racionesTxt: "1 (unas 4–5 tortitas pequeñas)", tiempoTxt: "20 min", min: 20,
+    completa: { kcal: 230, p: 20, g: 4, c: 26 }, racion: { kcal: 230, p: 20, g: 4, c: 26 },
+    ingredientes: [
+      { t: "Masa", items: ["{40} g de copos de avena", "{3} claras de huevo (unos {100} ml). Sin brik, te sobran 3 yemas: [[natillas]] o [[tortilla]]", "{50} g de queso fresco batido 0%: las deja jugosas", "{0.5} cdta. de levadura química (polvo de hornear)", "Canela, aroma de vainilla y edulcorante al gusto", "Spray de aceite para la sartén (1–2 pulverizaciones)"] },
+      { t: "Toppings (recomendados)", items: ["{100} g de frutos rojos", "{50} g de skyr o queso batido 0%, con un poco de edulcorante"] }
+    ],
+    pasos: [
+      "<b>Haz harina de avena:</b> tritura los copos hasta que queden como harina.",
+      "<b>Mezcla</b> la harina de avena con las claras, el queso batido, la levadura, la canela, la vainilla y el edulcorante hasta tener una masa lisa.",
+      "<b>Reposa 5 min</b> [[t:5]]: la avena absorbe líquido y la masa espesa. Si queda muy espesa, añade una cucharada de agua o leche desnatada.",
+      "<b>Calienta</b> una sartén antiadherente a fuego medio con 1–2 pulverizaciones de aceite. Si está demasiado fuerte, se queman por fuera y quedan crudas por dentro.",
+      "<b>Cocina:</b> echa un cucharón pequeño de masa por tortita. Cuando salgan burbujas en la superficie y los bordes se vean secos (1–2 min) [[t:2]], dales la vuelta y deja 1 min más.",
+      "<b>Sirve</b> apiladas, con el skyr y los frutos rojos por encima."
+    ],
+    tabla: { cols: ["Sin toppings", "Con frutos rojos + skyr"], rows: [["Calorías", "~230 kcal", "~310 kcal"], ["Proteínas", "~20 g", "~25 g"], ["Grasas", "~4 g", "~4,5 g"], ["Carbohidratos", "~26 g", "~36 g"]] },
+    notaTabla: "Evita la crema de cacahuete o el sirope por encima: una cucharada de crema de cacahuete son unos 8 g de grasa.",
+    tips: [
+      "<b>Variantes:</b> de chocolate, con 1 cdta. de cacao puro desgrasado en la masa (+10 kcal). Más proteína: cambia 10 g de avena por 15 g de proteína en polvo. Con huevo entero: 1 huevo + 1 clara en vez de 3 claras (+5 g de grasa, más esponjosas)."
+    ],
+    conserva: { nevera: "2 días en un táper. Recaliéntalas 30 s en el microondas o 2 min en la airfryer a 160 °C.", congelar: "Sí, hasta 1 mes, separadas con papel de horno." },
+    compra: [["avena", 40, "g"], ["claras", 100, "ml"], ["batido", 100, "g"], ["levadura", 0.5, "cdta."], ["frutos", 100, "g"], ["vainilla", null], ["canela", null], ["edulcorante", null], ["spray", null]],
+    usa: ["avena", "claras", "batido", "skyr", "frutos", "edulcorante", "spray", "cacao", "proteina"]
+  },
+  {
+    id: "cheesecake-nevera", corto: "cheesecake de nevera", nombre: "Cheesecake fit fría de nevera",
+    cat: ["Merienda", "Postre"], met: ["Sin horno"], ext: ["Sin huevo"], tags: ["Alta proteína"],
+    gluten: "avena", lacteos: true,
+    raciones: 2, racionesTxt: "1 grande o 2 pequeñas (ración = ½)", tiempoTxt: "15 min + 3–4 h en la nevera", min: 225,
+    molde: "Molde individual de 10–12 cm, o vaso",
+    completa: { kcal: 270, p: 35, g: 2.5, c: 28 }, racion: { kcal: 135, p: 17, g: 1.3, c: 14 },
+    ingredientes: [
+      { t: "Base", items: ["{25} g de copos de avena finos", "{15} g (1 cda.) de queso fresco batido 0%", "Una pizca de edulcorante y canela (opcional)"] },
+      { t: "Crema de queso", items: ["{300} g de queso fresco batido 0% M.G. (o mitad batido y mitad skyr 0%)", "{3} láminas de gelatina neutra (unos {6} g). Si la quieres más firme, una más", "{40} ml de leche desnatada (para disolver la gelatina)", "{1} cdta. de aroma de vainilla", "Edulcorante al gusto (eritritol o sucralosa)"] },
+      { t: "Cobertura (recomendada)", items: ["{100} g de frutos rojos, calentados 1 min en el microondas con unas gotas de limón"] }
+    ],
+    pasos: [
+      "<b>Atempera los quesos:</b> sácalos de la nevera 20–30 min antes. Así la gelatina no hace grumos al mezclarla.",
+      "<b>Hidrata la gelatina:</b> pon las láminas en agua fría durante 5 minutos [[t:5]].",
+      "<b>Prepara la base:</b> tuesta la avena 2–3 min en una sartén sin aceite (opcional, pero gana mucho sabor). Tritúrala un poco, mézclala con la cucharada de queso batido y el edulcorante, y aprieta la mezcla con fuerza en el fondo del molde. Métela 15 min en el congelador [[t:15]].",
+      "<b>Mezcla la crema:</b> bate el queso batido, la vainilla y el edulcorante hasta que quede liso.",
+      "<b>Disuelve la gelatina:</b> calienta la leche en el microondas hasta que esté muy caliente, sin que llegue a hervir. Escurre la gelatina, échala en la leche y remueve hasta que se disuelva del todo.",
+      "<b>Atempera la gelatina:</b> añade 2 cucharadas de la crema a la leche con gelatina y mezcla. Después vierte esa mezcla sobre el resto de la crema sin dejar de batir con varillas.",
+      "<b>Cuaja:</b> vierte la crema sobre la base, alisa la superficie y deja en la nevera <b>3–4 horas</b> [[t:180]], o toda la noche. Pon la cobertura justo antes de servir."
+    ],
+    tabla: { cols: ["Receta completa", "Por ración (½)", "Completa + 100 g frutos rojos", "Sin base (completa)"], rows: [["Calorías", "~270 kcal", "~135 kcal", "~320 kcal", "~170 kcal"], ["Proteínas", "~35 g", "~17 g", "~36 g", "~30 g"], ["Grasas", "~2,5 g", "~1,3 g", "~3 g", "~0,7 g"], ["Carbohidratos", "~28 g", "~14 g", "~36 g", "~12 g"]] },
+    notaTabla: "Textura: sin queso crema queda más ligera, como una mousse firme de queso. Si echas de menos el sabor, añade 30 g de queso crema light (+3 g de grasa y +45 kcal).",
+    tips: [],
+    conserva: { nevera: "3–4 días, tapada. La cobertura, mejor al servir.", congelar: "Mejor no: la gelatina suelta agua al descongelar y queda acuosa." },
+    compra: [["avena", 25, "g"], ["batido", 315, "g"], ["gelatina", 3, "láminas"], ["leche", 40, "ml"], ["vainilla", 1, "cdta."], ["frutos", 100, "g"], ["edulcorante", null], ["canela", null]],
+    usa: ["batido", "skyr", "avena", "gelatina", "leche", "edulcorante", "frutos", "queso-crema"]
+  },
+  {
+    id: "cheesecake-airfryer", corto: "cheesecake de airfryer", nombre: "Cheesecake fit en freidora de aire",
+    cat: ["Merienda", "Postre"], met: ["Airfryer"], ext: ["Genera yemas"], tags: ["Alta proteína", "3 opciones"],
+    gluten: "avena", lacteos: true,
+    raciones: 2, racionesTxt: "1 grande o 2 pequeñas (ración = ½)", tiempoTxt: "10 min + 25–30 min de horno + 4 h en la nevera", min: 280,
+    molde: "Molde de 12 cm (metálico forrado con papel de horno, o de silicona). Freidora Princess 10 L",
+    opcionDefecto: "B",
+    opciones: {
+      A: { txt: "{3} claras (unos {100} ml)", corto: "3 claras", desc: "La más ligera. Sin brik, te sobran 3 yemas.", completa: { kcal: 325, p: 40, g: 2.5, c: 35 }, racion: { kcal: 160, p: 20, g: 1.3, c: 17 }, compra: [["claras", 115, "ml"]] },
+      B: { txt: "huevos L: {1} entero + {2} claras", corto: "1 huevo + 2 claras", desc: "Recomendada: buen equilibrio entre sabor y grasa. Con 3 huevos, te sobran 2 yemas.", completa: { kcal: 380, p: 43, g: 7, c: 35 }, racion: { kcal: 190, p: 21.5, g: 3.5, c: 17.5 }, compra: [["huevos", 3, "ud."]] },
+      C: { txt: "huevos L enteros: {3}", corto: "3 huevos enteros", desc: "La más cremosa, la más parecida a una cheesecake clásica. No sobra nada.", completa: { kcal: 490, p: 48, g: 17, c: 36 }, racion: { kcal: 245, p: 24, g: 8.5, c: 18 }, compra: [["huevos", 3, "ud."]] }
+    },
+    ingredientes: [
+      { t: "Base", items: ["{25} g de copos de avena finos", "{15} g (1 cda.) de clara de huevo, sacada de las claras de la crema", "Una pizca de edulcorante y canela (opcional)"] },
+      { t: "Crema de queso horneada", items: ["{300} g de queso fresco batido 0% M.G.", "Huevo: {{opcion}} (elige la opción arriba)", "{10} g de harina de maíz (Maizena). Se puede cambiar por {15} g de proteína en polvo de vainilla", "{1} cdta. de aroma de vainilla", "Edulcorante al gusto"] },
+      { t: "Cobertura (recomendada)", items: ["{100} g de frutos rojos"] }
+    ],
+    pasos: [
+      "<b>Precalienta:</b> pon la freidora Princess a 160 °C durante 3 minutos [[t:3]].",
+      "<b>Prepara la base:</b> forra el molde con papel de horno (o usa uno de silicona). Tritura un poco la avena, mézclala con la clara y el edulcorante, y aprieta la mezcla contra el fondo. Hornea la base sola <b>5 min a 160 °C</b> [[t:5]].",
+      "<b>Mezcla la crema:</b> bate el queso batido, el huevo o las claras (según la opción), la vainilla, el edulcorante y la Maizena hasta que no queden grumos. Bate suave, sin montar.",
+      "<b>Hornea:</b> vierte la crema sobre la base. Pon la bandeja en la posición media o baja. Hornea a <b>150 °C durante 25–30 min</b> [[t:25]].",
+      "<b>Comprueba si está hecha:</b> los bordes deben estar cuajados y el centro tiene que temblar un poco, como un flan. Si el centro se ve líquido, hornea 5 min más [[t:5]]. Si la superficie se dora demasiado, tápala con papel de aluminio.",
+      "<b>Enfría:</b> deja la tarta 10 min dentro de la freidora apagada, con la puerta entreabierta [[t:10]]. Después déjala a temperatura ambiente y métela en la nevera al menos <b>4 horas</b> [[t:240]]."
+    ],
+    tabla: { firstCol: "Opción (receta entera)", cols: ["Calorías", "Proteínas", "Grasas", "Carbohid.", "½ ración"], rows: [["A) 3 claras", "~325 kcal", "~40 g", "~2,5 g", "~35 g", "~160 kcal, 1,3 g grasa"], ["B) 1 huevo + 2 claras", "~380 kcal", "~43 g", "~7 g", "~35 g", "~190 kcal, 3,5 g grasa"], ["C) 3 huevos enteros", "~490 kcal", "~48 g", "~17 g", "~36 g", "~245 kcal, 8,5 g grasa"]] },
+    notaTabla: "Sin cobertura: 100 g de frutos rojos suman unas 50 kcal. Con proteína en polvo en lugar de Maizena: unos +12 g de proteína y −8 g de carbohidratos. La A queda firme, como un flan de queso; cada yema la hace más cremosa. El horneado es igual en las tres.",
+    tips: ["<b>¿Te han sobrado yemas?</b> Con 2 yemas tienes unas [[natillas]] o una [[tortilla]] para cenar."],
+    conserva: { nevera: "4 días, tapada.", congelar: "Sí, en porciones envueltas, hasta 2 meses. Descongela en la nevera la noche antes." },
+    compra: [["avena", 25, "g"], ["batido", 300, "g"], ["maizena", 10, "g"], ["vainilla", 1, "cdta."], ["frutos", 100, "g"], ["edulcorante", null], ["canela", null]],
+    usa: ["batido", "avena", "claras", "huevos", "maizena", "edulcorante", "frutos", "proteina"]
+  },
+  {
+    id: "mousse", corto: "mousse de chocolate", nombre: "Mousse de chocolate proteica",
+    cat: ["Merienda", "Postre"], met: ["Sin horno"], ext: ["Sin huevo", "Sin gluten"], tags: ["Alta proteína", "La que menos grasa tiene"],
+    gluten: "natural", lacteos: true,
+    raciones: 2, racionesTxt: "2 vasitos", tiempoTxt: "10 min + 2 h en la nevera", min: 130,
+    completa: { kcal: 210, p: 32, g: 2.3, c: 14 }, racion: { kcal: 105, p: 16, g: 1.2, c: 7 },
+    ingredientes: [
+      { t: "Ingredientes", items: ["{300} g de queso fresco batido 0% M.G. (o skyr 0%, más espeso)", "{15} g ({1.5} cda.) de cacao puro desgrasado, sin azúcar", "{2} láminas de gelatina neutra (unos {4} g)", "{30} ml de leche desnatada (para disolver la gelatina)", "Edulcorante al gusto: el cacao puro amarga, así que pruébalo", "{1} cdta. de aroma de vainilla y una pizca de sal (realza el chocolate)", "Topping opcional: {50} g de frambuesas"] }
+    ],
+    pasos: [
+      "<b>Hidrata la gelatina:</b> pon las láminas en agua fría durante 5 minutos [[t:5]].",
+      "<b>Disuelve el cacao sin grumos:</b> mezcla el cacao, el edulcorante y la sal con 3–4 cucharadas del queso batido hasta tener una pasta lisa. Después añade el resto del queso batido y la vainilla, y bate bien.",
+      "<b>Disuelve la gelatina:</b> calienta la leche en el microondas hasta que esté muy caliente, sin que llegue a hervir. Escurre la gelatina, échala en la leche y remueve hasta que se disuelva del todo.",
+      "<b>Atempera:</b> añade 2 cucharadas de la crema de chocolate a la leche con gelatina y mezcla. Después vierte esa mezcla sobre el resto sin dejar de batir con varillas.",
+      "<b>Bate con energía</b> 1 minuto con varillas para meterle aire. Así queda más esponjosa, tipo mousse.",
+      "<b>Enfría:</b> reparte en vasitos y deja en la nevera al menos <b>2 horas</b> [[t:120]]. Pon las frambuesas justo antes de servir."
+    ],
+    tabla: { cols: ["Receta completa", "Por ración (½)", "Ración + 50 g frambuesas"], rows: [["Calorías", "~210 kcal", "~105 kcal", "~130 kcal"], ["Proteínas", "~32 g", "~16 g", "~16 g"], ["Grasas", "~2,3 g", "~1,2 g", "~1,3 g"], ["Carbohidratos", "~14 g", "~7 g", "~10 g"]] },
+    notaTabla: "El cacao desgrasado aporta mucha fibra (unos 4 g por receta), que ayuda a saciar.",
+    tips: [
+      "<b>Para que llene más:</b> como merienda grande, cómete la receta entera (~210 kcal y 32 g de proteína, casi sin grasa).",
+      "<b>Variantes:</b> chocolate-naranja, con ralladura de naranja. Moca, con 1 cdta. de café soluble. Más proteína: añade 15 g de proteína en polvo de chocolate y quita un poco de edulcorante.",
+      "<b>Sin gelatina:</b> queda como una crema de chocolate para tomar al momento, mejor con skyr para que sea más espesa."
+    ],
+    conserva: { nevera: "3 días, tapada con film.", congelar: "No: la textura se corta al descongelar." },
+    compra: [["batido", 300, "g"], ["cacao", 15, "g"], ["gelatina", 2, "láminas"], ["leche", 30, "ml"], ["vainilla", 1, "cdta."], ["frutos", 50, "g"], ["edulcorante", null]],
+    usa: ["batido", "skyr", "cacao", "gelatina", "leche", "edulcorante", "frutos", "proteina"]
+  },
+  {
+    id: "natillas", corto: "natillas", nombre: "Natillas fit",
+    cat: ["Merienda", "Postre"], met: ["Cazo"], ext: ["Aprovechamiento", "Sin gluten", "Genera claras"], tags: ["Aprovecha 2 yemas"],
+    gluten: "natural", lacteos: true,
+    raciones: 2, racionesTxt: "2 vasitos", tiempoTxt: "15 min + 2 h en la nevera", min: 135,
+    completa: { kcal: 250, p: 14, g: 10, c: 27 }, racion: { kcal: 125, p: 7, g: 5, c: 13 },
+    ingredientes: [
+      { t: "Ingredientes", items: ["<b>{2} yemas de huevo</b>, solo la yema: la clara cuajaría en grumos. Si separas huevos, las claras van a [[tortitas]] o [[hamburguesas]]", "{250} ml de leche desnatada", "{15} g de harina de maíz (Maizena)", "Edulcorante al gusto (eritritol o sucralosa)", "Canela en rama: {1}. Piel de limón: {0.5} (solo la parte amarilla)", "Canela en polvo para decorar"] }
+    ],
+    pasos: [
+      "<b>Reserva un chorrito</b> de leche fría (unos 30 ml) en un vaso.",
+      "<b>Infusiona:</b> calienta el resto de la leche con la canela en rama y la piel de limón hasta que casi hierva. Apaga el fuego y déjala reposar 5–10 min [[t:8]]. Después retira la canela y el limón.",
+      "<b>Mezcla aparte</b> las yemas, la Maizena, el edulcorante y la leche fría que reservaste hasta que no queden grumos.",
+      "<b>Atempera:</b> echa poco a poco un par de cucharadas de la leche caliente sobre las yemas sin dejar de remover. Así no se cuajan de golpe.",
+      "<b>Cuece:</b> vuelve a echarlo todo al cazo, a <b>fuego medio-bajo y removiendo sin parar</b>, hasta que espese y cubra la cuchara (unos 3–5 min) [[t:4]]. <b>Que no llegue a hervir fuerte</b>, o se cortan.",
+      "<b>Enfría:</b> reparte en vasitos, pon film en contacto con la superficie para que no se forme costra, y a la nevera al menos 2 horas [[t:120]]. Sirve con canela en polvo por encima."
+    ],
+    tabla: { cols: ["Receta completa", "Por ración (½)"], rows: [["Calorías", "~250 kcal", "~125 kcal"], ["Proteínas", "~14 g", "~7 g"], ["Grasas", "~10 g", "~5 g"], ["Carbohidratos", "~27 g", "~13 g"]] },
+    notaTabla: "",
+    tips: [
+      "<b>Variantes:</b> de chocolate, con 1 cucharada de cacao puro desgrasado en el paso 3 (+20 kcal). Con fruta, con unos frutos rojos o plátano en rodajas por encima. Más proteína: cambia 5 g de Maizena por 10 g de proteína en polvo de vainilla, añadida al final y fuera del fuego.",
+      "<b>Yemas guardadas:</b> sirven las de 1–2 días en la nevera, bien tapadas. Vienen de la [[cheesecake-airfryer]] o de las [[tortitas]]."
+    ],
+    conserva: { nevera: "2–3 días, con film pegado a la superficie.", congelar: "No: se cortan al descongelar." },
+    compra: [["huevos", 2, "ud. (solo yemas; o las que te sobren)"], ["leche", 250, "ml"], ["maizena", 15, "g"], ["canela", 1, "rama"], ["limon", 0.5, "ud."], ["edulcorante", null]],
+    usa: ["huevos", "leche", "maizena", "edulcorante", "cacao", "proteina"]
+  },
+  {
+    id: "tortilla", corto: "tortilla", nombre: "Tortilla de aprovechamiento con tomate",
+    cat: ["Cena"], met: ["Sartén"], ext: ["Aprovechamiento", "Sin gluten"], tags: ["Aprovecha 2 yemas", "Rápida"],
+    gluten: "natural", lacteos: true,
+    raciones: 1, racionesTxt: "1", tiempoTxt: "10 min", min: 10,
+    completa: { kcal: 285, p: 19, g: 18, c: 10 }, racion: { kcal: 285, p: 19, g: 18, c: 10 },
+    ingredientes: [
+      { t: "Ingredientes", items: ["Yemas de huevo: {2}, más huevos L enteros: {1}", "{2} cucharadas ({30} g) de queso fresco batido 0%: la deja más jugosa y suma proteína", "{100} g de verdura al gusto: espinacas, champiñones, cebolla o calabacín", "Tomate grande: {1} (unos {150} g), a la plancha o en crudo", "Unas gotas de aceite de oliva o spray (unos 3 g)", "Sal, pimienta, orégano"] }
+    ],
+    pasos: [
+      "<b>Saltea la verdura</b> en una sartén antiadherente con unas gotas de aceite hasta que suelte el agua. Sácala de la sartén.",
+      "<b>Bate</b> las yemas, el huevo entero, el queso batido, la sal y la pimienta. Añade la verdura.",
+      "<b>Cuaja</b> a fuego medio-bajo en la misma sartén, tapada, 3–4 min [[t:3]]. Dale la vuelta con ayuda de un plato y deja 1–2 min más.",
+      "<b>Sirve</b> con el tomate en rodajas, a la plancha o en crudo, con orégano."
+    ],
+    tabla: { cols: ["Ración completa", "Solo huevos (2 yemas + 1 huevo)"], rows: [["Calorías", "~285 kcal", "~195 kcal"], ["Proteínas", "~19 g", "~13 g"], ["Grasas", "~18 g", "~15 g"], ["Carbohidratos", "~10 g", "~2 g"]] },
+    notaTabla: "Es la receta con más grasa del libro, porque las yemas la concentran. Para que no suba más: nada de chorro de aceite, y mejor verdura que queso o embutido.",
+    tips: [
+      "<b>Más proteína sin más grasa:</b> añade 50 g de pavo en taquitos (+50 kcal, +10 g de proteína) o una lata pequeña de atún al natural (+60 kcal, +14 g de proteína).",
+      "<b>Solo con las 2 yemas</b>, sin el huevo entero, sale muy pequeña: más bien un revuelto."
+    ],
+    conserva: { nevera: "Mejor recién hecha. Si sobra, 1 día en la nevera.", congelar: "No." },
+    compra: [["huevos", 3, "ud. (o 1 + las 2 yemas que te sobren)"], ["batido", 30, "g"], ["verduras", 100, "g"], ["tomate", 1, "ud."], ["spray", null], ["especias", null]],
+    usa: ["huevos", "batido", "spray"]
+  },
+  {
+    id: "pollo", corto: "pollo especiado", nombre: "Pollo especiado con verduras",
+    cat: ["Cena"], met: ["Airfryer"], ext: ["Sin huevo", "Sin gluten"], tags: ["Alta proteína", "La que más llena"],
+    gluten: "natural", lacteos: true,
+    raciones: 1, racionesTxt: "1", tiempoTxt: "10 min + 15 min de airfryer", min: 30,
+    completa: { kcal: 330, p: 49, g: 7, c: 13 }, racion: { kcal: 330, p: 49, g: 7, c: 13 },
+    ingredientes: [
+      { t: "Pollo", items: ["{200} g de pechuga de pollo en tiras o dados", "{50} g de yogur natural 0% (lo deja jugoso)", "{1} cdta. de pimentón (dulce o picante), {0.5} cdta. de comino, ajo en polvo, orégano, sal y pimienta", "Zumo de limón: {0.5} (opcional)"] },
+      { t: "Verduras", items: ["{250} g de verduras en trozos: pimiento, calabacín, cebolla y champiñón", "Spray de aceite (unos 3 g en total)"] }
+    ],
+    pasos: [
+      "<b>Adoba el pollo:</b> mezcla el yogur, las especias, la sal y el limón, y embadurna bien el pollo. Si tienes tiempo, déjalo 15 min en la nevera [[t:15]] (o hasta la noche).",
+      "<b>Precalienta</b> la freidora Princess a 190 °C durante 3 minutos [[t:3]].",
+      "<b>Verduras primero:</b> pon las verduras en la bandeja con una pulverización de spray y una pizca de sal. Cocina 5 min a 190 °C [[t:5]].",
+      "<b>Añade el pollo</b> por encima, sin amontonarlo, y cocina <b>12–14 min a 190 °C</b> [[t:12]], removiendo a mitad.",
+      "<b>Comprueba:</b> el pollo tiene que estar blanco por dentro, sin nada rosa. Si tienes termómetro, 74 °C en el centro.",
+      "<b>Sirve</b> todo junto. Queda bien con un chorrito más de limón o una cucharada de yogur 0% con ajo y hierbas."
+    ],
+    tabla: { cols: ["Ración", "Con 150 g de patata asada"], rows: [["Calorías", "~330 kcal", "~445 kcal"], ["Proteínas", "~49 g", "~52 g"], ["Grasas", "~7 g", "~7 g"], ["Carbohidratos", "~13 g", "~38 g"]] },
+    notaTabla: "Cuentas con pechuga de pollo de 108 kcal y 1,8 g de grasa por 100 g (Hacendado). El aceite del spray es la mitad de la grasa del plato.",
+    tips: [
+      "<b>Para una cena más grande:</b> añade 150 g de patata en dados a la bandeja desde el principio, con las verduras, y alarga 5 min.",
+      "<b>Prepara de más:</b> haz el doble de pollo y guarda la mitad para una ensalada al día siguiente."
+    ],
+    conserva: { nevera: "3 días en un táper.", congelar: "Sí, cocinado, hasta 2 meses. O congela el pollo ya adobado y crudo." },
+    compra: [["pollo", 200, "g"], ["yogur", 50, "g"], ["verduras", 250, "g"], ["limon", 0.5, "ud."], ["especias", null], ["spray", null]],
+    usa: ["pollo", "yogur", "spray"]
+  },
+  {
+    id: "merluza", corto: "merluza en papillote", nombre: "Merluza en papillote",
+    cat: ["Cena"], met: ["Airfryer"], ext: ["Sin huevo", "Sin gluten", "Sin lácteos"], tags: ["Muy ligera", "Rápida"],
+    gluten: "natural", lacteos: false,
+    raciones: 1, racionesTxt: "1", tiempoTxt: "10 min + 15 min de airfryer", min: 25,
+    completa: { kcal: 245, p: 38, g: 6, c: 10 }, racion: { kcal: 245, p: 38, g: 6, c: 10 },
+    ingredientes: [
+      { t: "Ingredientes", items: ["{200} g de lomos de merluza (si son congelados, descongelados la noche antes)", "{200} g de verduras en láminas finas: calabacín, cebolla, pimiento y unos tomates cherry", "Limón: {1} (unas rodajas y el zumo de medio)", "Ajo: {1} diente picado, y perejil", "Spray de aceite (unos 3 g), sal y pimienta", "Opcional: {150} g de patata en láminas muy finas"] }
+    ],
+    pasos: [
+      "<b>Prepara el papel:</b> corta un rectángulo grande de papel de horno (unos 40 cm).",
+      "<b>Monta el paquete:</b> pon las verduras en el centro (y la patata, si la usas) con sal. Encima, la merluza seca con papel de cocina, con sal, pimienta, ajo, perejil y las rodajas de limón. Una pulverización de spray.",
+      "<b>Cierra</b> doblando los bordes del papel varias veces, como un sobre, para que no se escape el vapor.",
+      "<b>Precalienta</b> la freidora a 180 °C durante 3 minutos [[t:3]].",
+      "<b>Cocina</b> el paquete a <b>180 °C durante 12–15 min</b> [[t:13]] (con patata, 18–20 min).",
+      "<b>Comprueba:</b> la merluza está hecha cuando está blanca y se separa en láminas al pincharla. Abre con cuidado, que sale vapor, y añade el zumo de limón."
+    ],
+    tabla: { cols: ["Ración", "Con 150 g de patata"], rows: [["Calorías", "~245 kcal", "~360 kcal"], ["Proteínas", "~38 g", "~41 g"], ["Grasas", "~6 g", "~6 g"], ["Carbohidratos", "~10 g", "~35 g"]] },
+    notaTabla: "Cuentas con lomos de merluza de 82 kcal y 1,2 g de grasa por 100 g (Hacendado).",
+    tips: [
+      "<b>Para que no flote el papel</b> en la airfryer (el ventilador lo levanta), mete el paquete solo cuando ya lleva el pescado encima, nunca el papel vacío al precalentar.",
+      "<b>Otros pescados blancos</b> que funcionan igual: bacalao fresco, abadejo o lenguado. El salmón también, pero tiene bastante más grasa."
+    ],
+    conserva: { nevera: "Mejor recién hecha. Si sobra, 1 día en la nevera.", congelar: "No una vez cocinada." },
+    compra: [["merluza", 200, "g"], ["verduras", 200, "g"], ["limon", 1, "ud."], ["ajo", 1, "diente"], ["especias", null], ["spray", null]],
+    usa: ["merluza", "spray"]
+  },
+  {
+    id: "hamburguesas", corto: "hamburguesas de pavo", nombre: "Hamburguesas caseras de pavo",
+    cat: ["Cena"], met: ["Airfryer"], ext: ["Aprovechamiento", "Sin lácteos"], tags: ["Alta proteína", "Aprovecha 1 clara"],
+    gluten: "avena", lacteos: false,
+    raciones: 2, racionesTxt: "2 hamburguesas (ración = 1)", tiempoTxt: "15 min + 12 min de airfryer", min: 30,
+    completa: { kcal: 470, p: 82, g: 7, c: 16 }, racion: { kcal: 235, p: 41, g: 3.5, c: 8 },
+    ingredientes: [
+      { t: "Hamburguesas", items: ["{300} g de filetes de pechuga de pavo, picados en la picadora (o pídeselo al carnicero)", "Claras de huevo: {1} (unos {35} g). La que te sobre de las [[natillas]] sirve", "{20} g de copos de avena (las mantiene jugosas)", "Cebolla pequeña rallada: {0.5} (unos {50} g)", "Ajo: {1} diente, perejil, {0.5} cdta. de pimentón, sal y pimienta", "Spray de aceite"] },
+      { t: "Para acompañar (recomendado)", items: ["Ensalada grande: lechuga, tomate, pepino y cebolla, con vinagre y sal", "O pan integral (unos 60 g por ración, +150 kcal)"] }
+    ],
+    pasos: [
+      "<b>Pica el pavo</b> en la picadora a golpes cortos, hasta que quede como carne picada (no una pasta).",
+      "<b>Mezcla</b> el pavo con la clara, la avena, la cebolla rallada, el ajo picado, el perejil, el pimentón, la sal y la pimienta. Deja reposar 10 min [[t:10]] para que la avena se hidrate.",
+      "<b>Forma 2 hamburguesas</b> con las manos húmedas, de unos 2 cm de grosor. Haz un hueco con el pulgar en el centro: así no se abomban.",
+      "<b>Precalienta</b> la freidora a 190 °C durante 3 minutos [[t:3]].",
+      "<b>Cocina</b> con una pulverización de spray a <b>190 °C durante 10–12 min</b> [[t:11]], dándoles la vuelta a mitad.",
+      "<b>Comprueba:</b> por dentro no tiene que quedar nada rosa. Si tienes termómetro, 74 °C en el centro. Deja reposar 2 min antes de servir."
+    ],
+    tabla: { cols: ["Receta completa (2)", "Por hamburguesa", "1 + 60 g de pan integral"], rows: [["Calorías", "~470 kcal", "~235 kcal", "~385 kcal"], ["Proteínas", "~82 g", "~41 g", "~47 g"], ["Grasas", "~7 g", "~3,5 g", "~5,5 g"], ["Carbohidratos", "~16 g", "~8 g", "~33 g"]] },
+    notaTabla: "Cuentas con filete de pechuga de pavo de 112 kcal y 1,3 g de grasa por 100 g (Mercadona). La carne picada de pavo ya preparada suele llevar bastante más grasa: mira la etiqueta.",
+    tips: [
+      "<b>Con salsa sin grasa:</b> mostaza, o yogur 0% con ajo, limón y eneldo.",
+      "<b>Prepara de más:</b> forma 4–6 hamburguesas y congela las crudas, separadas con papel de horno."
+    ],
+    conserva: { nevera: "Crudas, 1 día. Cocinadas, 2 días.", congelar: "Sí, mejor crudas, hasta 3 meses. Se hacen directamente congeladas: 15–16 min a 190 °C." },
+    compra: [["pavo", 300, "g"], ["claras", 35, "ml (o la clara que te sobre)"], ["avena", 20, "g"], ["cebolla", 0.5, "ud."], ["ajo", 1, "diente"], ["especias", null], ["spray", null], ["verduras", 200, "g (ensalada)"]],
+    usa: ["pavo", "claras", "avena", "spray"]
+  }
+];
+
+/* ===================== INGREDIENTES (guía de marcas) ===================== */
+const OFF = c => "https://es.openfoodfacts.org/producto/" + c;
+const INGREDIENTES = [
+  { id: "batido", nombre: "Queso fresco batido 0%", pasillo: "Lácteos y huevos", rol: "La base de casi todo el libro: cheesecakes, mousse, tortitas.",
+    criterio: "Grasa <b>≤ 0,5 g</b> y proteína <b>≥ 8 g</b> por 100 g. Que ponga «0% M.G.» o «desnatado».",
+    productos: [
+      { marca: "Hacendado", nombre: "Queso fresco batido desnatado", tienda: "Mercadona", formato: "500 g", v: [46, 8, 0.5, 3.5], src: OFF("8480000510716") },
+      { marca: "Hacendado", nombre: "Queso fresco batido +proteínas", tienda: "Mercadona", formato: "—", v: [52, 10, 0.5, 3.1], src: OFF("8480000210036"), nota: "Más proteína con la misma grasa." },
+      { marca: "Milbona", nombre: "Queso batido", tienda: "Lidl", formato: "180 g", v: [67, 12.4, 0.4, 3.3], src: OFF("20987459"), nota: "El que más proteína tiene de la lista." },
+      { marca: "Margui", nombre: "Queso fresco batido", tienda: "Sin dato de tienda", formato: "500 g", v: [46, 7.5, 0, 4], src: OFF("8432022000713") }
+    ] },
+  { id: "skyr", nombre: "Skyr natural 0%", pasillo: "Lácteos y huevos", rol: "Alternativa al queso batido. Más espeso y con más proteína.",
+    criterio: "Proteína <b>≥ 10 g</b> y grasa <b>≤ 0,5 g</b> por 100 g. Natural, sin sabores ni azúcar añadido.",
+    aviso: "No he podido verificar una ficha concreta de skyr natural en una tienda española. Como referencia, el skyr natural de Arla tiene unos 61–63 kcal, 10–11 g de proteína y 0,2 g de grasa por 100 g según sus fichas de Reino Unido y Alemania.",
+    productos: [{ marca: "Arla", nombre: "Skyr natural", tienda: "En España, sin verificar", formato: "450 g", v: [61, 10, 0.2, null], src: "https://www.arlafoods.co.uk/brands/arla-skyr/natural-450g", unv: true }] },
+  { id: "yogur", nombre: "Yogur natural 0%", pasillo: "Lácteos y huevos", rol: "Para adobar el pollo y para salsas sin grasa.",
+    criterio: "Natural y <b>desnatado</b>, sin azúcar. Grasa <b>≤ 0,5 g</b> por 100 g.",
+    productos: [{ marca: "Hacendado", nombre: "Yogur natural 0%", tienda: "Mercadona", formato: "6 × 125 g", v: [36, 4.3, 0.1, 4.5], src: OFF("8480000202109") }] },
+  { id: "avena", nombre: "Copos de avena", pasillo: "Despensa", rol: "Base de las cheesecakes, masa de las tortitas y para que las hamburguesas queden jugosas.",
+    criterio: "Copos <b>100% avena</b>, sin azúcar ni frutas. Si necesitas sin gluten, que pongan «sin gluten» (la avena normal suele llevar trazas).",
+    productos: [
+      { marca: "Brüggen (para Mercadona)", nombre: "Copos de avena", tienda: "Mercadona", formato: "500 g", v: [375, 14, 7, 59], src: OFF("4008713756661") },
+      { marca: "Aldi", nombre: "Copos de avena XXL", tienda: "Aldi", formato: "—", v: [363, 12, 6.9, 59.6], src: OFF("2004060087153") },
+      { marca: "Ecocesta", nombre: "Copos gruesos de avena integral (ecológico)", tienda: "Carrefour, Alcampo, Consum", formato: "500 g", v: [347, 10.9, 5.7, 57.6], src: OFF("8422584013122") }
+    ] },
+  { id: "galletas", nombre: "Galletas para la base (alternativa)", pasillo: "Despensa", rol: "Si prefieres la base de galleta clásica en vez de avena.",
+    criterio: "«Sin azúcares añadidos» y la grasa más baja que encuentres por 100 g.",
+    aviso: "Las galletas tienen bastante más grasa que la avena: una base de 30 g de galleta son unos 5 g de grasa, frente a unos 2 g con 25 g de avena. Para el objetivo del libro, mejor avena.",
+    productos: [{ marca: "Gullón", nombre: "Digestive sin azúcares (Diet Nature)", tienda: "Consum (y otros súper)", formato: "400 g", v: [430, 6.2, 16, 68], src: OFF("8410376074307") }] },
+  { id: "claras", nombre: "Claras de huevo líquidas", pasillo: "Lácteos y huevos", rol: "Para tortitas, cheesecake y hamburguesas sin separar huevos.",
+    criterio: "<b>100% clara</b> de huevo pasteurizada. Unos 11 g de proteína por 100 g. 1 clara ≈ 35 ml.",
+    aviso: "No confundas con la «bebida de claras» con zumo de frutas: lleva zumo y edulcorante, no sirve para cocinar.",
+    productos: [
+      { marca: "Sin marca", nombre: "Claras de huevo líquidas pasteurizadas", tienda: "Mercadona", formato: "1 l", v: [48, 11, 0.1, 0.5], src: "https://finditapp.es/product/23540/claras-de-huevo-liquidas-pasteurizadas" },
+      { marca: "Huevos Guillén", nombre: "Claras de huevo pasteurizadas", tienda: "Sin dato de tienda", formato: "1000 ml", v: [42, 11, 0.1, 0.5], src: OFF("8411384100941") },
+      { marca: "Carrefour", nombre: "Clara de huevo pasteurizada", tienda: "Carrefour", formato: "320 ml", v: [46, 9.7, 0.5, 0.7], src: OFF("8431876338812") }
+    ] },
+  { id: "huevos", nombre: "Huevos L", pasillo: "Lácteos y huevos", rol: "Para la cheesecake (opciones B y C), las natillas y la tortilla.",
+    criterio: "Talla <b>L</b>: las cantidades están calculadas con ese tamaño. Cualquier marca sirve.",
+    nota: "Cada yema tiene unos 5 g de grasa y 55 kcal; la clara, casi nada. Para separarlos y guardar yemas, mira Trucos.", productos: [] },
+  { id: "leche", nombre: "Leche desnatada", pasillo: "Lácteos y huevos", rol: "Para disolver la gelatina y para las natillas.",
+    criterio: "Grasa <b>≤ 0,5 g</b> por 100 g. Cualquier marca blanca vale: son casi idénticas.",
+    productos: [
+      { marca: "Hacendado", nombre: "Leche desnatada", tienda: "Mercadona", formato: "1 l", v: [35, 3.2, 0.3, 4.9], src: OFF("8480000108487") },
+      { marca: "Central Lechera Asturiana", nombre: "Leche desnatada", tienda: "Varios súper", formato: "1 l", v: [34, 3.2, 0.2, 4.7], src: OFF("8410297012105") },
+      { marca: "Milsani", nombre: "Leche desnatada", tienda: "Aldi", formato: "1 l", v: [34, 3.3, 0.2, 4.8], src: OFF("24008105") },
+      { marca: "Carrefour", nombre: "Leche desnatada", tienda: "Carrefour", formato: "1 l", v: [35, 3.2, 0.5, 4.8], src: OFF("8431876011944") }
+    ] },
+  { id: "pollo", nombre: "Pechuga de pollo", pasillo: "Carne y pescado", rol: "Para el pollo especiado.",
+    criterio: "<b>Pechuga</b> sin piel, en filetes o entera. Grasa <b>≤ 2 g</b> por 100 g. Evita la ya adobada: lleva aceite y sal.",
+    productos: [{ marca: "Hacendado", nombre: "Pechuga de pollo", tienda: "Mercadona", formato: "—", v: [108, 22, 1.8, 0.5], src: OFF("2303682007922") }] },
+  { id: "pavo", nombre: "Pechuga de pavo (filetes)", pasillo: "Carne y pescado", rol: "Para las hamburguesas: se pica en casa o en la carnicería.",
+    criterio: "<b>Filetes o solomillo de pechuga</b>, sin piel. Grasa <b>≤ 2 g</b> por 100 g.",
+    aviso: "La carne picada de pavo ya preparada suele llevar más grasa y otros ingredientes, y no he encontrado una fiable. Mejor picar la pechuga. Y no confundas con la «pechuga de pavo» de charcutería (fiambre).",
+    productos: [
+      { marca: "Mercadona", nombre: "Filetes de pechuga de pavo", tienda: "Mercadona", formato: "600 g", v: [112, 25.1, 1.3, 0], src: OFF("2302794004225") },
+      { marca: "Mercadona", nombre: "Solomillo de pavo", tienda: "Mercadona", formato: "600 g", v: [109, 24.5, 1.2, 0], src: OFF("2325926003811") }
+    ] },
+  { id: "merluza", nombre: "Lomos de merluza", pasillo: "Congelados", rol: "Para la merluza en papillote.",
+    criterio: "<b>Lomos o filetes al natural</b>, sin rebozar ni salsas. Grasa <b>≤ 2 g</b> por 100 g. Los congelados son más baratos y van igual de bien.",
+    aviso: "Ojo con los «medallones» y la merluza rebozada o en salsa: pueden llevar harina y aceite (hasta 7 g de grasa por 100 g).",
+    productos: [
+      { marca: "Hacendado", nombre: "Lomos de merluza (congelados)", tienda: "Mercadona", formato: "—", v: [82, 18, 1.2, 0.4], src: OFF("8480000622129") },
+      { marca: "Hacendado", nombre: "Filetes de merluza (congelados)", tienda: "Mercadona", formato: "600 g", v: [82, 18, 1.2, 0.5], src: OFF("8480000622280") },
+      { marca: "Pescanova", nombre: "Medallones de merluza (al natural)", tienda: "Sin dato de tienda", formato: "475 g", v: [77, 15.8, 1.5, null], src: OFF("8410063093123") }
+    ] },
+  { id: "cacao", nombre: "Cacao puro desgrasado", pasillo: "Despensa", rol: "Para la mousse y las variantes de chocolate.",
+    criterio: "Que ponga <b>«cacao puro»</b> y no lleve azúcar. Si dice «desgrasado», mejor.",
+    aviso: "No lo confundas con el cacao soluble de desayuno (tipo Cola Cao o Nesquik): ese es casi todo azúcar.",
+    productos: [
+      { marca: "Valor", nombre: "Cacao puro desgrasado en polvo", tienda: "Mercadona", formato: "265 g", v: [375, 25.5, 16, 16.3], src: OFF("8410109121551"), nota: "La ficha da 16 g de grasa por 100 g: en la mousse (15 g) son unos 2 g." },
+      { marca: "Valor", nombre: "100% cacao puro natural", tienda: "Alcampo, Consum", formato: "250 g", v: [339, 25, 11, 17], src: OFF("8410109115543"), nota: "Menos grasa por 100 g según su ficha." }
+    ] },
+  { id: "gelatina", nombre: "Gelatina neutra en láminas", pasillo: "Despensa", rol: "Para que cuajen la cheesecake de nevera y la mousse.",
+    criterio: "<b>Neutra</b> (sin sabor) y <b>en láminas</b>. Cada lámina pesa unos 2 g.",
+    productos: [{ marca: "Hacendado", nombre: "Gelatina neutra en láminas", tienda: "Mercadona", formato: "20 g", v: null, src: "https://finditapp.es/supermercado/mercadona/gelatina", nota: "En estas cantidades sus calorías casi no cuentan." }] },
+  { id: "maizena", nombre: "Harina de maíz fina (Maizena)", pasillo: "Despensa", rol: "Cuaja la cheesecake de airfryer y espesa las natillas.",
+    criterio: "<b>Almidón o harina fina de maíz</b>, la de espesar. Maizena es la marca conocida; la de marca blanca sirve igual.",
+    nota: "No la confundas con la harina de maíz para arepas o tortitas mexicanas.", productos: [] },
+  { id: "edulcorante", nombre: "Edulcorante", pasillo: "Despensa", rol: "Para endulzar sin azúcar.",
+    criterio: "<b>Eritritol</b> o <b>sucralosa</b> (líquida o en polvo). 0 kcal.",
+    aviso: "La estevia pura puede dejar regusto amargo si te pasas. Si prefieres evitar el eritritol, usa sucralosa líquida.",
+    productos: [{ marca: "Hacendado", nombre: "Edulcorante eritritol y sucralosa", tienda: "Mercadona", formato: "200 g", v: null, src: "https://okdiario.com/economia/tremenda-locura-edulcorante-sano-mercadona-que-puesto-moda-10484374", nota: "1 g endulza como 5 g de azúcar. Dato de prensa de 2023: comprueba el envase.", unv: true }] },
+  { id: "frutos", nombre: "Frutos rojos congelados", pasillo: "Congelados", rol: "Cobertura y topping. Mucho volumen y fibra por muy pocas calorías.",
+    criterio: "<b>Solo fruta</b>, sin azúcar ni almíbar.",
+    productos: [{ marca: "Hacendado", nombre: "Mezcla de frutas rojas ultracongeladas", tienda: "Mercadona", formato: "300 g", v: [39, 0.9, 0, 5.5], src: OFF("8480000610263") }] },
+  { id: "queso-crema", nombre: "Queso crema light (opcional)", pasillo: "Lácteos y huevos", rol: "Solo si echas de menos el sabor clásico de cheesecake.",
+    criterio: "Úsalo poco: <b>30 g como mucho</b> por receta.",
+    aviso: "Aunque sea «light», tiene unos 11–12 g de grasa por 100 g. Por eso el libro no lo usa por defecto.",
+    productos: [{ marca: "Philadelphia", nombre: "Philadelphia Light", tienda: "Lidl, Alcampo, Ahorramás", formato: "200 g", v: [154, 5.9, 12, 4.1], src: OFF("7622210103338") }] },
+  { id: "proteina", nombre: "Proteína en polvo (opcional)", pasillo: "Despensa", rol: "Para subir la proteína en tortitas, cheesecake, mousse o natillas.",
+    criterio: "Whey o isolate de vainilla o chocolate con <b>≥ 70 g de proteína</b> por 100 g y poca grasa (≤ 7 g).",
+    nota: "No he verificado marcas concretas: hay muchísimas y cambian a menudo. Compara la etiqueta con este criterio.", productos: [] },
+  { id: "spray", nombre: "Spray de aceite", pasillo: "Despensa", rol: "Para la sartén y la airfryer.",
+    criterio: "<b>Aceite de oliva en spray</b>. 1–2 pulverizaciones bastan.",
+    nota: "Cada cucharada de aceite son unos 10 g de grasa. El spray es lo que más grasa ahorra en las cenas.", productos: [] }
+];
+
+/* Cosas de la lista de la compra que no tienen ficha de marca */
+const EXTRA_ING = {
+  levadura: ["Levadura química (polvo de hornear)", "Despensa"],
+  vainilla: ["Aroma de vainilla", "Despensa"],
+  canela: ["Canela (rama y polvo)", "Despensa"],
+  especias: ["Especias: pimentón, comino, ajo en polvo, orégano, pimienta", "Despensa"],
+  verduras: ["Verduras variadas (calabacín, pimiento, cebolla, champiñón, lechuga…)", "Fruta y verdura"],
+  tomate: ["Tomate", "Fruta y verdura"],
+  limon: ["Limón", "Fruta y verdura"],
+  cebolla: ["Cebolla", "Fruta y verdura"],
+  ajo: ["Ajo", "Fruta y verdura"]
+};
+const PASILLOS = ["Fruta y verdura", "Carne y pescado", "Lácteos y huevos", "Congelados", "Despensa", "Otros"];
+
+/* ===================== CONFIGURACIÓN ===================== */
+const SABOR = { "tortitas": "avena", "cheesecake-nevera": "frambuesa", "cheesecake-airfryer": "melocoton", "mousse": "cacao", "natillas": "vainilla", "tortilla": "espinaca", "pollo": "melocoton", "merluza": "vainilla", "hamburguesas": "espinaca" };
+const SABOR_MOMENTO = { Desayuno: "avena", Merienda: "frambuesa", Postre: "frambuesa", Cena: "espinaca" };
+const sabor = r => r.sabor || SABOR[r.id] || SABOR_MOMENTO[r.cat[0]] || "avena";
+const CATS = ["Desayuno", "Merienda", "Postre", "Cena"];
+const METS = ["Sin horno", "Airfryer", "Sartén", "Cazo"];
+const EXTS = ["Favoritas", "Sin huevo", "Sin gluten", "Sin lácteos", "Aprovechamiento"];
+const KEY_LABEL = { kcal: "calorías", p: "proteína", g: "grasa", c: "carbohidratos", p100: "lo que más llena", min: "tiempo", nombre: "nombre" };
+const LIM = { kcal: 500, p: 0, g: 20 }; // valores de "sin límite" de los deslizadores
+const DIAS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+const HUECOS = [["desayuno", "Desayuno", ["Desayuno"]], ["merienda", "Merienda", ["Merienda", "Postre"]], ["cena", "Cena", ["Cena"]]];
+
+/* Preferencias de este navegador (vista, orden…) */
+const prefs = {
+  get(k, d) { try { const v = localStorage.getItem("rf-" + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem("rf-" + k, JSON.stringify(v)); } catch (e) {} }
+};
+const state = {
+  q: "", cat: new Set(), met: new Set(), ext: new Set(),
+  maxK: LIM.kcal, minP: LIM.p, maxG: LIM.g,
+  sort: prefs.get("sort", "kcal"), dir: prefs.get("dir", "asc"), base: prefs.get("base", "racion"),
+  view: prefs.get("view", "mosaico"), opcion: "B", mult: 1, abierta: null, cookIdx: 0
+};
+
+/* ===================== UTILIDADES ===================== */
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const fmt = n => (n == null ? "—" : (Number.isInteger(n) ? String(n) : String(Math.round(n * 10) / 10).replace(".", ",")));
+const norm = s => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+const byId = id => RECETAS.find(r => r.id === id);
+const valores = (r, base, opcion) => (r.opciones ? r.opciones[opcion || r.opcionDefecto] : r)[base];
+const p100 = v => Math.round(v.p / v.kcal * 1000) / 10;
+const FRAC = { 0.25: "¼", 0.5: "½", 0.75: "¾" };
+function fmtQ(n) {
+  if (n >= 20) return String(Math.round(n));
+  const ent = Math.floor(n + 1e-9), dec = Math.round((n - ent) * 100) / 100;
+  if (dec === 0) return String(ent);
+  if (FRAC[dec]) return (ent || "") + FRAC[dec];
+  return String(Math.round(n * 10) / 10).replace(".", ",");
+}
+const scaleTxt = (t, m) => t.replace(/\{([\d.]+)\}/g, (x, n) => fmtQ(parseFloat(n) * m));
+const plainTxt = t => scaleTxt(t, 1).replace(/\[\[t:\d+\]\]/g, "").replace(/\[\[([a-z-]+)\]\]/g, (m, id) => (byId(id) ? byId(id).corto : m)).replace(/<[^>]+>/g, "");
+const refs = html => html.replace(/\[\[([a-z-]+)\]\]/g, (m, id) => { const r = byId(id); return r ? `<button type="button" class="xref" data-goto="${id}">${r.corto || r.nombre}</button>` : m; });
+const timersIn = (html, label) => html.replace(/\[\[t:(\d+)\]\]/g, (m, n) => `<button type="button" class="timer-btn" data-timer="${n}" data-label="${esc(label)}"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 0h4v2H6zM8 3a6.5 6.5 0 1 0 0 13A6.5 6.5 0 0 0 8 3zm.9 6.9V6H7.1v4.6l3 1.8.9-1.5z"/></svg>${n >= 60 ? fmt(n / 60) + " h" : n + " min"}</button>`);
+const fecha = iso => new Date(iso).toLocaleDateString("es-ES", { day: "numeric", month: "short" });
+let toastT = null;
+function toast(msg) { const t = $("#toast"); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => (t.hidden = true), 2600); }
+
+/* ===================== GUARDADO =====================
+   Siempre se guarda en este navegador. Si conectas GitHub (un token que solo da acceso
+   al repositorio privado de datos), además se sincroniza en datos.json de ese repositorio,
+   y las fotos van a su carpeta fotos/. Así se ve igual en el móvil y en el ordenador. */
+const GH = { owner: "hectorgarvi", repo: "recetario-datos", file: "datos.json" };
+const b64enc = str => { const bytes = new TextEncoder().encode(str); let bin = ""; for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000)); return btoa(bin); };
+const b64dec = b64 => { const bin = atob(b64.replace(/\n/g, "")); const bytes = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i); return new TextDecoder().decode(bytes); };
+const bufToB64 = buf => { const bytes = new Uint8Array(buf); let bin = ""; for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000)); return btoa(bin); };
+
+const Saved = {
+  mode: "local", // local | github | offline | error
+  error: "", token: "", sha: null,
+  recetas: {}, compra: { recetas: {}, tachados: {}, extra: [] }, plan: { dias: {} },
+  sucios: new Set(), tPush: null, subiendo: false, otraVez: false, fotosUrl: {},
+  async init() {
+    this.cargarLocal();
+    this.token = prefs.get("ghtoken", "");
+    if (this.token) await this.pull();
+    alCambiarDatos();
+    // Al volver a la página, trae lo último del otro dispositivo
+    document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible" && this.token && !this.sucios.size) this.pull().then(alCambiarDatos); });
+  },
+  datos() { return { recetas: this.recetas, compra: this.compra, plan: this.plan }; },
+  aplicar(d) {
+    this.recetas = d.recetas || {};
+    this.compra = Object.assign({ recetas: {}, tachados: {}, extra: [] }, d.compra || {});
+    this.plan = Object.assign({ dias: {} }, d.plan || {});
+  },
+  cargarLocal() { try { this.aplicar(JSON.parse(localStorage.getItem("rf-datos") || "{}")); } catch (e) {} },
+  guardarLocal() { try { localStorage.setItem("rf-datos", JSON.stringify(this.datos())); } catch (e) {} },
+  api(path, opts = {}) {
+    const headers = { Authorization: "Bearer " + this.token, Accept: opts.raw ? "application/vnd.github.raw+json" : "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28" };
+    if (opts.body) headers["Content-Type"] = "application/json";
+    const url = path.startsWith("https://") ? path : `https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${path}`;
+    return fetch(url, { method: opts.method || "GET", headers, body: opts.body, cache: "no-store" });
+  },
+  fallo(r) {
+    this.mode = "error";
+    this.error = r.status === 401 ? "El token no es válido o ha caducado. Crea uno nuevo y vuelve a conectar."
+      : r.status === 403 || r.status === 404 ? "El token no tiene permiso de escritura en el repositorio recetario-datos."
+      : "GitHub ha devuelto un error (" + r.status + "). Inténtalo más tarde.";
+  },
+  async pull() {
+    try {
+      const r = await this.api(GH.file);
+      if (r.status === 404) {
+        // ¿Existe el repositorio? Si sí, aún no hay datos: se suben los de este navegador
+        const rr = await this.api(`https://api.github.com/repos/${GH.owner}/${GH.repo}`);
+        if (!rr.ok) return this.fallo(rr);
+        this.sha = null; this.mode = "github"; this.sucios.add("todo"); this.programar(0); return;
+      }
+      if (!r.ok) return this.fallo(r);
+      const j = await r.json();
+      this.sha = j.sha;
+      if (!this.sucios.size) { this.aplicar(JSON.parse(b64dec(j.content))); this.guardarLocal(); }
+      this.mode = "github"; this.error = "";
+    } catch (e) { this.mode = "offline"; }
+  },
+  programar(ms = 1500) { clearTimeout(this.tPush); this.tPush = setTimeout(() => this.push(), ms); },
+  async push() {
+    if (!this.token) return;
+    if (this.subiendo) { this.otraVez = true; return; }
+    this.subiendo = true;
+    try {
+      const subir = () => this.api(GH.file, { method: "PUT", body: JSON.stringify({ message: "Actualizar datos del recetario", content: b64enc(JSON.stringify(this.datos(), null, 1)), ...(this.sha ? { sha: this.sha } : {}) }) });
+      let r = await subir();
+      if (r.status === 409 || r.status === 422) {
+        // Otro dispositivo guardó antes: se mezcla lo suyo con lo cambiado aquí
+        const rr = await this.api(GH.file);
+        if (rr.ok) {
+          const j = await rr.json(); this.sha = j.sha;
+          const remoto = JSON.parse(b64dec(j.content)), local = this.datos();
+          if (!this.sucios.has("todo")) {
+            const m = { recetas: Object.assign({}, remoto.recetas), compra: remoto.compra, plan: remoto.plan };
+            this.sucios.forEach(k => { if (k === "compra") m.compra = local.compra; else if (k === "plan") m.plan = local.plan; else if (k.startsWith("r-")) m.recetas[k.slice(2)] = local.recetas[k.slice(2)]; });
+            this.aplicar(m); this.guardarLocal();
+          }
+          r = await subir();
+        }
+      }
+      if (r.ok) { const j = await r.json(); this.sha = j.content.sha; this.sucios.clear(); this.mode = "github"; this.error = ""; }
+      else this.fallo(r);
+    } catch (e) { this.mode = "offline"; this.programar(15000); }
+    finally {
+      this.subiendo = false; estadoGuardado();
+      if (this.otraVez) { this.otraVez = false; this.programar(300); }
+    }
+  },
+  guardar(clave) {
+    this.guardarLocal();
+    if (this.token) { this.sucios.add(clave); this.programar(); }
+    return Promise.resolve();
+  },
+  receta(rid) { return this.recetas[rid] || { fav: false, hechas: [], nota: "", fotos: [] }; },
+  setReceta(rid, cambios) { this.recetas[rid] = Object.assign({}, this.receta(rid), cambios); return this.guardar("r-" + rid); },
+  setCompra() { return this.guardar("compra"); },
+  setPlan() { return this.guardar("plan"); },
+  async conectar(token) {
+    const prev = this.token; this.token = token;
+    const r = await this.api(`https://api.github.com/repos/${GH.owner}/${GH.repo}`).catch(() => null);
+    if (!r || !r.ok || !((await r.json()).permissions || {}).push) {
+      this.token = prev;
+      return r && r.status === 401 ? "Ese token no es válido. Cópialo entero, sin espacios." : "El token no da permiso de escritura en recetario-datos. Revisa el paso 3.";
+    }
+    prefs.set("ghtoken", token); await this.pull(); alCambiarDatos(); return "";
+  },
+  desconectar() { this.token = ""; prefs.set("ghtoken", ""); this.mode = "local"; this.error = ""; this.sha = null; alCambiarDatos(); },
+  /* Fotos: se reducen a 1200 px en JPEG antes de subirlas */
+  async subirFoto(file, rid) {
+    const bmp = await createImageBitmap(file, { imageOrientation: "from-image" });
+    const k = Math.min(1, 1200 / Math.max(bmp.width, bmp.height));
+    const cv = document.createElement("canvas"); cv.width = Math.round(bmp.width * k); cv.height = Math.round(bmp.height * k);
+    cv.getContext("2d").drawImage(bmp, 0, 0, cv.width, cv.height);
+    const blob = await new Promise(res => cv.toBlob(res, "image/jpeg", 0.82));
+    const path = `fotos/${rid}-${Date.now()}.jpg`;
+    const r = await this.api(path, { method: "PUT", body: JSON.stringify({ message: "Foto de " + rid, content: bufToB64(await blob.arrayBuffer()) }) });
+    if (!r.ok) throw new Error(String(r.status));
+    this.fotosUrl[path] = URL.createObjectURL(blob);
+    return path;
+  },
+  async urlFoto(path) {
+    if (this.fotosUrl[path]) return this.fotosUrl[path];
+    const r = await this.api(path, { raw: true });
+    if (!r.ok) return null;
+    return (this.fotosUrl[path] = URL.createObjectURL(await r.blob()));
+  },
+  async borrarFoto(path) {
+    const r = await this.api(path); if (!r.ok) return;
+    const { sha } = await r.json();
+    await this.api(path, { method: "DELETE", body: JSON.stringify({ message: "Quitar foto", sha }) });
+  }
+};
+function estadoGuardado() {
+  const t = Saved.mode === "github" ? (Saved.sucios.size ? "Guardando en GitHub…" : "Sincronizado con GitHub: se ve igual en el móvil y en el ordenador")
+    : Saved.mode === "offline" ? "Sin conexión: guardado en este navegador, se subirá a GitHub cuando vuelva la conexión"
+    : Saved.mode === "error" ? Saved.error
+    : "Se guarda solo en este navegador. Conecta GitHub en Trucos para sincronizar";
+  document.querySelectorAll(".savebar").forEach(b => { b.classList.toggle("on", Saved.mode === "github"); b.querySelector("span").textContent = t; });
+}
+function alCambiarDatos() {
+  estadoGuardado();
+  renderGrid();
+  renderPlan();
+  renderCompra();
+  renderConexion();
+  if (state.abierta && !$("#overlay").hidden) refrescarPersonal();
+}
+function renderConexion() {
+  const box = $("#gh-box"); if (!box) return;
+  box.innerHTML = Saved.token
+    ? `<p class="savebar"><i></i><span></span></p><div class="rowbtns"><button type="button" class="pbtn alt" id="gh-sync">Sincronizar ahora</button><button type="button" class="pbtn alt" id="gh-off">Desconectar este dispositivo</button></div>`
+    : `<p class="savebar"><i></i><span></span></p>
+      <ol style="margin:0;padding-left:20px;display:grid;gap:6px">
+        <li>Abre <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">crear token en GitHub</a> (con tu cuenta personal).</li>
+        <li>Ponle un nombre (por ejemplo «Recetario») y una caducidad.</li>
+        <li>En <b>Repository access</b> elige <b>Only select repositories</b> y marca solo <b>recetario-datos</b>. En <b>Permissions → Contents</b> elige <b>Read and write</b>.</li>
+        <li>Pulsa <b>Generate token</b>, cópialo y pégalo aquí. Hazlo una vez en cada dispositivo.</li>
+      </ol>
+      <div class="addrow"><input id="gh-token" type="password" autocomplete="off" placeholder="github_pat_…" aria-label="Token de GitHub"><button type="button" class="pbtn acc" id="gh-on">Conectar</button></div>
+      <p class="muted" id="gh-msg"></p>`;
+  estadoGuardado();
+}
+document.addEventListener("click", async e => {
+  if (e.target.id === "gh-on") {
+    const tok = $("#gh-token").value.trim(); if (!tok) return;
+    $("#gh-msg").textContent = "Comprobando…";
+    const err = await Saved.conectar(tok);
+    if (err) $("#gh-msg").textContent = err; else toast("Conectado con GitHub");
+  }
+  if (e.target.id === "gh-off") confirmar(e.target, "Pulsa otra vez para desconectar", () => { Saved.desconectar(); toast("Desconectado. Tus datos siguen en GitHub y en este navegador."); });
+  if (e.target.id === "gh-sync") { await Saved.pull(); if (Saved.sucios.size) await Saved.push(); alCambiarDatos(); toast("Sincronizado"); }
+});
+
+/* ===================== RECETAS: LISTADO ===================== */
+function chipGroup(el, list, set, cls) {
+  el.innerHTML = list.map(x => `<button type="button" class="${cls}" aria-pressed="false" data-v="${x}">${x === "Favoritas" ? "♥ Favoritas" : x}</button>`).join("");
+  el.addEventListener("click", e => {
+    const b = e.target.closest("[data-v]"); if (!b) return;
+    set.has(b.dataset.v) ? set.delete(b.dataset.v) : set.add(b.dataset.v);
+    b.setAttribute("aria-pressed", set.has(b.dataset.v)); renderGrid();
+  });
+}
+function matches(r) {
+  if (state.cat.size && !r.cat.some(c => state.cat.has(c))) return false;
+  if (state.met.size && !r.met.some(c => state.met.has(c))) return false;
+  for (const x of state.ext) {
+    if (x === "Favoritas") { if (!Saved.receta(r.id).fav) return false; }
+    else if (!r.ext.includes(x)) return false;
+  }
+  const v = valores(r, "racion");
+  if (state.maxK < LIM.kcal && v.kcal > state.maxK) return false;
+  if (state.minP > LIM.p && v.p < state.minP) return false;
+  if (state.maxG < LIM.g && v.g > state.maxG) return false;
+  if (state.q) {
+    const hay = norm([r.nombre, ...r.cat, ...r.met, ...r.tags, ...r.ingredientes.flatMap(g => g.items).map(plainTxt)].join(" "));
+    if (!norm(state.q).split(/\s+/).filter(Boolean).every(w => hay.includes(w))) return false;
+  }
+  return true;
+}
+function sortVal(r) {
+  const v = valores(r, state.base);
+  if (state.sort === "p100") return p100(v);
+  if (state.sort === "min") return r.min;
+  if (state.sort === "nombre") return norm(r.nombre);
+  return v[state.sort];
+}
+const favMark = r => (Saved.receta(r.id).fav ? '<span class="fav" aria-label="Favorita">♥</span>' : "");
+function renderGrid() {
+  const list = RECETAS.filter(matches).sort((a, b) => {
+    const x = sortVal(a), y = sortVal(b);
+    const d = typeof x === "string" ? x.localeCompare(y) : x - y;
+    return state.dir === "asc" ? d : -d;
+  });
+  const n = state.met.size + state.ext.size + (state.base === "completa" ? 1 : 0) + (state.maxK < LIM.kcal) + (state.minP > LIM.p) + (state.maxG < LIM.g);
+  $("#nfilters").hidden = !n; $("#nfilters").textContent = n;
+  $("#count").textContent = list.length === RECETAS.length ? `${list.length} recetas, valores ${state.base === "racion" ? "por ración" : "de la receta completa"}` : `${list.length} de ${RECETAS.length} recetas`;
+  $("#dir").textContent = state.dir === "asc" ? "↑" : "↓";
+  $("#dir").setAttribute("aria-label", state.dir === "asc" ? "De menor a mayor. Pulsa para invertir" : "De mayor a menor. Pulsa para invertir");
+  const grid = $("#grid");
+  if (!list.length) {
+    grid.className = "grid";
+    grid.innerHTML = `<div class="empty">Ninguna receta cumple todos los filtros.<br><button type="button" class="btn-text" data-clear>Quitar filtros</button></div>`;
+    return;
+  }
+  grid.className = state.view === "lista" ? "list" : state.view === "tabla" ? "" : "grid";
+  if (state.view === "lista") { grid.innerHTML = list.map(listRow).join(""); return; }
+  if (state.view === "tabla") { grid.innerHTML = cmpTable(list); return; }
+  grid.innerHTML = list.map(r => {
+    const v = valores(r, state.base);
+    const on = k => (state.sort === k ? ' class="on"' : "");
+    const sub = r.opciones ? "Valores de la opción B" : (state.base === "racion" && r.raciones > 1 ? `1 ración de ${r.raciones}` : (r.min < 60 ? r.min + " min" : ""));
+    return `<button type="button" class="card f-${sabor(r)}" data-open="${r.id}" aria-label="${esc(r.nombre)}, ${fmt(v.kcal)} kcal">
+      <span class="blob"></span>${favMark(r)}
+      <div class="kind">${[...r.cat.slice(0, 1), ...r.met].map(t => `<span>${t}</span>`).join("")}</div>
+      <div><h3>${r.nombre}</h3></div>
+      <div style="display:grid;gap:8px">
+        <div class="kcal">${fmt(v.kcal)}<small>kcal</small></div>
+        <div class="mac"><span${on("p")}>${fmt(v.p)} g prot.</span><span${on("g")}>${fmt(v.g)} g grasa</span><span${on("c")}>${fmt(v.c)} g carb.</span></div>
+        <div class="sub">${sub}</div>
+      </div>
+    </button>`;
+  }).join("");
+  grid.classList.toggle("tall", list.length >= 4);
+  fitLast();
+}
+function listRow(r) {
+  const v = valores(r, state.base);
+  const on = k => (state.sort === k ? " on" : "");
+  return `<button type="button" class="lrow f-${sabor(r)}" data-open="${r.id}">${favMark(r)}
+    <div class="sw"><b>${fmt(v.kcal)}</b><span>kcal</span></div>
+    <div class="info">
+      <div class="kind">${[...r.cat, ...r.met].map(t => `<span>${t}</span>`).join("")}</div>
+      <h3>${r.nombre}</h3>
+      <div class="mac"><span class="p${on("p")}">${fmt(v.p)} g prot.</span><span class="g${on("g")}">${fmt(v.g)} g grasa</span><span class="c${on("c")}">${fmt(v.c)} g carb.</span><span style="color:var(--ink-soft)">${r.tiempoTxt}</span></div>
+    </div>
+  </button>`;
+}
+function cmpTable(list) {
+  const cols = [["nombre", "Receta"], ["kcal", "kcal"], ["p", "Proteína"], ["g", "Grasa"], ["c", "Carb."], ["p100", "Prot./100 kcal"], ["min", "Tiempo"]];
+  const arrow = state.dir === "asc" ? " ↑" : " ↓";
+  const head = cols.map(([k, t], i) => `<th class="${i ? "n" : ""}"${state.sort === k ? ` aria-sort="${state.dir === "asc" ? "ascending" : "descending"}"` : ""}><button type="button" data-sortkey="${k}">${t}${state.sort === k ? arrow : ""}</button></th>`).join("");
+  const mins = m => (m < 60 ? m + " min" : fmt(Math.round(m / 30) / 2) + " h");
+  const rows = list.map(r => {
+    const v = valores(r, state.base);
+    return `<tr class="f-${sabor(r)}"><td class="name"><button type="button" data-open="${r.id}"><i></i>${r.nombre}${r.opciones ? " (B)" : ""}${Saved.receta(r.id).fav ? " ♥" : ""}</button></td>
+      <td class="n">${fmt(v.kcal)}</td><td class="n p">${fmt(v.p)} g</td><td class="n g">${fmt(v.g)} g</td><td class="n c">${fmt(v.c)} g</td><td class="n">${fmt(p100(v))} g</td><td class="n">${mins(r.min)}</td></tr>`;
+  }).join("");
+  return `<div class="cmp-wrap"><table class="cmp"><thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+function fitLast() {
+  const grid = $("#grid"), cards = grid.querySelectorAll(".card");
+  if (!grid.classList.contains("grid")) return;
+  cards.forEach(c => (c.style.gridColumn = ""));
+  const cols = getComputedStyle(grid).gridTemplateColumns.split(" ").length;
+  if (cols < 2 || cards.length < 2) return;
+  const feature = cols >= 3 && grid.classList.contains("tall") ? 4 : 2;
+  const rem = (feature + cards.length - 1) % cols;
+  if (rem) cards[cards.length - 1].style.gridColumn = "span " + (cols - rem + 1);
+}
+window.addEventListener("resize", () => fitLast());
+
+/* ===================== FICHA DE RECETA ===================== */
+function splitHTML(v) {
+  const kp = v.p * 4, kc = v.c * 4, kg = v.g * 9, t = kp + kc + kg || 1, pc = x => Math.round(x / t * 100);
+  return `<div class="split">
+    <div class="bar" role="img" aria-label="De dónde vienen las calorías: proteína ${pc(kp)} %, carbohidratos ${pc(kc)} %, grasa ${pc(kg)} %"><i class="bp" style="width:${kp / t * 100}%"></i><i class="bc" style="width:${kc / t * 100}%"></i><i class="bg" style="width:${kg / t * 100}%"></i></div>
+    <div class="legend"><span><i style="background:var(--prot)"></i>${fmt(v.p)} g proteína</span><span><i style="background:var(--carb)"></i>${fmt(v.c)} g carbohidratos</span><span><i style="background:var(--fat)"></i>${fmt(v.g)} g grasa</span></div>
+  </div>`;
+}
+const MULTS = [0.5, 1, 2, 3];
+function ingHTML(r, m) {
+  const op = r.opciones ? r.opciones[state.opcion] : null;
+  let n = 0;
+  return r.ingredientes.map(g => `${r.ingredientes.length > 1 || g.t !== "Ingredientes" ? `<h4>${g.t}</h4>` : ""}<ul class="checklist">${g.items.map(i => `<li><label><input type="checkbox" id="ck-${r.id}-${n++}"><span>${refs(scaleTxt(i.replace("{{opcion}}", op ? "<b>" + state.opcion + ") " + op.txt + "</b>" : ""), m))}</span></label></li>`).join("")}</ul>`).join("");
+}
+function renderDetail(r) {
+  const op = r.opciones ? r.opciones[state.opcion] : null;
+  const m = state.mult;
+  const v1 = valores(r, "racion", state.opcion), vc = valores(r, "completa", state.opcion);
+  const racTot = r.raciones * m;
+  const optSel = r.opciones ? `<div class="optsel"><div class="opts" role="group" aria-label="Opción de huevo">${Object.entries(r.opciones).map(([k, o]) => `<button type="button" data-op="${k}" aria-pressed="${k === state.opcion}">${k}) ${o.corto}</button>`).join("")}</div><p>${op.desc}</p></div>` : "";
+  const scale = `<div class="scale"><span style="font-weight:700">Cantidades para</span><div class="opts" role="group" aria-label="Cantidades">${MULTS.map(x => `<button type="button" data-mult="${x}" aria-pressed="${x === m}">×${fmtQ(x)}</button>`).join("")}</div><span style="font-size:.9rem;opacity:.85">${fmtQ(racTot)} ${racTot === 1 ? "ración" : "raciones"}</span></div>`;
+  const t = r.tabla;
+  const head = `<tr><th>${t.firstCol || ""}</th>${t.cols.map(c => `<th class="n">${c}</th>`).join("")}</tr>`;
+  const body = t.rows.map(row => `<tr class="${r.opciones && row[0].startsWith(state.opcion + ")") ? "hl" : ""}"><td><b>${row[0]}</b></td>${row.slice(1).map(c => `<td class="n">${c}</td>`).join("")}</tr>`).join("");
+  const gl = r.gluten === "natural" ? "Sus ingredientes no llevan gluten. Si eres celíaco, revisa las trazas en las etiquetas." : "Usa copos de avena con la etiqueta «sin gluten»; el resto no lleva gluten.";
+  const lc = r.lacteos ? "Cambia los lácteos por sus versiones «sin lactosa» (comprueba que sigan siendo 0% grasa)." : "No lleva lácteos.";
+  const sheet = $("#sheet");
+  sheet.className = "sheet f-" + sabor(r);
+  sheet.innerHTML = `
+    <div class="hero">
+      <div class="hero-bar"><button class="close" id="back" type="button">Cerrar</button>
+        <div class="hero-actions"><button type="button" class="hbtn" id="fav-btn" aria-pressed="false">♡ Favorita</button></div></div>
+      <div class="facts">${[...r.cat, ...r.met].map(x => `<span>${x}</span>`).join("")}</div>
+      <h2 id="d-title">${r.nombre}</h2>
+      <div class="facts"><span>${r.tiempoTxt}</span><span>Raciones: ${r.racionesTxt}</span>${r.molde ? `<span>${r.molde}</span>` : ""}</div>
+      ${optSel}
+      <div class="hero-num"><div class="big">${fmt(v1.kcal)}<small>kcal</small></div><div class="per">${r.raciones > 1 ? `por ración<br>${fmt(vc.kcal)} kcal la receta entera` : "la ración"}</div></div>
+      ${splitHTML(v1)}
+      ${scale}
+      <div class="hero-actions"><button type="button" class="hbtn big" data-cook>Empezar a cocinar</button><button type="button" class="hbtn" data-addshop>Añadir a la compra</button></div>
+    </div>
+    <div class="body">
+      <section><h3>Ingredientes</h3><div id="ings">${ingHTML(r, m)}</div></section>
+      <section><h3>Cómo se hace</h3><ol class="steps">${r.pasos.map((p, i) => `<li><div>${timersIn(refs(p), r.corto + ", paso " + (i + 1))}</div></li>`).join("")}</ol></section>
+      <section><h3>Valores aproximados</h3><div class="tbl-wrap"><table>${head}${body}</table></div>${r.notaTabla ? `<p class="note">${r.notaTabla}</p>` : ""}${m !== 1 ? `<p class="note">Haciendo ×${fmtQ(m)}, la receta entera son unas ${fmt(Math.round(vc.kcal * m))} kcal; cada ración sigue igual.</p>` : ""}</section>
+      ${r.tips.length ? `<div class="tip">${r.tips.map(x => `<p>${refs(x)}</p>`).join("")}</div>` : ""}
+      <section><h3>Conservación e intolerancias</h3><div class="facts2">
+        <div><b>Nevera</b><p>${r.conserva.nevera}</p></div>
+        <div><b>Congelador</b><p>${r.conserva.congelar}</p></div>
+        <div><b>Sin gluten</b><p>${gl}</p></div>
+        <div><b>Sin lactosa</b><p>${lc}</p></div>
+      </div></section>
+      <section id="personal"></section>
+      <div class="buy"><b>Qué marca comprar</b><div class="links">${r.usa.map(id => INGREDIENTES.find(i => i.id === id)).filter(Boolean).map(i => `<a href="#ing-${i.id}" data-ing="${i.id}">${i.nombre}</a>`).join("")}</div></div>
+    </div>`;
+  $("#back").addEventListener("click", closeRecipe);
+  refrescarPersonal();
+}
+/* Parte personal de la ficha: favorita, "la he hecho", notas y fotos */
+function refrescarPersonal() {
+  const r = byId(state.abierta); if (!r) return;
+  const d = Saved.receta(r.id);
+  const fb = $("#fav-btn");
+  if (fb) { fb.setAttribute("aria-pressed", !!d.fav); fb.textContent = d.fav ? "♥ Favorita" : "♡ Favorita"; }
+  const box = $("#personal"); if (!box) return;
+  const ta = box.querySelector("textarea");
+  const editando = ta && document.activeElement === ta;
+  const hechas = d.hechas || [];
+  const hechasTxt = hechas.length ? `La has hecho ${hechas.length} ${hechas.length === 1 ? "vez" : "veces"}. La última, el ${fecha(hechas[hechas.length - 1])}.` : "Todavía no la has marcado como hecha.";
+  const fotos = (d.fotos || []).map(p => `<div class="photo"><img data-foto="${esc(p)}" alt="Foto de ${esc(r.nombre)}">${Saved.token ? `<button type="button" data-delfoto="${esc(p)}">Quitar</button>` : ""}</div>`).join("");
+  const sinGuardar = false;
+  const html = `<h3>Lo tuyo</h3>
+    <div style="display:grid;gap:14px">
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button type="button" class="pbtn" data-hecha ${sinGuardar ? "disabled" : ""}>La he hecho hoy</button><span class="muted">${hechasTxt}</span>${hechas.length ? '<button type="button" class="x" data-deshacer>Deshacer la última</button>' : ""}</div>
+      <div class="notes"><label for="nota" style="font-weight:700">Mis notas</label><textarea id="nota" placeholder="Por ejemplo: con el batido de Lidl queda más firme. La próxima vez, menos edulcorante.">${esc(d.nota || "")}</textarea><div class="st" id="nota-st"></div></div>
+      <div><b>Mis fotos</b>
+        ${Saved.token ? `<div class="photos" style="margin-top:8px">${fotos}<label class="upload" style="position:relative">+ Añadir foto<input type="file" accept="image/*" id="foto-in"></label></div>`
+          : `<p class="muted">Las fotos se guardan en tu GitHub. Para subirlas y verlas, <a href="#trucos" data-tabgo="trucos">conecta GitHub</a>.</p>`}
+      </div>
+      <p class="savebar"><i></i><span></span></p>
+    </div>`;
+  if (editando) {
+    // No tocar la nota mientras se escribe; solo lo demás
+    const keep = ta.value;
+    box.innerHTML = html; const nt = box.querySelector("textarea"); nt.value = keep; nt.focus();
+  } else box.innerHTML = html;
+  box.querySelectorAll("img[data-foto]").forEach(async img => { const u = await Saved.urlFoto(img.dataset.foto).catch(() => null); if (u) img.src = u; });
+  estadoGuardado();
+}
+let notaT = null;
+document.addEventListener("input", e => {
+  if (e.target.id !== "nota") return;
+  const rid = state.abierta, val = e.target.value;
+  $("#nota-st").textContent = "Escribiendo…";
+  clearTimeout(notaT);
+  notaT = setTimeout(async () => { await Saved.setReceta(rid, { nota: val }); const st = $("#nota-st"); if (st) st.textContent = "Nota guardada"; }, 900);
+});
+document.addEventListener("change", async e => {
+  if (e.target.id !== "foto-in" || !e.target.files[0]) return;
+  const file = e.target.files[0], rid = state.abierta;
+  if (!Saved.token) return;
+  toast("Subiendo la foto…");
+  try {
+    const path = await Saved.subirFoto(file, rid);
+    const d = Saved.receta(rid);
+    await Saved.setReceta(rid, { fotos: [...(d.fotos || []), path] });
+    toast("Foto guardada");
+  } catch (err) {
+    toast(err && err.name === "InvalidStateError" ? "No se ha podido leer esa imagen. Prueba con JPG o PNG." : "No se ha podido subir la foto. Revisa la conexión e inténtalo de nuevo.");
+  }
+  refrescarPersonal();
+});
+
+let lastFocus = null;
+function openRecipe(id, push = true) {
+  const r = byId(id); if (!r) return;
+  if (state.abierta !== id) { state.mult = 1; if (r.opciones) state.opcion = r.opcionDefecto; }
+  state.abierta = id;
+  if ($("#overlay").hidden) lastFocus = document.activeElement;
+  renderDetail(r);
+  $("#overlay").hidden = false; $("#sheet").scrollTop = 0;
+  document.body.style.overflow = "hidden";
+  if (push) history.replaceState(null, "", "#" + id);
+  $("#back").focus();
+}
+function closeRecipe() {
+  if ($("#overlay").hidden) return;
+  $("#overlay").hidden = true; document.body.style.overflow = ""; state.abierta = null;
+  history.replaceState(null, "", "#" + (prefs.get("tab", "recetas")));
+  if (lastFocus && document.contains(lastFocus)) lastFocus.focus();
+}
+function rerenderDetail() { const top = $("#sheet").scrollTop; renderDetail(byId(state.abierta)); $("#sheet").scrollTop = top; }
+
+/* ===================== MODO COCINA ===================== */
+let wake = null;
+async function pedirWake() {
+  try { wake = await navigator.wakeLock.request("screen"); wake.addEventListener("release", () => { wake = null; pintarWake(); }); } catch (e) { wake = null; }
+  pintarWake();
+}
+function pintarWake() { const w = $("#wake"); if (w) w.textContent = wake ? "La pantalla no se apagará" : "Tu navegador no deja mantener la pantalla encendida"; }
+document.addEventListener("visibilitychange", () => { if (!$("#cook").hidden && document.visibilityState === "visible" && !wake) pedirWake(); });
+function openCook() {
+  state.cookIdx = 0; $("#cook").hidden = false; renderCook(); pedirWake(); ensureAudio();
+}
+function closeCook() { $("#cook").hidden = true; try { wake && wake.release(); } catch (e) {} wake = null; $("#sheet").focus?.(); }
+function renderCook() {
+  const r = byId(state.abierta), i = state.cookIdx, n = r.pasos.length;
+  const c = $("#cook");
+  c.className = "cook f-" + sabor(r);
+  c.innerHTML = `
+    <div class="cook-top"><button type="button" class="close" data-cookclose>Salir</button><span class="prog">Paso ${i + 1} de ${n}</span><button type="button" class="close" data-cookings aria-expanded="false">Ingredientes</button></div>
+    <div class="cook-body">
+      <div class="cook-ings" id="cook-ings" hidden>${ingHTML(r, state.mult)}</div>
+      <div class="stepnum">${i + 1}</div>
+      <div class="steptxt">${timersIn(refs(r.pasos[i]), r.corto + ", paso " + (i + 1))}</div>
+      <p class="wake" id="wake"></p>
+    </div>
+    <div class="cook-nav"><button type="button" data-cookprev ${i === 0 ? "disabled" : ""}>Anterior</button><button type="button" class="next" data-cooknext>${i === n - 1 ? "Terminar" : "Siguiente"}</button></div>`;
+  pintarWake();
+}
+
+/* ===================== TEMPORIZADORES ===================== */
+let timers = [], tick = null, audio = null;
+function ensureAudio() { try { audio = audio || new (window.AudioContext || window.webkitAudioContext)(); if (audio.state === "suspended") audio.resume(); } catch (e) {} }
+function beep() {
+  if (!audio) return;
+  try {
+    [0, .35, .7].forEach(t => { const o = audio.createOscillator(), g = audio.createGain(); o.frequency.value = 880; g.gain.value = .15; o.connect(g); g.connect(audio.destination); o.start(audio.currentTime + t); o.stop(audio.currentTime + t + .2); });
+  } catch (e) {}
+  try { navigator.vibrate && navigator.vibrate([300, 150, 300]); } catch (e) {}
+}
+function addTimer(min, label) {
+  ensureAudio();
+  timers.push({ id: Date.now() + Math.random(), label, end: Date.now() + min * 60000, done: false });
+  if (!tick) tick = setInterval(renderTimers, 1000);
+  renderTimers(); toast(`Temporizador de ${min >= 60 ? fmt(min / 60) + " h" : min + " min"} en marcha`);
+}
+function renderTimers() {
+  const now = Date.now();
+  timers.forEach(t => { if (!t.done && t.end <= now) { t.done = true; beep(); } });
+  $("#timers").innerHTML = timers.map(t => {
+    const s = Math.max(0, Math.round((t.end - now) / 1000)), h = Math.floor(s / 3600), mm = Math.floor(s % 3600 / 60), ss = s % 60;
+    const txt = t.done ? "¡Listo!" : (h ? `${h}:${String(mm).padStart(2, "0")}:${String(ss).padStart(2, "0")}` : `${mm}:${String(ss).padStart(2, "0")}`);
+    return `<div class="timer${t.done ? " done" : ""}"><span class="t">${txt}</span><span class="l">${esc(t.label)}</span>${t.done ? "" : `<button type="button" data-tplus="${t.id}">+1 min</button>`}<button type="button" data-tstop="${t.id}">${t.done ? "Vale" : "Parar"}</button></div>`;
+  }).join("");
+  if (!timers.length && tick) { clearInterval(tick); tick = null; }
+}
+
+/* ===================== LISTA DE LA COMPRA ===================== */
+const ingNombre = id => (INGREDIENTES.find(i => i.id === id) || {}).nombre || (EXTRA_ING[id] || [id])[0];
+const ingPasillo = id => (INGREDIENTES.find(i => i.id === id) || {}).pasillo || (EXTRA_ING[id] || [, "Otros"])[1];
+function addToShop(rid, mult, opcion) {
+  const r = byId(rid); const key = r.opciones ? rid + "|" + (opcion || r.opcionDefecto) : rid;
+  const cur = Saved.compra.recetas[key];
+  Saved.compra.recetas[key] = { id: rid, opcion: r.opciones ? (opcion || r.opcionDefecto) : null, mult: (cur ? cur.mult : 0) + mult };
+  Saved.setCompra(); renderCompra();
+}
+function agregarCompra() {
+  const items = {};
+  Object.values(Saved.compra.recetas).forEach(e => {
+    const r = byId(e.id); if (!r) return;
+    const lista = [...r.compra, ...(r.opciones && e.opcion ? r.opciones[e.opcion].compra : [])];
+    lista.forEach(([ing, cant, ud]) => {
+      const key = ing + "|" + (ud || "");
+      const it = items[key] || (items[key] = { key, ing, ud: ud || "", cant: 0, gusto: cant == null, de: new Set() });
+      if (cant != null) { it.cant += cant * e.mult; it.gusto = false; }
+      it.de.add(r.corto);
+    });
+  });
+  return Object.values(items);
+}
+function renderCompra() {
+  const recs = Object.entries(Saved.compra.recetas);
+  $("#shop-recipes").innerHTML = recs.length ? recs.map(([k, e]) => {
+    const r = byId(e.id); if (!r) return "";
+    return `<div class="inrow f-${sabor(r)}"><span class="sw"></span><span class="n">${r.nombre}${e.opcion ? ` (${e.opcion})` : ""}</span>
+      <div class="stepper"><button type="button" data-shopminus="${k}" aria-label="Una menos">−</button><span>×${fmtQ(e.mult)}</span><button type="button" data-shopplus="${k}" aria-label="Una más">+</button></div>
+      <button type="button" class="x" data-shopdel="${k}" aria-label="Quitar ${esc(r.nombre)}">✕</button></div>`;
+  }).join("") : `<p class="muted">Todavía no hay recetas. Ábrelas y pulsa «Añadir a la compra», o añade tu plan de la semana desde Plan.</p>`;
+  const items = agregarCompra();
+  const tach = Saved.compra.tachados || {};
+  const grupos = PASILLOS.map(p => [p, items.filter(it => ingPasillo(it.ing) === p)]).filter(([, l]) => l.length);
+  const extra = Saved.compra.extra || [];
+  const fila = (key, label, q, link) => `<li><label><input type="checkbox" data-tach="${esc(key)}" ${tach[key] ? "checked" : ""}><span class="lbl">${label}${link}</span><span class="q">${q}</span></label></li>`;
+  let html = grupos.map(([p, l]) => `<div class="aisle"><h4>${p}</h4><ul class="checklist">${l.map(it => {
+    const ficha = INGREDIENTES.some(i => i.id === it.ing) ? `<a href="#ing-${it.ing}" data-ingtab="${it.ing}">marcas</a>` : "";
+    const q = it.gusto ? "al gusto" : `${fmtQ(it.cant)} ${it.ud}`;
+    return fila(it.key, esc(ingNombre(it.ing)), q, ficha);
+  }).join("")}</ul></div>`).join("");
+  if (extra.length) html += `<div class="aisle"><h4>Otros</h4><ul class="checklist">${extra.map(x => `<li><label><input type="checkbox" data-tach="x-${x.id}" ${tach["x-" + x.id] ? "checked" : ""}><span class="lbl">${esc(x.txt)}</span><button type="button" class="x" data-extradel="${x.id}" aria-label="Quitar ${esc(x.txt)}">✕</button></label></li>`).join("")}</ul></div>`;
+  $("#shop-items").innerHTML = html || `<p class="muted">La lista está vacía.</p>`;
+  estadoGuardado();
+}
+function confirmar(btn, aviso, accion) {
+  // Confirmación en dos toques, dentro de la página
+  if (btn.dataset.armed) { delete btn.dataset.armed; btn.textContent = btn.dataset.txt; accion(); return; }
+  btn.dataset.txt = btn.textContent; btn.dataset.armed = "1"; btn.textContent = aviso;
+  setTimeout(() => { if (btn.dataset.armed) { delete btn.dataset.armed; btn.textContent = btn.dataset.txt; } }, 4000);
+}
+
+/* ===================== PLAN SEMANAL ===================== */
+function renderPlan() {
+  const dias = Saved.plan.dias || {};
+  let tot = { kcal: 0, p: 0, g: 0 }, nDias = 0;
+  $("#plan").innerHTML = DIAS.map((dn, di) => {
+    const d = dias[di] || {};
+    const t = { kcal: 0, p: 0, g: 0 }; let alguno = false;
+    const slots = HUECOS.map(([k, label, cats]) => {
+      const sel = d[k] || "";
+      const r = sel ? byId(sel) : null;
+      if (r) { const v = valores(r, "racion"); t.kcal += v.kcal; t.p += v.p; t.g += v.g; alguno = true; }
+      const opts = RECETAS.filter(x => x.cat.some(c => cats.includes(c))).map(x => `<option value="${x.id}" ${x.id === sel ? "selected" : ""}>${x.nombre} (${fmt(valores(x, "racion").kcal)} kcal)</option>`).join("");
+      return `<div class="slot"><span>${label}</span><select data-dia="${di}" data-hueco="${k}" class="${r ? "set f-" + sabor(r) : ""}" aria-label="${label} del ${dn.toLowerCase()}"><option value="">Nada</option>${opts}</select></div>`;
+    }).join("");
+    if (alguno) { nDias++; tot.kcal += t.kcal; tot.p += t.p; tot.g += t.g; }
+    return `<div class="day"><div class="day-head"><h3>${dn}</h3>${alguno ? `<div class="day-tot"><span>${fmt(t.kcal)} kcal</span><span class="p">${fmt(Math.round(t.p))} g prot.</span><span class="g">${fmt(Math.round(t.g * 10) / 10)} g grasa</span></div>` : ""}</div>${slots}</div>`;
+  }).join("");
+  const med = k => (nDias ? Math.round(tot[k] / nDias * 10) / 10 : 0);
+  $("#weeksum").innerHTML = `<div><b>${fmt(Math.round(med("kcal")))}</b><span>kcal al día (media)</span></div><div><b>${fmt(Math.round(med("p")))} g</b><span>proteína al día</span></div><div><b>${fmt(med("g"))} g</b><span>grasa al día</span></div>`;
+  estadoGuardado();
+}
+function planACompra() {
+  const cuenta = {};
+  Object.values(Saved.plan.dias || {}).forEach(d => HUECOS.forEach(([k]) => { if (d[k]) cuenta[d[k]] = (cuenta[d[k]] || 0) + 1; }));
+  const ids = Object.keys(cuenta);
+  if (!ids.length) { toast("El plan está vacío"); return; }
+  ids.forEach(id => { const r = byId(id); addToShop(id, Math.ceil(cuenta[id] / r.raciones)); });
+  toast(`Añadidas ${ids.length} recetas a la compra`);
+}
+
+/* ===================== MARCAS ===================== */
+function renderIngredientes() {
+  const pvs = v => `<div class="pv"><div><b>${fmt(v[0])}</b><span>kcal</span></div><div class="p"><b>${fmt(v[1])}</b><span>prot.</span></div><div class="g"><b>${fmt(v[2])}</b><span>grasa</span></div><div class="c"><b>${fmt(v[3])}</b><span>carb.</span></div></div>`;
+  $("#ing-list").innerHTML = INGREDIENTES.map(i => {
+    const used = RECETAS.filter(r => r.usa.includes(i.id));
+    const prods = i.productos.map(p => `<div class="prod">
+        <div class="prod-top"><div><b>${p.marca}</b>${p.unv ? '<span class="unv">sin verificar</span>' : ""}<div class="name">${p.nombre}</div></div><span class="store">${p.tienda}</span></div>
+        ${p.v ? pvs(p.v) : ""}
+        <div class="prod-foot"><span>${p.formato !== "—" ? p.formato : ""}${p.nota ? (p.formato !== "—" ? ". " : "") + p.nota : ""}</span><a href="${p.src}" target="_blank" rel="noopener">Ver ficha</a></div>
+      </div>`).join("");
+    return `<article class="ing" id="ing-${i.id}">
+      <div><h3>${i.nombre}</h3><p class="rol">${i.rol}</p></div>
+      <div class="look"><b>En la etiqueta:</b> ${i.criterio}</div>
+      ${i.aviso ? `<div class="warn">${i.aviso}</div>` : ""}
+      ${prods ? `<div class="prods">${prods}</div>` : ""}
+      ${i.nota ? `<p class="rol">${i.nota}</p>` : ""}
+      ${used.length ? `<div class="usedin"><span>Lo usan:</span>${used.map(r => `<button type="button" class="dot f-${sabor(r)}" data-goto="${r.id}">${r.nombre}</button>`).join("")}</div>` : ""}
+    </article>`;
+  }).join("");
+}
+
+/* ===================== TRUCOS ===================== */
+function renderGuide() {
+  $("#guide").innerHTML = refs(`
+    <h2>Trucos</h2>
+    <div class="gcard"><h3>Para que llene</h3>
+      <p>Lo que más sacia es la proteína, la fibra (avena, fruta, verdura) y el volumen. Por eso las recetas llevan frutos rojos y verdura en vez de mermelada o salsas. Ordena por <b>lo que más llena</b> para ver qué recetas dan más proteína por cada caloría.</p></div>
+    <div class="gcard"><h3>No se tira nada</h3>
+      <div class="flow">
+        <div class="box f-vainilla"><b>3 huevos</b>sin brik de claras</div><span class="arr">→</span>
+        <div class="box f-melocoton"><b>Cheesecake B</b>1 huevo + 2 claras</div><span class="arr">→</span>
+        <div class="box f-espinaca"><b>2 yemas</b>natillas o tortilla</div>
+      </div>
+      <p>Las [[tortitas]] dejan 3 yemas: van a las [[natillas]] o a la [[tortilla]]. Y al revés: las natillas dejan claras, que sirven para las [[tortitas]] o las [[hamburguesas]].</p></div>
+    <div class="gcard"><h3>Cocinar sin mirar el reloj</h3>
+      <p>En cada receta, «Empezar a cocinar» te enseña los pasos de uno en uno, en grande, y mantiene la pantalla encendida si tu navegador lo permite. Los pasos con tiempo tienen un botón de temporizador: suena y vibra al acabar. Puedes tener varios a la vez.</p></div>
+    <div class="gcard"><h3>Si no compras claras en brik</h3><ul>
+      <li>Una clara de huevo L son unos 35 g. La cucharada de clara de la base de la cheesecake (15 g) <b>sácala de las claras de la propia crema</b>.</li>
+      <li>Casca cada huevo <b>sobre un bol pequeño aparte</b>. Así, si una yema se rompe, no estropea el resto.</li>
+      <li>Para separarlos, pasa la yema de una mitad de la cáscara a la otra, o usa la mano limpia: la clara se escurre entre los dedos.</li>
+      <li>En estas recetas las claras <b>no se montan</b>: si se cuela un poco de yema, da igual.</li></ul></div>
+    <div class="gcard"><h3>Cómo guardar yemas y claras</h3><ul>
+      <li><b>Yemas en la nevera:</b> en un tarro tapado, cubiertas con un poco de agua. Duran 1–2 días.</li>
+      <li><b>Yemas en el congelador:</b> bátelas con una pizca de sal. Aguantan unos meses.</li>
+      <li><b>Claras:</b> en un tarro tapado, 2–3 días en la nevera. Se congelan muy bien, sin añadir nada.</li></ul></div>
+    <div class="gcard"><h3>La grasa escondida</h3><ul>
+      <li>Cada cucharada de aceite son unos 10 g de grasa. Usa spray o una sartén antiadherente.</li>
+      <li>«Light», «fit» o «0%» no siempre significan poca grasa. Compara la etiqueta por cada 100 g.</li>
+      <li>El queso crema, aunque sea light, tiene unos 11–12 g de grasa por 100 g.</li>
+      <li>La carne picada ya preparada suele llevar mucha más grasa que la pechuga picada en casa.</li></ul></div>
+    <div class="gcard"><h3>Sobre los valores</h3>
+      <p>Están calculados con valores medios de supermercado por cada 100 g. Con tus marcas pueden variar un ±10–15 %. Las cheesecakes dan 1 grande o 2 pequeñas: la ración es la mitad.</p></div>
+    <div class="gcard" id="sync"><h3>Sincronizar con GitHub</h3>
+      <p>Favoritas, notas, plan y lista de la compra se guardan siempre en este navegador. Si conectas GitHub, también se guardan en tu repositorio <b>privado</b> recetario-datos, junto con tus fotos, y se ven igual en todos tus dispositivos. Nadie más puede verlos.</p>
+      <div id="gh-box" style="display:grid;gap:10px"></div></div>`);
+  renderConexion();
+}
+
+/* ===================== NAVEGACIÓN Y EVENTOS ===================== */
+const TABS = ["recetas", "plan", "compra", "trucos"];
+function showTab(tab, scrollTo) {
+  if (!TABS.includes(tab)) tab = "recetas";
+  TABS.forEach(t => { $("#panel-" + t).hidden = t !== tab; });
+  $("#recipe-tools").hidden = tab !== "recetas";
+  document.querySelectorAll(".tabs a").forEach(a => a.setAttribute("aria-current", a.dataset.tab === tab ? "page" : "false"));
+  prefs.set("tab", tab);
+  if (tab === "recetas") fitLast();
+  if (scrollTo) { const el = document.getElementById(scrollTo); if (el) el.scrollIntoView({ block: "start" }); }
+  else window.scrollTo(0, 0);
+}
+function route() {
+  const h = location.hash.slice(1);
+  if (byId(h)) { showTab("recetas"); openRecipe(h, false); return; }
+  closeRecipe();
+  if (h.startsWith("ing-") || h === "marcas") { showTab("compra", h); return; }
+  if (h === "sync") { showTab("trucos", "sync"); return; }
+  showTab(TABS.includes(h) ? h : prefs.get("tab", "recetas"));
+}
+function irAMarca(id) { closeRecipe(); history.replaceState(null, "", "#ing-" + id); showTab("compra", "ing-" + id); }
+
+document.addEventListener("click", e => {
+  const T = sel => e.target.closest(sel);
+  let b;
+  if ((b = T("[data-timer]"))) { addTimer(+b.dataset.timer, b.dataset.label); return; }
+  if ((b = T("[data-tplus]"))) { const t = timers.find(x => String(x.id) === b.dataset.tplus); if (t) t.end += 60000; renderTimers(); return; }
+  if ((b = T("[data-tstop]"))) { timers = timers.filter(x => String(x.id) !== b.dataset.tstop); renderTimers(); return; }
+  if ((b = T("[data-goto]"))) { e.preventDefault(); if (!$("#cook").hidden) closeCook(); openRecipe(b.dataset.goto); return; }
+  if ((b = T("[data-open]"))) { openRecipe(b.dataset.open); return; }
+  if ((b = T("[data-ing]")) || (b = T("[data-ingtab]"))) { e.preventDefault(); irAMarca(b.dataset.ing || b.dataset.ingtab); return; }
+  if ((b = T("[data-op]"))) { state.opcion = b.dataset.op; rerenderDetail(); $('[data-op="' + state.opcion + '"]').focus(); return; }
+  if ((b = T("[data-mult]"))) { state.mult = +b.dataset.mult; rerenderDetail(); $('[data-mult="' + b.dataset.mult + '"]').focus(); return; }
+  if (T("#fav-btn")) { const d = Saved.receta(state.abierta); Saved.setReceta(state.abierta, { fav: !d.fav }); refrescarPersonal(); renderGrid(); toast(d.fav ? "Quitada de favoritas" : "Añadida a favoritas"); return; }
+  if (T("[data-hecha]")) { const d = Saved.receta(state.abierta); Saved.setReceta(state.abierta, { hechas: [...(d.hechas || []), new Date().toISOString()] }); refrescarPersonal(); toast("¡Apuntado!"); return; }
+  if (T("[data-deshacer]")) { const d = Saved.receta(state.abierta); Saved.setReceta(state.abierta, { hechas: (d.hechas || []).slice(0, -1) }); refrescarPersonal(); return; }
+  if ((b = T("[data-delfoto]"))) {
+    const id = b.dataset.delfoto, rid = state.abierta;
+    confirmar(b, "¿Seguro?", async () => {
+      const d = Saved.receta(rid);
+      await Saved.setReceta(rid, { fotos: (d.fotos || []).filter(x => x !== id) });
+      try { await Saved.borrarFoto(id); } catch (err) {}
+      refrescarPersonal();
+    });
+    return;
+  }
+  if (T("[data-cook]")) { openCook(); return; }
+  if (T("[data-cookclose]")) { closeCook(); return; }
+  if (T("[data-cookprev]")) { state.cookIdx = Math.max(0, state.cookIdx - 1); renderCook(); return; }
+  if (T("[data-cooknext]")) { const n = byId(state.abierta).pasos.length; if (state.cookIdx >= n - 1) { closeCook(); toast("¡Que aproveche! Puedes marcarla como hecha abajo."); } else { state.cookIdx++; renderCook(); } return; }
+  if ((b = T("[data-cookings]"))) { const box = $("#cook-ings"); box.hidden = !box.hidden; b.setAttribute("aria-expanded", !box.hidden); return; }
+  if (T("[data-addshop]")) { addToShop(state.abierta, state.mult, state.opcion); toast(`Añadida a la compra (×${fmtQ(state.mult)})`); return; }
+  if ((b = T("[data-shopplus]"))) { Saved.compra.recetas[b.dataset.shopplus].mult += 0.5; Saved.setCompra(); renderCompra(); return; }
+  if ((b = T("[data-shopminus]"))) { const e2 = Saved.compra.recetas[b.dataset.shopminus]; e2.mult = Math.max(0.5, e2.mult - 0.5); Saved.setCompra(); renderCompra(); return; }
+  if ((b = T("[data-shopdel]"))) { delete Saved.compra.recetas[b.dataset.shopdel]; Saved.setCompra(); renderCompra(); return; }
+  if ((b = T("[data-extradel]"))) { e.preventDefault(); Saved.compra.extra = Saved.compra.extra.filter(x => String(x.id) !== b.dataset.extradel); Saved.setCompra(); renderCompra(); return; }
+  if (T("[data-clear]")) { clearFilters(); return; }
+  if ((b = T("[data-view]"))) { state.view = b.dataset.view; prefs.set("view", state.view); syncView(); renderGrid(); return; }
+  if ((b = T("[data-sortkey]"))) {
+    const k = b.dataset.sortkey;
+    if (state.sort === k) state.dir = state.dir === "asc" ? "desc" : "asc";
+    else { state.sort = k; state.dir = ["p", "p100"].includes(k) ? "desc" : "asc"; }
+    $("#sort").value = state.sort; prefs.set("sort", state.sort); prefs.set("dir", state.dir); renderGrid(); return;
+  }
+  if ((b = T("[data-base]"))) { state.base = b.dataset.base; prefs.set("base", state.base); syncBase(); renderGrid(); return; }
+  if ((b = T("[data-tabgo]"))) { e.preventDefault(); closeRecipe(); history.replaceState(null, "", "#sync"); showTab("trucos", "sync"); return; }
+  if ((b = T(".tabs a"))) { e.preventDefault(); history.replaceState(null, "", "#" + b.dataset.tab); showTab(b.dataset.tab); }
+});
+document.addEventListener("change", e => {
+  const t = e.target;
+  if (t.dataset.tach) { const tach = Object.assign({}, Saved.compra.tachados); if (t.checked) tach[t.dataset.tach] = true; else delete tach[t.dataset.tach]; Saved.compra.tachados = tach; Saved.setCompra(); return; }
+  if (t.dataset.dia !== undefined && t.dataset.hueco) {
+    const dias = Object.assign({}, Saved.plan.dias); const d = Object.assign({}, dias[t.dataset.dia]);
+    if (t.value) d[t.dataset.hueco] = t.value; else delete d[t.dataset.hueco];
+    dias[t.dataset.dia] = d; Saved.plan.dias = dias; Saved.setPlan(); renderPlan();
+  }
+});
+$("#overlay").addEventListener("click", e => { if (e.target.id === "overlay") closeRecipe(); });
+document.addEventListener("keydown", e => {
+  if (e.key !== "Escape") return;
+  if (!$("#cook").hidden) closeCook(); else closeRecipe();
+});
+function addExtra() {
+  const inp = $("#shop-add"), txt = inp.value.trim(); if (!txt) return;
+  Saved.compra.extra = [...(Saved.compra.extra || []), { id: Date.now(), txt }]; inp.value = "";
+  Saved.setCompra(); renderCompra();
+}
+$("#shop-add-btn").addEventListener("click", addExtra);
+$("#shop-add").addEventListener("keydown", e => { if (e.key === "Enter") addExtra(); });
+$("#shop-clear-done").addEventListener("click", () => { Saved.compra.tachados = {}; Saved.compra.extra = (Saved.compra.extra || []); Saved.setCompra(); renderCompra(); toast("Lista desmarcada"); });
+$("#shop-clear-done").textContent = "Desmarcar todo";
+$("#shop-clear").addEventListener("click", e => confirmar(e.currentTarget, "Pulsa otra vez para vaciar", () => { Saved.compra = { recetas: {}, tachados: {}, extra: [] }; Saved.setCompra(); renderCompra(); toast("Lista vaciada"); }));
+$("#plan-to-shop").addEventListener("click", planACompra);
+$("#plan-clear").addEventListener("click", e => confirmar(e.currentTarget, "Pulsa otra vez para vaciar", () => { Saved.plan = { dias: {} }; Saved.setPlan(); renderPlan(); toast("Plan vaciado"); }));
+
+function syncView() { document.querySelectorAll("[data-view]").forEach(b => b.setAttribute("aria-pressed", b.dataset.view === state.view)); }
+function syncBase() { document.querySelectorAll("[data-base]").forEach(b => b.setAttribute("aria-pressed", b.dataset.base === state.base)); }
+function syncRanges() {
+  $("#r-kcal").value = state.maxK; $("#r-p").value = state.minP; $("#r-g").value = state.maxG;
+  $("#r-kcal-v").textContent = state.maxK >= LIM.kcal ? "sin límite" : state.maxK + " kcal";
+  $("#r-p-v").textContent = state.minP <= LIM.p ? "sin mínimo" : state.minP + " g";
+  $("#r-g-v").textContent = state.maxG >= LIM.g ? "sin límite" : state.maxG + " g";
+}
+$("#r-kcal").addEventListener("input", e => { state.maxK = +e.target.value; syncRanges(); renderGrid(); });
+$("#r-p").addEventListener("input", e => { state.minP = +e.target.value; syncRanges(); renderGrid(); });
+$("#r-g").addEventListener("input", e => { state.maxG = +e.target.value; syncRanges(); renderGrid(); });
+function clearFilters() {
+  state.q = ""; $("#q").value = "";
+  [state.cat, state.met, state.ext].forEach(s => s.clear());
+  state.maxK = LIM.kcal; state.minP = LIM.p; state.maxG = LIM.g; syncRanges();
+  state.base = "racion"; prefs.set("base", state.base); syncBase();
+  document.querySelectorAll("[data-v]").forEach(c => c.setAttribute("aria-pressed", "false"));
+  renderGrid();
+}
+const toggleFilters = show => { $("#filters").hidden = !show; $("#toggle-filters").setAttribute("aria-expanded", show); };
+$("#toggle-filters").addEventListener("click", () => toggleFilters($("#filters").hidden));
+$("#close-filters").addEventListener("click", () => toggleFilters(false));
+$("#clear").addEventListener("click", clearFilters);
+$("#q").addEventListener("input", e => { state.q = e.target.value.trim(); renderGrid(); });
+$("#sort").addEventListener("change", e => {
+  state.sort = e.target.value;
+  state.dir = ["p", "p100"].includes(state.sort) ? "desc" : "asc"; // más proteína primero; menos de lo demás primero
+  prefs.set("sort", state.sort); prefs.set("dir", state.dir); renderGrid();
+});
+$("#dir").addEventListener("click", () => { state.dir = state.dir === "asc" ? "desc" : "asc"; prefs.set("dir", state.dir); renderGrid(); });
+
+chipGroup($("#f-cat"), CATS, state.cat, "moment");
+chipGroup($("#f-met"), METS, state.met, "chip");
+chipGroup($("#f-ext"), EXTS, state.ext, "chip");
+$("#sort").value = state.sort;
+syncBase(); syncView(); syncRanges();
+renderGrid(); renderIngredientes(); renderGuide(); renderPlan(); renderCompra();
+route();
+window.addEventListener("hashchange", route);
+Saved.init();
+</script>
+</body>
+</html>
