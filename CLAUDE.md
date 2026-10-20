@@ -80,4 +80,65 @@ Antes de publicar, ejecuta en la consola del navegador (o en un navegador headle
 - Para probar en local, abre `index.html` en el navegador. Si quieres servirlo: `python3 -m http.server`.
 - Para publicar, haz commit y push a `main`. Pages se actualiza en ~1 minuto.
 - Configura git en este repo con el nombre `hectorgarvi` y el email `100135701+hectorgarvi@users.noreply.github.com`, para no publicar otro email.
-- `.gitignore` solo deja pasar `index.html`, `README.md`, `CLAUDE.md` y `.gitignore`. Si añades un archivo nuevo, añádelo también ahí.
+- `.gitignore` ignora todo salvo lo que se publica: `index.html`, `README.md`, `CLAUDE.md`, `.gitignore`, `manifest.webmanifest`, `sw.js` y los iconos. Si añades un archivo nuevo, añádelo también ahí.
+
+### Comprobación lista para pegar
+
+Abre `index.html` en un navegador (o en uno headless) y ejecuta en la consola:
+
+```js
+const out = [], ingOk = id => INGREDIENTES.some(i => i.id === id) || EXTRA_ING[id];
+RECETAS.forEach(r => {
+  (r.opciones ? Object.values(r.opciones) : [r]).forEach(({ completa: c, racion: q }) => {
+    ["kcal", "p", "g", "c"].forEach(k => { if (Math.abs(q[k] * r.raciones - c[k]) > Math.max(2, c[k] * 0.04)) out.push(r.id + ": completa." + k); });
+    const d = (c.kcal - (4 * c.p + 4 * c.c + 9 * c.g)) / c.kcal; if (d < -0.06 || d > 0.15) out.push(r.id + ": kcal vs macros");
+  });
+  r.compra.forEach(([i]) => { if (!ingOk(i)) out.push(r.id + ": compra " + i); });
+  r.usa.forEach(i => { if (!INGREDIENTES.some(x => x.id === i)) out.push(r.id + ": usa " + i); });
+  ["SABOR", "NUTRI", "NIVEL", "UTENSILIOS"].forEach(t => { if (!window.eval(t)[r.id]) out.push(r.id + ": falta en " + t); });
+  if (r.met.includes("Airfryer") && !/Precalienta[\s\S]*posición/.test(r.pasos.join(" "))) out.push(r.id + ": airfryer sin precalentar o sin posición");
+  r.cat.forEach(c => { if (!CATS.includes(c)) out.push(r.id + ": cat " + c); });
+  r.met.forEach(m => { if (!METS.includes(m)) out.push(r.id + ": met " + m); });
+  [...r.pasos, ...r.ingredientes.flatMap(g => g.items), ...r.tips].join(" ").replace(/\[\[([a-z-]+)\]\]/g, (x, id) => { if (!byId(id)) out.push(r.id + ": enlace roto " + id); });
+});
+SEMANA_TIPO.flat().forEach(v => { const id = v.split("|")[0]; if (id && !byId(id)) out.push("semana tipo: " + id); });
+console.log(RECETAS.length + " recetas", out.length ? out : "todo OK");
+```
+
+## Decisiones tomadas (y por qué)
+
+- **GitHub Pages + repositorio privado de datos, sin Firebase ni artifact de claude.ai.** El usuario quiere usarlo desde su cuenta personal y desde casa sin depender de Claude, y que se sincronice entre el móvil y el ordenador. Un artifact de claude.ai no puede llamar a servicios externos, y GitHub evita darse de alta en otro servicio. Antes hubo una versión en un artifact de la cuenta de trabajo, ya borrada.
+- **El token nunca va en el código** (el repo es público). Lo pega el usuario en cada dispositivo y solo tiene Contents RW sobre `recetario-datos`.
+- **Recetas muy bajas en grasa a propósito; la grasa buena del día va en la comida.** El usuario empezó pidiendo «la mínima grasa posible»; se le explicó que necesita unos 55 g o más al día. No volver a recetas «0 grasa» ni a planes por debajo de unas 2.000 kcal.
+- **Valores nutricionales aproximados, calculados con productos reales verificados** y nunca con marcas inventadas. Lo que no se puede verificar se marca como «sin verificar» o se deja sin marca.
+- **Sin micronutrientes ni contador de calorías de todo lo que come.** Se descartó por falsa precisión (los datos de Open Food Facts están incompletos) y porque ya existen apps para eso.
+
+## Reglas de la sincronización (no romper)
+
+Salieron de una revisión de código con dos fallos de pérdida de datos:
+- `Saved.sucios` (las secciones con cambios sin subir) se guarda en localStorage (`rf-sucios`) y se recupera al abrir. Si no, al reabrir con conexión el `pull` pisaba lo local.
+- Con cambios pendientes, `pull` **no** adopta el `sha` remoto ni aplica los datos. Así el `push` choca (409/422) y mezcla por secciones; si no, borraba lo de otro dispositivo.
+- Al conectar, lo local se mezcla con lo remoto (`mezclar`). Si se conecta sin conexión, se marca `todo` y la mezcla se hace al volver.
+- Las secciones son `recetas` (una clave por receta, `r-<id>`), `compra`, `plan`, `progreso` y `despensa`. Si añades una sección nueva, inclúyela en `datos()`, `aplicar()`, la mezcla de `push` y `mezclar()`.
+- Hay una prueba de punta a punta que se hizo con el token de `gh` (`gh auth token -u hectorgarvi`) contra el repo privado, borrando después lo que crea. Repítela si tocas `Saved`.
+
+## Estilo visual
+
+- Estilo «fresco y frutal», elegido por el usuario. Cada receta tiene el color de su sabor (`SABOR`), las kcal van en grande y la ficha se abre como una hoja que sube desde abajo.
+- Fuentes: Bricolage Grotesque (títulos y números) y Onest (texto).
+- Colores como tokens en `:root`, con modo oscuro en `prefers-color-scheme` y en `[data-theme]` (botón ◐/☀/☾). El fondo va también en `html` para que la app instalada no deje franjas blancas.
+- Gráficas: azul `#2a78d6` para la media semanal y naranja `#eb6834` para cada registro (paleta de referencia que pasa la comprobación de daltonismo). Nunca verde con rojo.
+- Pensada primero para el móvil (390 px). Revisa en modo oscuro y a esa anchura antes de publicar.
+
+## Sobre el usuario
+
+Su perfil (datos, objetivos, gustos) está en `perfil.md` del repo privado. Léelo. Lo esencial para trabajar con él:
+- Escribe en español de España.
+- Está empezando a cocinar.
+- Prefiere ver las cosas en la propia web, no en documentos.
+- Agradece que se le digan las cosas claras, aunque contradigan lo que pidió, y que se compruebe todo antes de darlo por bueno.
+
+## Ideas posibles para más adelante
+
+Más recetas, sobre todo comidas y cenas de pescado azul. Rehacer la semana tipo con más variedad (bizcocho o brownie de postre, albóndigas o curry de comida) manteniendo las ~2.300 kcal.
+
