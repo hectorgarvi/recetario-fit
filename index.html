@@ -408,6 +408,7 @@ tr.hl td { background: var(--ok-bg); }
 .objrow > span { font-weight: 700; width: 100%; }
 .objrow label { display: grid; gap: 3px; color: var(--ink-soft); font-weight: 600; }
 .objrow input { width: 110px; border: 0; border-radius: 10px; padding: 8px 10px; background: var(--bg); box-shadow: inset 0 0 0 1.5px var(--line); font-weight: 700; color: var(--ink); }
+.slot-hint { grid-column: 2; font-size: .8rem; color: var(--ink-soft); margin-top: -4px; }
 .slot-in { display: flex; gap: 6px; min-width: 0; }
 .stepbtn { flex: none; border: 0; border-radius: 10px; padding: 0 10px; background: var(--pill); font-weight: 800; cursor: pointer; color: var(--ink); }
 .stepbtn[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
@@ -492,7 +493,7 @@ tr.hl td { background: var(--ok-bg); }
   <section class="panel" id="panel-plan" aria-label="Plan semanal" hidden>
     <div class="intro">
       <h2>Plan de la semana</h2>
-      <p>Elige qué vas a tomar cada día. Cada hueco es una ración; pulsa ×1 para cambiarla a ×1,5 o ×2. Si ese día comes algo que ya tienes (un táper del congelador), elige «Algo que ya tengo». «Rellenar con la semana tipo» solo llena los huecos vacíos.</p>
+      <p>Elige qué vas a tomar cada día. Cada hueco es <b>una ración</b> (lo que come una persona). Pulsa ×1 para cambiarla a ×1,5 (ración y media) o ×2 (doble), y «Ver» para abrir la receta con las cantidades ya calculadas para ese hueco. Si ese día comes algo que ya tienes (un táper del congelador), elige «Algo que ya tengo». «Rellenar con la semana tipo» solo llena los huecos vacíos.</p>
       <p class="savebar" id="save-plan"><i></i><span></span></p>
     </div>
     <div class="panelcard" style="margin-bottom:14px">
@@ -1022,7 +1023,7 @@ const RECETAS = [
     raciones: 2, racionesTxt: "2 (para dos días)", tiempoTxt: "15 min + 35 min de cocción", min: 50,
     completa: { kcal: 945, p: 88, g: 26, c: 68 }, racion: { kcal: 475, p: 44, g: 13, c: 34 },
     ingredientes: [
-      { t: "Ingredientes", items: ["Lentejas pardinas secas: {140} g (o 2 botes de lentejas cocidas, unos {480} g escurridas)", "Filetes de pechuga de pavo: {200} g, en dados", "Verduras: {1} zanahoria, {0.5} cebolla, {0.5} pimiento verde y {1} tomate (unos {400} g en total)", "Ajo: {2} dientes, {1} hoja de laurel, {1} cdta. de pimentón dulce y una pizca de comino", "Aceite de oliva virgen extra: {2} cucharadas ({20} g)", "Agua: lo justo para cubrir (unos {800} ml) y sal"] }
+      { t: "Ingredientes", items: ["Lentejas pardinas secas: {140} g (o lentejas cocidas de bote: unos {480} g escurridas, 2 botes normales)", "Filetes de pechuga de pavo: {200} g, en dados", "Verduras: {1} zanahoria, {0.5} cebolla, {0.5} pimiento verde y {1} tomate (unos {400} g en total)", "Ajo: {2} dientes, {1} hoja de laurel, {1} cdta. de pimentón dulce y una pizca de comino", "Aceite de oliva virgen extra: {2} cucharadas ({20} g)", "Agua: lo justo para cubrir (unos {800} ml) y sal"] }
     ],
     pasos: [
       "<b>Lava las lentejas</b> (las pardinas no necesitan remojo).",
@@ -2046,7 +2047,7 @@ function splitHTML(v) {
     <div class="legend"><span><i style="background:var(--prot)"></i>${fmt(v.p)} g proteína</span><span><i style="background:var(--carb)"></i>${fmt(v.c)} g carbohidratos</span><span><i style="background:var(--fat)"></i>${fmt(v.g)} g grasa</span></div>
   </div>`;
 }
-const MULTS = [0.5, 1, 2, 3];
+const MULTS = [0.5, 1, 1.5, 2, 3];
 function ingHTML(r, m) {
   const op = r.opciones ? r.opciones[state.opcion] : null;
   let n = 0;
@@ -2058,7 +2059,7 @@ function renderDetail(r) {
   const v1 = valores(r, "racion", state.opcion), vc = valores(r, "completa", state.opcion);
   const racTot = r.raciones * m;
   const optSel = r.opciones ? `<div class="optsel"><div class="opts" role="group" aria-label="Opción de huevo">${Object.entries(r.opciones).map(([k, o]) => `<button type="button" data-op="${k}" aria-pressed="${k === state.opcion}">${k}) ${o.corto}</button>`).join("")}</div><p>${op.desc}</p></div>` : "";
-  const scale = `<div class="scale"><span style="font-weight:700">Cantidades para</span><div class="opts" role="group" aria-label="Cantidades">${MULTS.map(x => `<button type="button" data-mult="${x}" aria-pressed="${x === m}">×${fmtQ(x)}</button>`).join("")}</div><span style="font-size:.9rem;opacity:.85">${fmtQ(racTot)} ${racTot === 1 ? "ración" : "raciones"}</span></div>`;
+  const scale = `<div class="scale"><span style="font-weight:700">Cantidades para</span><div class="opts" role="group" aria-label="Cantidades">${[...new Set([...MULTS, m])].sort((a, b) => a - b).map(x => `<button type="button" data-mult="${x}" aria-pressed="${x === m}">×${fmtQ(x)}${MULTS.includes(x) ? "" : " (plan)"}</button>`).join("")}</div><span style="font-size:.9rem;opacity:.85">${fmtQ(racTot)} ${racTot === 1 ? "ración" : "raciones"}</span></div>`;
   const t = r.tabla;
   const head = `<tr><th>${t.firstCol || ""}</th>${t.cols.map(c => `<th class="n">${c}</th>`).join("")}</tr>`;
   const body = t.rows.map(row => `<tr class="${r.opciones && row[0].startsWith(state.opcion + ")") ? "hl" : ""}"><td><b>${row[0]}</b></td>${row.slice(1).map(c => `<td class="n">${c}</td>`).join("")}</tr>`).join("");
@@ -2158,9 +2159,10 @@ document.addEventListener("change", async e => {
 });
 
 let lastFocus = null;
-function openRecipe(id, push = true) {
+function openRecipe(id, push = true, mult = null) {
   const r = byId(id); if (!r) return;
   if (state.abierta !== id) { state.mult = 1; if (r.opciones) state.opcion = r.opcionDefecto; }
+  if (mult) state.mult = mult; // desde el plan: las cantidades justas para ese hueco
   state.abierta = id;
   if ($("#overlay").hidden) lastFocus = document.activeElement;
   renderDetail(r);
@@ -2299,8 +2301,10 @@ function renderPlan() {
       if (r) { const v = valores(r, "racion"); t.kcal += v.kcal * x; t.p += v.p * x; t.g += v.g * x; alguno = true; }
       if (sel === "otro") otro = true;
       const opts = RECETAS.filter(y => y.cat.some(c => cats.includes(c))).map(y => `<option value="${y.id}" ${y.id === sel ? "selected" : ""}>${y.nombre} (${fmt(valores(y, "racion").kcal)} kcal)</option>`).join("");
-      const dbl = r ? `<button type="button" class="stepbtn" data-doble="${di}|${k}" aria-pressed="${x !== 1}" aria-label="Tamaño de la ración: ×${fmtQ(x)}. Pulsa para cambiar">×${fmtQ(x)}</button>` : "";
-      return `<div class="slot"><span>${label}</span><div class="slot-in"><select data-dia="${di}" data-hueco="${k}" class="${r ? "set f-" + sabor(r) : ""}" aria-label="${label} del ${dn.toLowerCase()}"><option value="">Nada</option>${opts}<option value="otro" ${sel === "otro" ? "selected" : ""}>Algo que ya tengo (no se cuenta)</option></select>${dbl}</div></div>`;
+      const dbl = r ? `<button type="button" class="stepbtn" data-doble="${di}|${k}" aria-pressed="${x !== 1}" aria-label="Tamaño de la ración: ×${fmtQ(x)}. Pulsa para cambiar">×${fmtQ(x)}</button><button type="button" class="stepbtn" data-planopen="${sel}|${x / r.raciones}" aria-label="Ver la receta con las cantidades de este hueco">Ver</button>` : "";
+      const hint = !r ? "" : r.raciones === 1 ? (x === 1 ? "" : `Ración ×${fmtQ(x)}: «Ver» te da las cantidades ya multiplicadas.`)
+        : `${fmtQ(x)} de las ${r.raciones} raciones que da la receta${x / r.raciones === 1 ? " (la receta entera)" : ` (${fmtQ(x / r.raciones)} de la receta)`}. «Ver» te da las cantidades.`;
+      return `<div class="slot"><span>${label}</span><div class="slot-in"><select data-dia="${di}" data-hueco="${k}" class="${r ? "set f-" + sabor(r) : ""}" aria-label="${label} del ${dn.toLowerCase()}"><option value="">Nada</option>${opts}<option value="otro" ${sel === "otro" ? "selected" : ""}>Algo que ya tengo (no se cuenta)</option></select>${dbl}</div>${hint ? `<small class="slot-hint">${hint}</small>` : ""}</div>`;
     }).join("");
     if (alguno) { nDias++; tot.kcal += t.kcal; tot.p += t.p; tot.g += t.g; }
     if (otro) conOtro = true;
@@ -2328,7 +2332,7 @@ function planACompra() {
   Object.values(Saved.plan.dias || {}).forEach(d => HUECOS.forEach(([k]) => { const { id, x } = slotParse(d[k]); if (id && id !== "otro" && byId(id)) cuenta[id] = (cuenta[id] || 0) + x; }));
   const ids = Object.keys(cuenta);
   if (!ids.length) { toast("El plan está vacío"); return; }
-  ids.forEach(id => { const r = byId(id); addToShop(id, Math.ceil(cuenta[id] / r.raciones)); });
+  ids.forEach(id => { const r = byId(id); addToShop(id, Math.ceil(cuenta[id] / r.raciones * 2) / 2); }); // redondeo a media receta
   toast(`Añadidas ${ids.length} recetas a la compra`);
 }
 function semanaTipo() {
@@ -2482,6 +2486,7 @@ document.addEventListener("click", e => {
   if ((b = T("[data-shopdel]"))) { delete Saved.compra.recetas[b.dataset.shopdel]; Saved.setCompra(); renderCompra(); return; }
   if ((b = T("[data-extradel]"))) { e.preventDefault(); Saved.compra.extra = Saved.compra.extra.filter(x => String(x.id) !== b.dataset.extradel); Saved.setCompra(); renderCompra(); return; }
   if (T("[data-clear]")) { clearFilters(); return; }
+  if ((b = T("[data-planopen]"))) { const [id, m] = b.dataset.planopen.split("|"); openRecipe(id, true, +m); return; }
   if ((b = T("[data-view]"))) { state.view = b.dataset.view; prefs.set("view", state.view); syncView(); renderGrid(); return; }
   if ((b = T("[data-sortkey]"))) {
     const k = b.dataset.sortkey;
