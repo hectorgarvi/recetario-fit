@@ -2,7 +2,7 @@
 // - La página: primero la red (para tener siempre la última versión) y, sin conexión, la copia guardada.
 // - Iconos y fuentes: primero la copia guardada.
 // - La API de GitHub (tus datos) nunca se guarda aquí: la gestiona la propia página.
-const CACHE = "recetario-v2";
+const CACHE = "recetario-v3";
 const BASE = ["./", "index.html", "manifest.webmanifest", "icon-192.png", "icon-512.png", "apple-touch-icon.png"];
 
 self.addEventListener("install", e => {
@@ -17,13 +17,13 @@ self.addEventListener("fetch", e => {
   const esFuente = url.hostname === "fonts.googleapis.com" || url.hostname === "fonts.gstatic.com";
   const esPagina = req.mode === "navigate" || url.pathname.endsWith("/index.html");
   if (esPagina) {
-    e.respondWith(fetch(req).then(r => { const copia = r.clone(); caches.open(CACHE).then(c => c.put("index.html", copia)); return r; })
+    e.respondWith(fetch(req).then(r => { if (r.ok && r.type === "basic") { const copia = r.clone(); caches.open(CACHE).then(c => c.put("index.html", copia)); } return r; })
       .catch(() => caches.match("index.html").then(r => r || caches.match("./"))));
     return;
   }
   if (esFuente || url.origin === location.origin) {
     e.respondWith(caches.match(req).then(hit => hit || fetch(req).then(r => {
-      if (r.ok || r.type === "opaque") { const copia = r.clone(); caches.open(CACHE).then(c => c.put(req, copia)); }
+      if (r.ok || (esFuente && r.type === "opaque")) { const copia = r.clone(); caches.open(CACHE).then(c => c.put(req, copia)); }
       return r;
     })));
   }

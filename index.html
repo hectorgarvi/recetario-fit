@@ -654,7 +654,7 @@ tr.hl td { background: var(--ok-bg); }
 </div>
 
 <div class="cook" id="cook" role="dialog" aria-modal="true" aria-label="Modo cocina" hidden></div>
-<div class="timers" id="timers" aria-live="polite"></div>
+<div class="timers" id="timers"></div>
 <div class="toast" id="toast" role="status" hidden></div>
 <div class="glpop" id="glpop" role="dialog" aria-labelledby="glpop-t" hidden><div><b id="glpop-t"></b><button type="button" class="x" id="glpop-x" aria-label="Cerrar">✕</button></div><p id="glpop-d"></p></div>
 
@@ -1894,13 +1894,18 @@ const Saved = {
     this.plan = Object.assign({ semanas: {}, obj: {} }, d.plan || {});
     if (this.plan.dias) { // formato antiguo: un solo plan sin fecha → semana actual
       if (!this.plan.semanas[lunesDe(new Date())]) this.plan.semanas[lunesDe(new Date())] = { dias: this.plan.dias };
-      delete this.plan.dias;
+      delete this.plan.dias; this.migrado = true;
     }
     this.progreso = Object.assign({ registros: [] }, d.progreso || {});
     this.despensa = Array.isArray(d.despensa) ? d.despensa : [];
   },
-  cargarLocal() { try { this.aplicar(JSON.parse(localStorage.getItem("rf-datos") || "{}")); } catch (e) {} },
+  cargarLocal() {
+    try { this.aplicar(JSON.parse(localStorage.getItem("rf-datos") || "{}")); } catch (e) {}
+    // Cambios hechos sin conexión que aún no se han subido (sobreviven a cerrar la app)
+    try { JSON.parse(localStorage.getItem("rf-sucios") || "[]").forEach(k => this.sucios.add(k)); } catch (e) {}
+  },
   guardarLocal() { try { localStorage.setItem("rf-datos", JSON.stringify(this.datos())); } catch (e) {} },
+  guardarSucios() { try { localStorage.setItem("rf-sucios", JSON.stringify([...this.sucios])); } catch (e) {} },
   api(path, opts = {}) {
     const headers = { Authorization: "Bearer " + this.token, Accept: opts.raw ? "application/vnd.github.raw+json" : "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28" };
     if (opts.body) headers["Content-Type"] = "application/json";
@@ -1924,8 +1929,10 @@ const Saved = {
       }
       if (!r.ok) return this.fallo(r);
       const j = await r.json();
-      this.sha = j.sha;
-      if (!this.sucios.size) { this.aplicar(JSON.parse(b64dec(j.content))); this.guardarLocal(); }
+      if (!this.sucios.size) {
+        this.sha = j.sha; this.aplicar(JSON.parse(b64dec(j.content))); this.guardarLocal();
+        if (this.migrado) { this.migrado = false; this.sucios.add("plan"); this.guardarSucios(); this.programar(); } // 5. guardar el plan ya migrado
+      }
       this.mode = "github"; this.error = "";
     } catch (e) { this.mode = "offline"; }
   },
@@ -1943,16 +1950,20 @@ const Saved = {
         if (rr.ok) {
           const j = await rr.json(); this.sha = j.sha;
           const remoto = JSON.parse(b64dec(j.content)), local = this.datos();
-          if (!this.sucios.has("todo")) {
-            const m = { recetas: Object.assign({}, remoto.recetas), compra: remoto.compra, plan: remoto.plan };
-            m.progreso = remoto.progreso; m.despensa = remoto.despensa;
+          if (this.sucios.has("todo")) {
+            // Datos de antes de conectar: se suman a los de GitHub sin pisar nada
+            const loc = JSON.parse(JSON.stringify(local)); this.aplicar(remoto); this.mezclar(loc);
+          } else {
+            // Solo las secciones cambiadas aquí sustituyen a las de GitHub
+            const m = { recetas: Object.assign({}, remoto.recetas), compra: remoto.compra, plan: remoto.plan, progreso: remoto.progreso, despensa: remoto.despensa };
             this.sucios.forEach(k => { if (k === "compra") m.compra = local.compra; else if (k === "plan") m.plan = local.plan; else if (k === "progreso") m.progreso = local.progreso; else if (k === "despensa") m.despensa = local.despensa; else if (k.startsWith("r-")) m.recetas[k.slice(2)] = local.recetas[k.slice(2)]; });
-            this.aplicar(m); this.guardarLocal();
+            this.aplicar(m);
           }
+          this.guardarLocal();
           r = await subir();
         }
       }
-      if (r.ok) { const j = await r.json(); this.sha = j.content.sha; this.sucios.clear(); this.mode = "github"; this.error = ""; }
+      if (r.ok) { const j = await r.json(); this.sha = j.content.sha; this.sucios.clear(); this.guardarSucios(); this.mode = "github"; this.error = ""; }
       else this.fallo(r);
     } catch (e) { this.mode = "offline"; this.programar(15000); }
     finally {
@@ -1962,7 +1973,7 @@ const Saved = {
   },
   guardar(clave) {
     this.guardarLocal();
-    if (this.token) { this.sucios.add(clave); this.programar(); }
+    if (this.token) { this.sucios.add(clave); this.guardarSucios(); this.programar(); }
     return Promise.resolve();
   },
   receta(rid) { return this.recetas[rid] || { fav: false, hechas: [], nota: "", fotos: [] }; },
@@ -1981,6 +1992,7 @@ const Saved = {
     // Lo apuntado en este navegador antes de conectar se mezcla con lo que ya haya en GitHub
     const local = JSON.parse(JSON.stringify(this.datos()));
     prefs.set("ghtoken", token); await this.pull();
+    if (this.mode !== "github") { this.sucios.add("todo"); this.guardarSucios(); } // sin conexión al conectar: lo local se subirá y mezclará después
     if (this.mode === "github" && !this.sucios.has("todo") && this.mezclar(local)) { this.guardarLocal(); this.sucios.add("todo"); this.programar(0); }
     alCambiarDatos(); return "";
   },
@@ -2292,12 +2304,16 @@ function refrescarPersonal() {
   estadoGuardado();
 }
 let notaT = null;
+function guardarNotaYa() {
+  if (!notaT) return; clearTimeout(notaT); notaT = null;
+  const ta = $("#nota"); if (ta && state.abierta) Saved.setReceta(state.abierta, { nota: ta.value });
+}
 document.addEventListener("input", e => {
   if (e.target.id !== "nota") return;
   const rid = state.abierta, val = e.target.value;
   $("#nota-st").textContent = "Escribiendo…";
   clearTimeout(notaT);
-  notaT = setTimeout(async () => { await Saved.setReceta(rid, { nota: val }); const st = $("#nota-st"); if (st) st.textContent = "Nota guardada"; }, 900);
+  notaT = setTimeout(async () => { notaT = null; await Saved.setReceta(rid, { nota: val }); const st = $("#nota-st"); if (st) st.textContent = "Nota guardada"; }, 900);
 });
 document.addEventListener("change", async e => {
   if (e.target.id !== "foto-in" || !e.target.files[0]) return;
@@ -2329,6 +2345,8 @@ function openRecipe(id, push = true, mult = null) {
   $("#back").focus();
 }
 function closeRecipe() {
+  guardarNotaYa();
+  if (!$("#cook").hidden) closeCook();
   if ($("#overlay").hidden) return;
   $("#overlay").hidden = true; document.body.style.overflow = ""; state.abierta = null;
   history.replaceState(null, "", "#" + (prefs.get("tab", "recetas")));
@@ -2380,13 +2398,22 @@ function addTimer(min, label) {
   if (!tick) tick = setInterval(renderTimers, 1000);
   renderTimers(); toast(`Temporizador de ${min >= 60 ? fmt(min / 60) + " h" : min + " min"} en marcha`);
 }
+let timersSig = "";
 function renderTimers() {
   const now = Date.now();
-  timers.forEach(t => { if (!t.done && t.end <= now) { t.done = true; beep(); } });
+  timers.forEach(t => { if (!t.done && t.end <= now) { t.done = true; beep(); toast(`¡Listo! ${t.label}`); } });
+  const fmtT = t => { const s = Math.max(0, Math.round((t.end - now) / 1000)), h = Math.floor(s / 3600), mm = Math.floor(s % 3600 / 60), ss = s % 60; return t.done ? "¡Listo!" : (h ? `${h}:${String(mm).padStart(2, "0")}:${String(ss).padStart(2, "0")}` : `${mm}:${String(ss).padStart(2, "0")}`); };
+  const sig = timers.map(t => t.id + (t.done ? "d" : "")).join(",");
+  if (sig === timersSig) { // misma estructura: solo cambia el número
+    timers.forEach(t => { const el = document.querySelector(`[data-tid="${t.id}"] .t`); if (el) el.textContent = fmtT(t); });
+    if (!timers.length && tick) { clearInterval(tick); tick = null; }
+    return;
+  }
+  timersSig = sig;
   $("#timers").innerHTML = timers.map(t => {
     const s = Math.max(0, Math.round((t.end - now) / 1000)), h = Math.floor(s / 3600), mm = Math.floor(s % 3600 / 60), ss = s % 60;
     const txt = t.done ? "¡Listo!" : (h ? `${h}:${String(mm).padStart(2, "0")}:${String(ss).padStart(2, "0")}` : `${mm}:${String(ss).padStart(2, "0")}`);
-    return `<div class="timer${t.done ? " done" : ""}"><span class="t">${txt}</span><span class="l">${esc(t.label)}</span>${t.done ? "" : `<button type="button" data-tplus="${t.id}">+1 min</button>`}<button type="button" data-tstop="${t.id}">${t.done ? "Vale" : "Parar"}</button></div>`;
+    return `<div class="timer${t.done ? " done" : ""}" data-tid="${t.id}"><span class="t" role="timer">${txt}</span><span class="l">${esc(t.label)}</span>${t.done ? "" : `<button type="button" data-tplus="${t.id}">+1 min</button>`}<button type="button" data-tstop="${t.id}">${t.done ? "Vale" : "Parar"}</button></div>`;
   }).join("");
   if (!timers.length && tick) { clearInterval(tick); tick = null; }
 }
@@ -2397,7 +2424,7 @@ const ingPasillo = id => (INGREDIENTES.find(i => i.id === id) || {}).pasillo || 
 function addToShop(rid, mult, opcion) {
   const r = byId(rid); const key = r.opciones ? rid + "|" + (opcion || r.opcionDefecto) : rid;
   const cur = Saved.compra.recetas[key];
-  Saved.compra.recetas[key] = { id: rid, opcion: r.opciones ? (opcion || r.opcionDefecto) : null, mult: (cur ? cur.mult : 0) + mult };
+  Saved.compra.recetas[key] = Object.assign({ id: rid, opcion: r.opciones ? (opcion || r.opcionDefecto) : null, mult: 0 }, cur, { mult: (cur ? cur.mult : 0) + mult }); // conserva lo que venía del plan
   Saved.setCompra(); renderCompra();
 }
 function agregarCompra() {
@@ -2524,8 +2551,16 @@ function planACompra() {
   Object.values(semanaActual().dias || {}).forEach(d => HUECOS.forEach(([k]) => { const { id, x } = slotParse(d[k]); if (id && id !== "otro" && byId(id)) cuenta[id] = (cuenta[id] || 0) + x; }));
   const ids = Object.keys(cuenta);
   if (!ids.length) { toast("El plan está vacío"); return; }
-  ids.forEach(id => { const r = byId(id); addToShop(id, Math.ceil(cuenta[id] / r.raciones * 2) / 2); }); // redondeo a media receta
-  toast(`Añadidas ${ids.length} recetas a la compra`);
+  // Lo que venía del plan se sustituye (no se suma otra vez); lo añadido a mano se respeta
+  Object.values(Saved.compra.recetas).forEach(e => { if (e.dePlan) { e.mult -= e.dePlan; e.dePlan = 0; } });
+  ids.forEach(id => {
+    const r = byId(id), key = r.opciones ? id + "|" + r.opcionDefecto : id, n = Math.ceil(cuenta[id] / r.raciones * 2) / 2; // redondeo a media receta
+    const cur = Saved.compra.recetas[key] || { id, opcion: r.opciones ? r.opcionDefecto : null, mult: 0 };
+    Saved.compra.recetas[key] = Object.assign({}, cur, { mult: cur.mult + n, dePlan: n });
+  });
+  Object.keys(Saved.compra.recetas).forEach(k => { if (Saved.compra.recetas[k].mult <= 0) delete Saved.compra.recetas[k]; });
+  Saved.setCompra(); renderCompra();
+  toast(`Lista de la compra actualizada con ${ids.length} recetas del plan`);
 }
 function semanaTipo() {
   // Solo rellena los huecos vacíos: lo que ya tengas puesto se respeta
@@ -2816,10 +2851,10 @@ document.addEventListener("click", e => {
     const rac = Math.max(paso, Math.round((r.raciones * state.mult + (b.dataset.rac === "+" ? paso : -paso)) / paso) * paso);
     state.mult = rac / r.raciones; rerenderDetail(); $('[data-rac="' + b.dataset.rac + '"]').focus(); return;
   }
-  if (T("#fav-btn")) { const d = Saved.receta(state.abierta); Saved.setReceta(state.abierta, { fav: !d.fav }); refrescarPersonal(); renderGrid(); toast(d.fav ? "Quitada de favoritas" : "Añadida a favoritas"); return; }
-  if ((b = T("[data-star]"))) { const n = +b.dataset.star, d = Saved.receta(state.abierta); Saved.setReceta(state.abierta, { estrellas: d.estrellas === n ? 0 : n }); refrescarPersonal(); renderGrid(); return; }
-  if (T("[data-hecha]")) { const d = Saved.receta(state.abierta); Saved.setReceta(state.abierta, { hechas: [...(d.hechas || []), new Date().toISOString()] }); refrescarPersonal(); toast("¡Apuntado!"); return; }
-  if (T("[data-deshacer]")) { const d = Saved.receta(state.abierta); Saved.setReceta(state.abierta, { hechas: (d.hechas || []).slice(0, -1) }); refrescarPersonal(); return; }
+  if (T("#fav-btn")) { guardarNotaYa(); const d = Saved.receta(state.abierta); Saved.setReceta(state.abierta, { fav: !d.fav }); refrescarPersonal(); renderGrid(); toast(d.fav ? "Quitada de favoritas" : "Añadida a favoritas"); return; }
+  if ((b = T("[data-star]"))) { guardarNotaYa(); const n = +b.dataset.star, d = Saved.receta(state.abierta); Saved.setReceta(state.abierta, { estrellas: d.estrellas === n ? 0 : n }); refrescarPersonal(); renderGrid(); return; }
+  if (T("[data-hecha]")) { guardarNotaYa(); const d = Saved.receta(state.abierta); Saved.setReceta(state.abierta, { hechas: [...(d.hechas || []), new Date().toISOString()] }); refrescarPersonal(); toast("¡Apuntado!"); return; }
+  if (T("[data-deshacer]")) { guardarNotaYa(); const d = Saved.receta(state.abierta); Saved.setReceta(state.abierta, { hechas: (d.hechas || []).slice(0, -1) }); refrescarPersonal(); return; }
   if ((b = T("[data-delfoto]"))) {
     const id = b.dataset.delfoto, rid = state.abierta;
     confirmar(b, "¿Seguro?", async () => {
