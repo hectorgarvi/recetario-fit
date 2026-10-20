@@ -389,6 +389,10 @@ tr.hl td { background: var(--ok-bg); }
 .day-tot .p { color: var(--prot); } .day-tot .g { color: var(--fat); }
 .slot { display: grid; grid-template-columns: 82px minmax(0, 1fr); align-items: center; gap: 8px; }
 .slot span { font-size: .88rem; color: var(--ink-soft); font-weight: 600; }
+.objrow { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: end; font-size: .88rem; }
+.objrow > span { font-weight: 700; width: 100%; }
+.objrow label { display: grid; gap: 3px; color: var(--ink-soft); font-weight: 600; }
+.objrow input { width: 110px; border: 0; border-radius: 10px; padding: 8px 10px; background: var(--bg); box-shadow: inset 0 0 0 1.5px var(--line); font-weight: 700; color: var(--ink); }
 .slot-in { display: flex; gap: 6px; min-width: 0; }
 .stepbtn { flex: none; border: 0; border-radius: 10px; padding: 0 10px; background: var(--pill); font-weight: 800; cursor: pointer; color: var(--ink); }
 .stepbtn[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
@@ -472,13 +476,17 @@ tr.hl td { background: var(--ok-bg); }
   <section class="panel" id="panel-plan" aria-label="Plan semanal" hidden>
     <div class="intro">
       <h2>Plan de la semana</h2>
-      <p>Elige qué vas a tomar cada día. Cada hueco es una ración; pulsa ×2 para ración doble. Si ese día comes algo que ya tienes (un táper del congelador), elige «Algo que ya tengo». «Rellenar con la semana tipo» solo llena los huecos vacíos.</p>
+      <p>Elige qué vas a tomar cada día. Cada hueco es una ración; pulsa ×1 para cambiarla a ×1,5 o ×2. Si ese día comes algo que ya tienes (un táper del congelador), elige «Algo que ya tengo». «Rellenar con la semana tipo» solo llena los huecos vacíos.</p>
       <p class="savebar" id="save-plan"><i></i><span></span></p>
     </div>
     <div class="panelcard" style="margin-bottom:14px">
       <div class="weeksum" id="weeksum"></div>
       <div class="rowbtns"><button type="button" class="pbtn" id="plan-tipo">Rellenar con la semana tipo</button><button type="button" class="pbtn acc" id="plan-to-shop">Añadir el plan a la compra</button><button type="button" class="pbtn alt" id="plan-clear">Vaciar el plan</button></div>
-      <p class="notice" id="plan-note"></p>
+      <div class="objrow"><span>Tu objetivo diario</span>
+        <label>kcal <input type="number" inputmode="numeric" id="obj-kcal" min="1000" max="5000" step="50" placeholder="2300"></label>
+        <label>proteína mín. (g) <input type="number" inputmode="numeric" id="obj-p" min="0" max="400" placeholder="120"></label>
+        <label>grasa mín. (g) <input type="number" inputmode="numeric" id="obj-g" min="0" max="200" placeholder="55"></label></div>
+      <p class="notice" id="plan-note" hidden></p>
       <p class="muted" id="plan-confirm" hidden></p>
     </div>
     <div class="plan" id="plan"></div>
@@ -1116,6 +1124,66 @@ const RECETAS = [
     conserva: { nevera: "3 días.", congelar: "Sí, hasta 2 meses." },
     compra: [["garbanzos", 250, "g (escurridos)"], ["espinacas", 150, "g"], ["pollo", 100, "g"], ["ajo", 2, "dientes"], ["aceite", 10, "g"], ["especias", null]],
     usa: ["garbanzos", "espinacas", "pollo", "aceite"]
+  },
+  {
+    id: "fruta-frutos-secos", corto: "fruta y frutos secos", nombre: "Fruta y un puñado de frutos secos",
+    cat: ["Tentempié", "Merienda"], met: ["Sin cocinar"], ext: ["Sin huevo", "Sin gluten", "Sin lácteos"], tags: ["Grasa buena", "Para llevar"],
+    gluten: "natural", lacteos: false,
+    raciones: 1, racionesTxt: "1", tiempoTxt: "1 min", min: 1,
+    completa: { kcal: 235, p: 5, g: 15, c: 19 }, racion: { kcal: 235, p: 5, g: 15, c: 19 },
+    ingredientes: [
+      { t: "Ingredientes", items: ["Almendras o nueces: {25} g (un puñado que quepa en la palma, unas 20 almendras o 6–7 nueces)", "Fruta: {1} pieza mediana (manzana, pera, naranja o plátano)"] }
+    ],
+    pasos: [
+      "<b>Pesa los frutos secos</b> las primeras veces para ver cuánto es un puñado: es muy fácil pasarse sin darse cuenta.",
+      "<b>Llévatelo</b> en un táper pequeño o una bolsita para media mañana."
+    ],
+    tabla: { cols: ["Ración"], rows: [["Calorías", "~235 kcal"], ["Proteínas", "~5 g"], ["Grasas", "~15 g"], ["Carbohidratos", "~19 g"]] },
+    notaTabla: "Es la grasa buena del día en formato rápido. Valores medios de almendras o nueces naturales y una manzana.",
+    tips: ["<b>Naturales o tostados, sin sal ni miel.</b> Los fritos o con miel tienen bastantes más calorías."],
+    conserva: { nevera: "No hace falta.", congelar: "No hace falta." },
+    compra: [["frutos-secos", 25, "g"], ["fruta", 1, "pieza"]],
+    usa: ["frutos-secos"]
+  },
+  {
+    id: "bocadillo-pavo", corto: "bocadillo de pavo", nombre: "Bocadillo integral de pavo y tomate",
+    cat: ["Tentempié", "Merienda"], met: ["Sin cocinar"], ext: ["Sin huevo", "Sin lácteos"], tags: ["Para llevar", "Hidratos para entrenar"],
+    gluten: "pan", lacteos: false,
+    raciones: 1, racionesTxt: "1", tiempoTxt: "3 min", min: 3,
+    completa: { kcal: 275, p: 21, g: 3.5, c: 38 }, racion: { kcal: 275, p: 21, g: 3.5, c: 38 },
+    ingredientes: [
+      { t: "Ingredientes", items: ["Pan de molde 100% integral: {3} rebanadas (unos {80} g), o un panecillo integral", "Pechuga de pavo en lonchas, de más del 90% de carne: {60} g", "Tomate: unas rodajas, y lechuga si quieres", "Mostaza (opcional)"] }
+    ],
+    pasos: [
+      "<b>Monta el bocadillo</b> con el pavo, el tomate y un poco de mostaza en vez de mayonesa.",
+      "<b>Para llevar:</b> envuélvelo en papel de horno; el tomate, mejor aparte si va a pasar horas, para que no empape el pan."
+    ],
+    tabla: { cols: ["Ración"], rows: [["Calorías", "~275 kcal"], ["Proteínas", "~21 g"], ["Grasas", "~3,5 g"], ["Carbohidratos", "~38 g"]] },
+    notaTabla: "Bueno 1–2 horas antes del gimnasio: hidratos para tener energía y proteína.",
+    tips: ["<b>Con queso:</b> añade una loncha de queso fresco o de mozzarella light (+40–60 kcal). El curado tiene mucha más grasa: si te apetece, una loncha fina."],
+    conserva: { nevera: "Hecho por la mañana aguanta hasta la tarde.", congelar: "No." },
+    compra: [["pan", 80, "g"], ["pavo-fiambre", 60, "g"], ["tomate", 0.5, "ud."]],
+    usa: ["pan", "pavo-fiambre"]
+  },
+  {
+    id: "bol-queso-fruta", corto: "bol de queso batido", nombre: "Bol de queso batido con fruta y nueces",
+    cat: ["Tentempié", "Merienda", "Postre"], met: ["Sin cocinar"], ext: ["Sin huevo", "Sin gluten"], tags: ["Alta proteína", "Para los que aman el queso"],
+    gluten: "natural", lacteos: true,
+    raciones: 1, racionesTxt: "1 bol", tiempoTxt: "3 min", min: 3,
+    completa: { kcal: 265, p: 19, g: 11, c: 23 }, racion: { kcal: 265, p: 19, g: 11, c: 23 },
+    ingredientes: [
+      { t: "Ingredientes", items: ["Queso fresco batido 0%: {200} g", "Fruta: {1} pieza (kiwi, pera, frutos rojos, melocotón…), en trozos", "Nueces: {15} g (unas 4)", "Canela y edulcorante al gusto"] }
+    ],
+    pasos: [
+      "<b>Pon el queso batido</b> en un bol con la canela y el edulcorante.",
+      "<b>Por encima</b>, la fruta en trozos y las nueces partidas."
+    ],
+    tabla: { cols: ["Ración"], rows: [["Calorías", "~265 kcal"], ["Proteínas", "~19 g"], ["Grasas", "~11 g"], ["Carbohidratos", "~23 g"]] },
+    notaTabla: "Sabe a postre de queso y es de lo más proteico que puedes tomar en 3 minutos.",
+    tips: ["<b>Versión sin nueces:</b> baja a unos 165 kcal y 1 g de grasa."],
+    conserva: { nevera: "Montado al momento. El queso batido abierto, 3–4 días.", congelar: "No." },
+    compra: [["batido", 200, "g"], ["fruta", 1, "pieza"], ["frutos-secos", 15, "g"], ["canela", null], ["edulcorante", null]],
+    usa: ["batido", "frutos-secos"]
   }
 ];
 
@@ -1256,6 +1324,9 @@ const INGREDIENTES = [
   { id: "salmon", nombre: "Salmón", pasillo: "Carne y pescado", rol: "El pescado azul de la semana: grasa omega-3.",
     criterio: "Lomos sin piel o con piel, frescos o <b>congelados al natural</b> (sin marinar). Unos 200 kcal y 13 g de grasa por 100 g (valor medio).",
     nota: "No he verificado una marca concreta. La caballa y las sardinas son más baratas y también son pescado azul.", productos: [] },
+  { id: "frutos-secos", nombre: "Frutos secos", pasillo: "Despensa", rol: "La grasa buena de media mañana.",
+    criterio: "Almendras o nueces <b>naturales o tostadas, sin sal ni miel</b>. Unos 600–650 kcal por 100 g: la cantidad importa más que la marca.",
+    nota: "No he verificado marcas concretas. Mira que el único ingrediente sea el fruto seco.", productos: [] },
   { id: "queso-crema", nombre: "Queso crema light (opcional)", pasillo: "Lácteos y huevos", rol: "Solo si echas de menos el sabor clásico de cheesecake.",
     criterio: "Úsalo poco: <b>30 g como mucho</b> por receta.",
     aviso: "Aunque sea «light», tiene unos 11–12 g de grasa por 100 g. Por eso el libro no lo usa por defecto.",
@@ -1289,30 +1360,32 @@ const EXTRA_ING = {
   "verduras-guiso": ["Zanahoria, cebolla, pimiento verde y tomate", "Fruta y verdura"],
   judias: ["Judías verdes", "Fruta y verdura"],
   soja: ["Salsa de soja baja en sal", "Despensa"],
-  "tomate-triturado": ["Tomate triturado natural", "Despensa"]
+  "tomate-triturado": ["Tomate triturado natural", "Despensa"],
+  fruta: ["Fruta de temporada", "Fruta y verdura"]
 };
 const PASILLOS = ["Fruta y verdura", "Carne y pescado", "Lácteos y huevos", "Congelados", "Despensa", "Otros"];
 
 /* ===================== CONFIGURACIÓN ===================== */
-const SABOR = { "tortitas": "avena", "cheesecake-nevera": "frambuesa", "cheesecake-airfryer": "melocoton", "mousse": "cacao", "natillas": "vainilla", "tortilla": "espinaca", "pollo": "melocoton", "merluza": "vainilla", "hamburguesas": "espinaca", "tostada-aguacate": "espinaca", "revuelto-claras": "melocoton", "overnight-oats": "frambuesa", "batido-platano": "vainilla", "crema-calabacin": "espinaca", "merluza-coliflor": "vainilla", "pavo-verduras": "melocoton", "caldo-pollo": "avena", "lentejas": "cacao", "salmon-patata": "melocoton", "arroz-pollo": "avena", "pasta-atun": "frambuesa", "garbanzos-espinacas": "espinaca" };
-const SABOR_MOMENTO = { Desayuno: "avena", Comida: "melocoton", Merienda: "frambuesa", Postre: "frambuesa", Cena: "espinaca" };
+const SABOR = { "tortitas": "avena", "cheesecake-nevera": "frambuesa", "cheesecake-airfryer": "melocoton", "mousse": "cacao", "natillas": "vainilla", "tortilla": "espinaca", "pollo": "melocoton", "merluza": "vainilla", "hamburguesas": "espinaca", "tostada-aguacate": "espinaca", "revuelto-claras": "melocoton", "overnight-oats": "frambuesa", "batido-platano": "vainilla", "crema-calabacin": "espinaca", "merluza-coliflor": "vainilla", "pavo-verduras": "melocoton", "caldo-pollo": "avena", "lentejas": "cacao", "salmon-patata": "melocoton", "arroz-pollo": "avena", "pasta-atun": "frambuesa", "garbanzos-espinacas": "espinaca", "fruta-frutos-secos": "avena", "bocadillo-pavo": "melocoton", "bol-queso-fruta": "frambuesa" };
+const SABOR_MOMENTO = { Tentempié: "avena", Desayuno: "avena", Comida: "melocoton", Merienda: "frambuesa", Postre: "frambuesa", Cena: "espinaca" };
 const sabor = r => r.sabor || SABOR[r.id] || SABOR_MOMENTO[r.cat[0]] || "avena";
-const CATS = ["Desayuno", "Comida", "Merienda", "Postre", "Cena"];
-const METS = ["Sin horno", "Airfryer", "Sartén", "Cazo", "Tostadora", "Batidora"];
+const CATS = ["Desayuno", "Tentempié", "Comida", "Merienda", "Postre", "Cena"];
+const METS = ["Sin cocinar", "Sin horno", "Airfryer", "Sartén", "Cazo", "Tostadora", "Batidora"];
 const EXTS = ["Favoritas", "Cena ligera", "Sin huevo", "Sin gluten", "Sin lácteos", "Aprovechamiento"];
 const KEY_LABEL = { kcal: "calorías", p: "proteína", g: "grasa", c: "carbohidratos", p100: "lo que más llena", min: "tiempo", nombre: "nombre" };
 const LIM = { kcal: 500, p: 0, g: 20 }; // valores de "sin límite" de los deslizadores
 const DIAS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
-const HUECOS = [["desayuno", "Desayuno", ["Desayuno"]], ["comida", "Comida", ["Comida"]], ["merienda", "Merienda", ["Merienda", "Postre"]], ["cena", "Cena", ["Cena"]]];
-/* Semana tipo: [desayuno, comida, merienda, cena]; "|2" = ración doble */
+const HUECOS = [["desayuno", "Desayuno", ["Desayuno"]], ["media", "Media mañana", ["Tentempié"]], ["comida", "Comida", ["Comida"]], ["merienda", "Merienda", ["Merienda", "Tentempié"]], ["cena", "Cena", ["Cena"]], ["postre", "Postre", ["Postre"]]];
+/* Semana tipo: [desayuno, media mañana, comida, merienda, cena, postre]; "|1.5" o "|2" = ración mayor.
+   Pensada para unas 2.000–2.100 kcal con mucha proteína; con pan y fruta en la comida se llega a ~2.300. */
 const SEMANA_TIPO = [
-  ["overnight-oats", "lentejas", "mousse|2", "merluza-coliflor"],
-  ["tortitas", "lentejas", "cheesecake-nevera|2", "crema-calabacin"],
-  ["overnight-oats", "salmon-patata", "batido-platano", "pavo-verduras"],
-  ["tostada-aguacate", "arroz-pollo", "mousse|2", "caldo-pollo"],
-  ["overnight-oats", "pasta-atun", "natillas|2", "revuelto-claras"],
-  ["tortitas", "garbanzos-espinacas", "cheesecake-airfryer|2", "merluza"],
-  ["revuelto-claras", "pollo", "cheesecake-airfryer|2", "crema-calabacin"]
+  ["overnight-oats|1.5", "fruta-frutos-secos", "lentejas|1.5", "batido-platano", "caldo-pollo", "mousse"],
+  ["tortitas|2", "fruta-frutos-secos", "lentejas|1.5", "bocadillo-pavo", "crema-calabacin", ""],
+  ["overnight-oats|1.5", "bol-queso-fruta", "salmon-patata|1.5", "bocadillo-pavo", "pavo-verduras", "cheesecake-nevera"],
+  ["tostada-aguacate|1.5", "fruta-frutos-secos", "arroz-pollo|1.5", "batido-platano", "caldo-pollo", ""],
+  ["overnight-oats|1.5", "fruta-frutos-secos", "pasta-atun|1.5", "bocadillo-pavo", "revuelto-claras", "natillas"],
+  ["tortitas|2", "bol-queso-fruta", "garbanzos-espinacas|1.5", "batido-platano", "merluza", "cheesecake-airfryer"],
+  ["tostada-aguacate|1.5", "fruta-frutos-secos", "arroz-pollo|1.5", "bocadillo-pavo", "crema-calabacin", "mousse"]
 ];
 
 /* Preferencias de este navegador (vista, orden…) */
@@ -1914,7 +1987,7 @@ function renderPlan() {
       if (r) { const v = valores(r, "racion"); t.kcal += v.kcal * x; t.p += v.p * x; t.g += v.g * x; alguno = true; }
       if (sel === "otro") otro = true;
       const opts = RECETAS.filter(y => y.cat.some(c => cats.includes(c))).map(y => `<option value="${y.id}" ${y.id === sel ? "selected" : ""}>${y.nombre} (${fmt(valores(y, "racion").kcal)} kcal)</option>`).join("");
-      const dbl = r ? `<button type="button" class="stepbtn" data-doble="${di}|${k}" aria-pressed="${x === 2}" title="Ración doble">×2</button>` : "";
+      const dbl = r ? `<button type="button" class="stepbtn" data-doble="${di}|${k}" aria-pressed="${x !== 1}" aria-label="Tamaño de la ración: ×${fmtQ(x)}. Pulsa para cambiar">×${fmtQ(x)}</button>` : "";
       return `<div class="slot"><span>${label}</span><div class="slot-in"><select data-dia="${di}" data-hueco="${k}" class="${r ? "set f-" + sabor(r) : ""}" aria-label="${label} del ${dn.toLowerCase()}"><option value="">Nada</option>${opts}<option value="otro" ${sel === "otro" ? "selected" : ""}>Algo que ya tengo (no se cuenta)</option></select>${dbl}</div></div>`;
     }).join("");
     if (alguno) { nDias++; tot.kcal += t.kcal; tot.p += t.p; tot.g += t.g; }
@@ -1923,8 +1996,19 @@ function renderPlan() {
   }).join("");
   const med = k => (nDias ? Math.round(tot[k] / nDias * 10) / 10 : 0);
   $("#weeksum").innerHTML = `<div><b>${fmt(Math.round(med("kcal")))}</b><span>kcal al día (media)</span></div><div><b>${fmt(Math.round(med("p")))} g</b><span>proteína al día</span></div><div><b>${fmt(med("g"))} g</b><span>grasa al día</span></div>`;
-  const bajo = nDias && med("kcal") < 1500 ? `Ojo: ${fmt(Math.round(med("kcal")))} kcal al día es poco para la mayoría de adultos, incluso para perder peso. Completa con fruta (2 piezas, unas 150 kcal), pan integral en la comida (unas 150 kcal) o un puñado de frutos secos (unas 180 kcal), y consulta tus calorías con un dietista-nutricionista. ` : "";
-  $("#plan-note").textContent = nDias ? bajo + (conOtro ? "Los huecos con «Algo que ya tengo» no suman: los totales se quedan cortos esos días. " : "") + "Los totales son solo las comidas del plan." : "";
+  const obj = Saved.plan.obj || {};
+  ["kcal", "p", "g"].forEach(k => { const el = $("#obj-" + k); if (el && document.activeElement !== el) el.value = obj[k] || ""; });
+  let aviso = "";
+  if (nDias && obj.kcal) {
+    const dk = Math.round(med("kcal") - obj.kcal);
+    aviso = `Media de ${fmt(Math.round(med("kcal")))} kcal: ${Math.abs(dk) <= 100 ? "en tu objetivo" : dk < 0 ? fmt(-dk) + " kcal por debajo de tu objetivo. Añade pan integral y una pieza de fruta en la comida (unas 235 kcal) o sube alguna ración" : fmt(dk) + " kcal por encima de tu objetivo"}. `;
+    if (obj.p && med("p") < obj.p) aviso += `Proteína por debajo de ${obj.p} g. `;
+    if (obj.g && med("g") < obj.g) aviso += `Grasa por debajo de ${obj.g} g: añade frutos secos o una cucharada de aceite de oliva en la comida. `;
+  } else if (nDias && med("kcal") < 1500) {
+    aviso = `Ojo: ${fmt(Math.round(med("kcal")))} kcal al día es poco para la mayoría de adultos, incluso para perder peso. Pon tu objetivo arriba para comparar. `;
+  }
+  $("#plan-note").textContent = nDias ? aviso + (conOtro ? "Los huecos con «Algo que ya tengo» no suman: los totales se quedan cortos esos días. " : "") + "Los totales son solo lo que está en el plan." : "";
+  $("#plan-note").hidden = !nDias;
   estadoGuardado();
 }
 function planACompra() {
@@ -2103,11 +2187,16 @@ $("#shop-clear-done").textContent = "Desmarcar todo";
 $("#shop-clear").addEventListener("click", e => confirmar(e.currentTarget, "Pulsa otra vez para vaciar", () => { Saved.compra = { recetas: {}, tachados: {}, extra: [] }; Saved.setCompra(); renderCompra(); toast("Lista vaciada"); }));
 $("#plan-to-shop").addEventListener("click", planACompra);
 $("#plan-tipo").addEventListener("click", semanaTipo);
+["kcal", "p", "g"].forEach(k => $("#obj-" + k).addEventListener("change", e => {
+  const v = parseInt(e.target.value, 10);
+  const obj = Object.assign({}, Saved.plan.obj); if (v > 0) obj[k] = v; else delete obj[k];
+  Saved.plan.obj = obj; Saved.setPlan(); renderPlan();
+}));
 document.addEventListener("click", e => {
   const b = e.target.closest("[data-doble]"); if (!b) return;
   const [di, k] = b.dataset.doble.split("|");
   const dias = Object.assign({}, Saved.plan.dias); const d = Object.assign({}, dias[di]);
-  const { id, x } = slotParse(d[k]); d[k] = x === 2 ? id : id + "|2";
+  const { id, x } = slotParse(d[k]); const sig = x === 1 ? 1.5 : x === 1.5 ? 2 : 1; d[k] = sig === 1 ? id : id + "|" + sig;
   dias[di] = d; Saved.plan.dias = dias; Saved.setPlan(); renderPlan();
 });
 $("#plan-clear").addEventListener("click", e => confirmar(e.currentTarget, "Pulsa otra vez para vaciar", () => { Saved.plan = { dias: {} }; Saved.setPlan(); renderPlan(); toast("Plan vaciado"); }));
