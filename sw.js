@@ -2,7 +2,7 @@
 // - La página: primero la red (para tener siempre la última versión) y, sin conexión, la copia guardada.
 // - Iconos y fuentes: primero la copia guardada.
 // - La API de GitHub (tus datos) nunca se guarda aquí: la gestiona la propia página.
-const CACHE = "recetario-v1";
+const CACHE = "recetario-v2";
 const BASE = ["./", "index.html", "manifest.webmanifest", "icon-192.png", "icon-512.png", "apple-touch-icon.png"];
 
 self.addEventListener("install", e => {

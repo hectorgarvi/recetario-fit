@@ -4,11 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="Recetas fit con mucha proteína y poca grasa: plan semanal, lista de la compra y modo cocina.">
-<meta name="theme-color" content="#f4f7f5">
+<meta name="theme-color" content="#f4f7f5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14171f" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" href="icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Libro de Recetas Fit</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -65,6 +68,7 @@ body { margin: 0; }
 img { max-width: 100%; }
 :root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
 html { -webkit-text-size-adjust: 100%; }
+html { background: var(--bg); }
 body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.5; }
 body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
 h1, h2, h3, .big { font-family: var(--display); text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
@@ -2753,6 +2757,10 @@ $("#tengo-clear").addEventListener("click", () => { Saved.despensa = []; Saved.s
 const TEMAS = ["auto", "light", "dark"], TEMA_TXT = { auto: "◐", light: "☀", dark: "☾" }, TEMA_LBL = { auto: "automático", light: "claro", dark: "oscuro" };
 function aplicarTema(t) {
   if (t === "auto") delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme = t;
+  // La barra de estado del móvil toma el color del fondo del tema elegido
+  const metas = document.querySelectorAll('meta[name="theme-color"]');
+  if (t === "auto") { metas[0].content = "#f4f7f5"; metas[0].media = "(prefers-color-scheme: light)"; metas[1].content = "#14171f"; metas[1].media = "(prefers-color-scheme: dark)"; }
+  else { const c = t === "dark" ? "#14171f" : "#f4f7f5"; metas.forEach(m => { m.content = c; m.removeAttribute("media"); }); }
   $("#themebtn").textContent = TEMA_TXT[t]; $("#themebtn").setAttribute("aria-label", `Modo ${TEMA_LBL[t]}. Pulsa para cambiar`); $("#themebtn").title = `Modo ${TEMA_LBL[t]}`;
 }
 aplicarTema(prefs.get("tema", "auto"));
