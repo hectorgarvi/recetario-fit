@@ -44,6 +44,19 @@ Recetas con mucha proteína y poca grasa que sacien, con filtros, plan semanal, 
 - Cocina del usuario: freidora de aire Princess de 10 L (tipo horno, con varias alturas de bandeja), sartén, cazo y microondas. Toda receta de airfryer debe incluir: precalentado (temperatura y 3 min), altura de la bandeja, temperatura y tiempo de cada fase y cómo saber si está hecho.
 - Revisa que `completa` sea `racion × raciones`. Comprueba también que kcal ≈ 4·p + 4·c + 9·g, con margen por la fibra.
 
+## Comprobación antes de publicar
+
+Antes de publicar, ejecuta en la consola del navegador (o en un navegador headless) una comprobación de todas las recetas:
+
+- `completa ≈ racion × raciones`, con un margen del 4 %.
+- kcal entre −6 % y +15 % de `4p + 4c + 9g`. El margen es por la fibra.
+- Cada `compra` existe en `INGREDIENTES` o en `EXTRA_ING`, y cada `usa` existe en `INGREDIENTES`.
+- Cada receta tiene `SABOR` y `UTENSILIOS`.
+- Las recetas de airfryer tienen «Precalienta» y «posición» en los pasos.
+- Las `cat` y los `met` están en `CATS` y `METS`.
+- Los `[[id]]` apuntan a recetas que existen.
+- Los ids de `SEMANA_TIPO` existen.
+
 ## Probar y publicar
 
 - Para probar en local, abre `index.html` en el navegador. Si quieres servirlo: `python3 -m http.server`.

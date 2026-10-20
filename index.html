@@ -1189,6 +1189,188 @@ const RECETAS = [
     conserva: { nevera: "Montado al momento. El queso batido abierto, 3–4 días.", congelar: "No." },
     compra: [["batido", 200, "g"], ["fruta", 1, "pieza"], ["frutos-secos", 15, "g"], ["canela", null], ["edulcorante", null]],
     usa: ["batido", "frutos-secos"]
+  },
+  {
+    id: "porridge-manzana", corto: "porridge de manzana", nombre: "Porridge de avena con manzana y canela",
+    cat: ["Desayuno"], met: ["Microondas"], ext: ["Sin huevo"], tags: ["Caliente", "Sacia mucho"],
+    gluten: "avena", lacteos: true,
+    raciones: 1, racionesTxt: "1 bol", tiempoTxt: "8 min", min: 8,
+    completa: { kcal: 375, p: 23, g: 5, c: 57 }, racion: { kcal: 375, p: 23, g: 5, c: 57 },
+    ingredientes: [{"t": "Ingredientes", "items": ["Copos de avena: {50} g", "Leche desnatada: {250} ml", "Manzana: {1} pequeña (unos {100} g), en dados o rallada", "Queso fresco batido 0%: {100} g, para el final", "Canela, una pizca de sal y edulcorante al gusto"]}],
+    pasos: ["<b>Mezcla</b> en un bol grande (que sea alto: sube al hervir) la avena, la leche, la manzana, la canela y una pizca de sal.", "<b>Microondas</b> 2 min a máxima potencia [[t:2]]. Remueve y otros 1–2 min, vigilando que no se salga, hasta que espese.", "<b>Deja reposar</b> 1 min y añade el queso batido y el edulcorante. Remueve: queda cremoso y templado.", "<b>En cazo:</b> todo menos el queso batido, a fuego medio 5–6 min [[t:5]] removiendo, y el queso al final, fuera del fuego."],
+    tabla: {"cols": ["Bol"], "rows": [["Calorías", "~375 kcal"], ["Proteínas", "~23 g"], ["Grasas", "~5 g"], ["Carbohidratos", "~57 g"]]},
+    notaTabla: "El desayuno más grande del libro: buena opción los días de gimnasio por la mañana.",
+    tips: ["<b>Otras frutas:</b> pera, plátano o frutos rojos congelados (directamente al bol).", "<b>Sin el queso batido</b> baja a ~330 kcal, pero también a 15 g de proteína."],
+    conserva: { nevera: "Mejor recién hecho. Si sobra, 1 día; añade leche al recalentar.", congelar: "No." },
+    compra: [["avena", 50, "g"], ["leche", 250, "ml"], ["fruta", 1, "pieza"], ["batido", 100, "g"], ["canela", null], ["edulcorante", null]],
+    usa: ["avena", "leche", "batido"]
+  },
+  {
+    id: "tostada-salmon", corto: "tostada de salmón", nombre: "Tostada de salmón ahumado y queso batido",
+    cat: ["Desayuno"], met: ["Tostadora"], ext: ["Sin huevo"], tags: ["Omega-3", "5 minutos"],
+    gluten: "pan", lacteos: true,
+    raciones: 1, racionesTxt: "1 (2 tostadas)", tiempoTxt: "5 min", min: 5,
+    completa: { kcal: 300, p: 23, g: 9, c: 31 }, racion: { kcal: 300, p: 23, g: 9, c: 31 },
+    ingredientes: [{"t": "Ingredientes", "items": ["Pan de molde 100% integral: {2} rebanadas (unos {60} g)", "Queso fresco batido 0%: {4} cucharadas ({60} g)", "Salmón ahumado: {50} g", "Pepino: unas rodajas finas, y eneldo o cebollino", "Unas gotas de limón y pimienta negra"]}],
+    pasos: ["<b>Tuesta el pan.</b>", "<b>Mezcla</b> el queso batido con el eneldo, el limón y la pimienta.", "<b>Unta</b> las tostadas, pon el pepino y el salmón por encima."],
+    tabla: {"cols": ["Ración"], "rows": [["Calorías", "~300 kcal"], ["Proteínas", "~23 g"], ["Grasas", "~9 g"], ["Carbohidratos", "~31 g"]]},
+    notaTabla: "Cuentas con salmón ahumado de 209 kcal y 13 g de grasa por 100 g (Aguinamar). Su grasa es omega-3, de la buena.",
+    tips: ["<b>El salmón ahumado lleva bastante sal:</b> si tomas mucho, alterna con la tostada de pavo o el revuelto."],
+    conserva: { nevera: "Al momento. El salmón abierto, 2–3 días bien tapado.", congelar: "El salmón ahumado sí se congela en su envase." },
+    compra: [["pan", 60, "g"], ["batido", 60, "g"], ["salmon-ahumado", 50, "g"], ["pepino", 0.25, "ud."], ["limon", null]],
+    usa: ["pan", "batido", "salmon-ahumado"]
+  },
+  {
+    id: "bizcocho-yogur", corto: "bizcocho de yogur", nombre: "Bizcocho de yogur y avena",
+    cat: ["Merienda", "Desayuno", "Postre"], met: ["Airfryer"], ext: [], tags: ["Para toda la semana", "Sin azúcar"],
+    gluten: "avena", lacteos: true,
+    raciones: 6, racionesTxt: "6 porciones", tiempoTxt: "10 min + 30–35 min de airfryer", min: 45,
+    molde: "Molde de 16–18 cm (de silicona o metálico; mejor no de cristal). Freidora Princess 10 L",
+    completa: { kcal: 920, p: 60, g: 22, c: 110 }, racion: { kcal: 155, p: 10, g: 3.7, c: 18 },
+    ingredientes: [{"t": "Ingredientes", "items": ["Yogur natural 0%: {3} unidades ({375} g)", "Huevos L: {2}, y claras de huevo: {2} (unos {70} ml)", "Copos de avena triturados (harina de avena): {150} g", "Levadura química: {1} sobre ({16} g)", "Edulcorante para repostería: el equivalente a unos {100} g de azúcar (mira el envase)", "Ralladura de {1} limón y {1} cdta. de aroma de vainilla"]}],
+    pasos: ["<b>Tritura la avena</b> hasta que quede como harina.", "<b>Bate</b> los huevos, las claras, los yogures, el edulcorante, la vainilla y la ralladura.", "<b>Añade</b> la harina de avena y la levadura tamizadas y mezcla con una espátula, sin batir demasiado.", "<b>Precalienta</b> la freidora Princess a 160 °C durante 5 minutos [[t:5]].", "<b>Hornea</b> en un molde de 16–18 cm forrado con papel (o de silicona), con la bandeja en la posición baja, a <b>160 °C durante 30–35 min</b> [[t:30]]. Si a los 15 min se dora mucho por arriba, tápalo con papel de aluminio.", "<b>Comprueba</b> pinchando el centro con un palillo: tiene que salir limpio. Deja enfriar 15 min antes de desmoldar."],
+    tabla: {"cols": ["Bizcocho entero", "Por porción (1/6)"], "rows": [["Calorías", "~920 kcal", "~155 kcal"], ["Proteínas", "~60 g", "~10 g"], ["Grasas", "~22 g", "~3,7 g"], ["Carbohidratos", "~110 g", "~18 g"]]},
+    notaTabla: "Un bizcocho de yogur normal lleva unos 100 ml de aceite y 200 g de azúcar: unas 2.600 kcal, casi el triple que este. A cambio, el fit queda algo más compacto y húmedo.",
+    tips: ["<b>Con una porción y un vaso de leche desnatada</b> tienes una merienda de ~245 kcal y 18 g de proteína.", "<b>Variantes:</b> con 100 g de arándanos en la masa, o 1 cucharada de cacao puro desgrasado para hacerlo de chocolate."],
+    conserva: { nevera: "4–5 días en un táper, mejor en la nevera.", congelar: "Sí, en porciones, hasta 2 meses. Descongela a temperatura ambiente o 20 s en el microondas." },
+    compra: [["yogur", 375, "g"], ["huevos", 4, "ud. (2 enteros + 2 claras)"], ["avena", 150, "g"], ["levadura", 1, "sobre"], ["limon", 1, "ud."], ["vainilla", 1, "cdta."], ["edulcorante", null]],
+    usa: ["yogur", "huevos", "avena", "edulcorante"]
+  },
+  {
+    id: "brownie-fit", corto: "brownie fit", nombre: "Brownie fit de cacao y plátano",
+    cat: ["Merienda", "Postre"], met: ["Airfryer"], ext: [], tags: ["Chocolate", "Sin azúcar añadido"],
+    gluten: "avena", lacteos: true,
+    raciones: 6, racionesTxt: "6 cuadrados", tiempoTxt: "10 min + 18–20 min de airfryer", min: 30,
+    molde: "Molde cuadrado de 15–18 cm forrado con papel de horno. Freidora Princess 10 L",
+    completa: { kcal: 685, p: 39, g: 15, c: 87 }, racion: { kcal: 115, p: 6.5, g: 2.5, c: 14.5 },
+    ingredientes: [{"t": "Ingredientes", "items": ["Plátanos muy maduros: {2} (unos {200} g sin piel)", "Huevo L: {1}, y claras de huevo: {2} (unos {70} ml)", "Copos de avena triturados: {60} g", "Cacao puro desgrasado: {30} g (3 cucharadas)", "Yogur natural 0%: {1} unidad ({125} g)", "Levadura química: {1} cdta., una pizca de sal y edulcorante al gusto"]}],
+    pasos: ["<b>Chafa los plátanos</b> con un tenedor hasta que sean puré.", "<b>Añade</b> el huevo, las claras y el yogur, y bate.", "<b>Incorpora</b> la avena triturada, el cacao, la levadura, la sal y el edulcorante. Mezcla hasta que no queden grumos de cacao.", "<b>Precalienta</b> la freidora a 165 °C durante 3 minutos [[t:3]].", "<b>Hornea</b> en un molde cuadrado de unos 15–18 cm forrado con papel, con la bandeja en la posición baja, a <b>165 °C durante 18–20 min</b> [[t:18]].", "<b>Comprueba:</b> el palillo tiene que salir con alguna miga húmeda, no líquido. Si sale limpio del todo, se ha secado. Deja enfriar antes de cortar en 6."],
+    tabla: {"cols": ["Molde entero", "Por cuadrado (1/6)"], "rows": [["Calorías", "~685 kcal", "~115 kcal"], ["Proteínas", "~39 g", "~6,5 g"], ["Grasas", "~15 g", "~2,5 g"], ["Carbohidratos", "~87 g", "~14,5 g"]]},
+    notaTabla: "El dulzor viene del plátano muy maduro: cuanto más negra la piel, más dulce sale y menos edulcorante necesita.",
+    tips: ["<b>Más chocolate:</b> 20 g de chocolate negro 85% en trocitos por encima antes de hornear (+120 kcal en total, unos 20 por cuadrado).", "<b>Frío de la nevera</b> queda más denso, más tipo brownie de verdad."],
+    conserva: { nevera: "4 días en la nevera.", congelar: "Sí, por cuadrados, hasta 2 meses." },
+    compra: [["platano", 2, "ud. maduros"], ["huevos", 3, "ud. (1 entero + 2 claras)"], ["avena", 60, "g"], ["cacao", 30, "g"], ["yogur", 125, "g"], ["levadura", 1, "cdta."], ["edulcorante", null]],
+    usa: ["cacao", "avena", "yogur", "huevos"]
+  },
+  {
+    id: "galletas-avena", corto: "galletas de avena", nombre: "Galletas de avena y plátano",
+    cat: ["Merienda", "Tentempié"], met: ["Airfryer"], ext: ["Sin lácteos"], tags: ["3 ingredientes", "Para llevar"],
+    gluten: "avena", lacteos: false,
+    raciones: 4, racionesTxt: "12 galletas (ración = 3)", tiempoTxt: "10 min + 12–15 min de airfryer", min: 25,
+    completa: { kcal: 645, p: 23, g: 9, c: 111 }, racion: { kcal: 160, p: 5.7, g: 2.3, c: 28 },
+    ingredientes: [{"t": "Ingredientes", "items": ["Plátanos muy maduros: {2} (unos {200} g sin piel)", "Copos de avena: {120} g", "Claras de huevo: {1} (unos {35} ml), para que liguen", "Canela al gusto (opcional: ralladura de naranja)"]}],
+    pasos: ["<b>Chafa los plátanos</b> con un tenedor y mézclalos con la avena, la clara y la canela. Deja reposar 5 min [[t:5]].", "<b>Precalienta</b> la freidora a 170 °C durante 3 minutos [[t:3]].", "<b>Forma 12 galletas</b> con una cuchara sobre papel de horno, aplastándolas a 1 cm de grosor (no crecen).", "<b>Hornea</b> con la bandeja en la posición media, a <b>170 °C durante 12–15 min</b> [[t:12]], hasta que los bordes estén dorados. Si no caben sin tocarse, en dos tandas.", "<b>Deja enfriar</b> en una rejilla: al principio están blanditas y se endurecen al enfriar."],
+    tabla: {"cols": ["Las 12", "Ración (3 galletas)"], "rows": [["Calorías", "~645 kcal", "~160 kcal"], ["Proteínas", "~23 g", "~5,7 g"], ["Grasas", "~9 g", "~2,3 g"], ["Carbohidratos", "~111 g", "~28 g"]]},
+    notaTabla: "Son sobre todo hidratos: buenas antes del gimnasio. Para merendar con proteína, acompáñalas de un vaso de leche o un yogur.",
+    tips: ["<b>Variantes:</b> con 1 cucharada de cacao puro desgrasado, o con unos arándanos en la masa."],
+    conserva: { nevera: "4 días en un táper (se ablandan un poco).", congelar: "Sí, hasta 2 meses." },
+    compra: [["platano", 2, "ud. maduros"], ["avena", 120, "g"], ["claras", 35, "ml"], ["canela", null]],
+    usa: ["avena", "claras"]
+  },
+  {
+    id: "helado-frutos-rojos", corto: "helado de frutos rojos", nombre: "Helado exprés de frutos rojos y queso batido",
+    cat: ["Postre", "Merienda"], met: ["Batidora"], ext: ["Sin huevo", "Sin gluten"], tags: ["5 minutos", "Sin heladera"],
+    gluten: "natural", lacteos: true,
+    raciones: 2, racionesTxt: "2 copas", tiempoTxt: "5 min", min: 5,
+    completa: { kcal: 190, p: 18, g: 1, c: 21 }, racion: { kcal: 95, p: 9, g: 0.5, c: 10.5 },
+    ingredientes: [{"t": "Ingredientes", "items": ["Frutos rojos congelados: {250} g", "Queso fresco batido 0% (o skyr), bien frío: {200} g", "Edulcorante al gusto y unas gotas de limón"]}],
+    pasos: ["<b>Deja los frutos rojos</b> 5 min fuera del congelador [[t:5]] para que la batidora pueda con ellos.", "<b>Tritura</b> todo junto con la batidora o la picadora a golpes, rascando las paredes, hasta tener una crema espesa.", "<b>Sirve al momento</b>: tiene textura de helado cremoso. Si lo quieres más firme, 30 min en el congelador [[t:30]]."],
+    tabla: {"cols": ["Receta (2 copas)", "Por copa"], "rows": [["Calorías", "~190 kcal", "~95 kcal"], ["Proteínas", "~18 g", "~9 g"], ["Grasas", "~1 g", "~0,5 g"], ["Carbohidratos", "~21 g", "~10,5 g"]]},
+    notaTabla: "El postre con menos calorías del libro. Se puede comer la receta entera sin remordimientos.",
+    tips: ["<b>Con mango o plátano congelado</b> en vez de frutos rojos queda más dulce y cremoso."],
+    conserva: { nevera: "Al momento.", congelar: "Si se congela del todo queda duro: sácalo 15 min antes." },
+    compra: [["frutos", 250, "g"], ["batido", 200, "g"], ["edulcorante", null], ["limon", null]],
+    usa: ["frutos", "batido"]
+  },
+  {
+    id: "pollo-curry", corto: "pollo al curry", nombre: "Pollo al curry ligero con arroz basmati",
+    cat: ["Comida"], met: ["Sartén", "Cazo"], ext: ["Sin huevo", "Sin gluten"], tags: ["Alta proteína", "Salsa de yogur"],
+    gluten: "natural", lacteos: true,
+    raciones: 1, racionesTxt: "1", tiempoTxt: "30 min", min: 30,
+    completa: { kcal: 585, p: 46, g: 13.5, c: 66 }, racion: { kcal: 585, p: 46, g: 13.5, c: 66 },
+    ingredientes: [{"t": "Ingredientes", "items": ["Pechuga de pollo: {150} g, en dados", "Arroz basmati: {60} g en crudo", "Cebolla: {0.5} (unos {75} g), picada", "Tomate triturado: {100} g", "Yogur natural 0%: {1} unidad ({125} g)", "Curry en polvo: {1} cucharada; ajo y jengibre al gusto", "Aceite de oliva: {1} cucharada ({10} g)", "Espinacas: un puñado (opcional)"]}],
+    pasos: ["<b>Pon a cocer el arroz</b> en agua con sal 10–12 min [[t:11]] y escúrrelo.", "<b>Sofríe la cebolla</b> en el aceite 4 min [[t:4]]. Añade el pollo y dóralo 4 min más.", "<b>Añade el curry</b>, el ajo y el jengibre, remueve 30 segundos, y echa el tomate. Cuece 6–8 min a fuego suave [[t:7]].", "<b>Fuera del fuego</b>, añade el yogur y las espinacas y mezcla. Si el yogur hierve, se corta.", "<b>Sirve</b> con el arroz."],
+    tabla: {"cols": ["Ración"], "rows": [["Calorías", "~585 kcal"], ["Proteínas", "~46 g"], ["Grasas", "~13,5 g"], ["Carbohidratos", "~66 g"]]},
+    notaTabla: "La salsa cremosa sale del yogur 0%, no de nata ni leche de coco: así queda en una fracción de la grasa. Cuentas con arroz basmati Hacendado (355 kcal por 100 g en crudo).",
+    tips: ["<b>Más ligero:</b> cambia el arroz por coliflor rallada salteada (−180 kcal).", "<b>Pica poco:</b> el curry en polvo normal es suave; si te gusta picante, una pizca de cayena."],
+    conserva: { nevera: "3 días.", congelar: "Sí, el pollo con la salsa, hasta 2 meses. El arroz, aparte." },
+    compra: [["pollo", 150, "g"], ["arroz", 60, "g (basmati)"], ["cebolla", 0.5, "ud."], ["tomate-triturado", 100, "g"], ["yogur", 125, "g"], ["aceite", 10, "g"], ["especias", null]],
+    usa: ["pollo", "arroz", "yogur", "tomate-triturado", "aceite"]
+  },
+  {
+    id: "albondigas-pollo", corto: "albóndigas de pollo", nombre: "Albóndigas de pollo en salsa de tomate",
+    cat: ["Comida"], met: ["Airfryer", "Cazo"], ext: ["Aprovechamiento"], tags: ["Alta proteína", "Para dos días"],
+    gluten: "avena", lacteos: false,
+    raciones: 2, racionesTxt: "2 (unas 16 albóndigas)", tiempoTxt: "20 min + 12 min de airfryer + 5 min en salsa", min: 40,
+    completa: { kcal: 820, p: 100, g: 22, c: 51 }, racion: { kcal: 410, p: 50, g: 11, c: 25.5 },
+    ingredientes: [{"t": "Albóndigas", "items": ["Pechuga de pollo: {400} g, picada en la picadora", "Claras de huevo: {1} (unos {35} ml)", "Copos de avena: {30} g (en vez de pan)", "Ajo: {1} diente muy picado, perejil, sal y pimienta", "Spray de aceite"]}, {"t": "Salsa", "items": ["Tomate triturado: {400} g", "Cebolla: {1} pequeña (unos {100} g)", "Aceite de oliva: {1} cucharada ({10} g)", "Orégano, sal y una pizca de edulcorante si el tomate está ácido"]}],
+    pasos: ["<b>Mezcla</b> el pollo picado con la clara, la avena, el ajo, el perejil, la sal y la pimienta. Deja reposar 10 min [[t:10]].", "<b>Forma unas 16 albóndigas</b> con las manos mojadas.", "<b>Precalienta</b> la freidora a 200 °C durante 3 minutos [[t:3]].", "<b>Cocina</b> las albóndigas con una pulverización de spray, con la bandeja en la posición media, a <b>200 °C durante 10–12 min</b> [[t:11]], moviéndolas a mitad. En dos tandas si no caben sin tocarse.", "<b>Mientras</b>, haz la salsa: cebolla picada en el aceite 5 min, el tomate y el orégano, y 10 min a fuego suave [[t:10]].", "<b>Junta</b> las albóndigas con la salsa y 5 min más [[t:5]]. Por dentro no tienen que quedar rosas (74 °C)."],
+    tabla: {"cols": ["Ración (8 albóndigas)", "Ración + 60 g de arroz basmati"], "rows": [["Calorías", "~410 kcal", "~625 kcal"], ["Proteínas", "~50 g", "~55 g"], ["Grasas", "~11 g", "~11,5 g"], ["Carbohidratos", "~25 g", "~72 g"]]},
+    notaTabla: "Las albóndigas de siempre se fríen y llevan carne de ternera y cerdo y pan con leche. Así, en airfryer y con pechuga, tienen una fracción de la grasa.",
+    tips: ["<b>Aprovecha la clara</b> que te sobre de las natillas.", "<b>Para la comida</b> acompáñalas con arroz, patata o pan integral; para la cena, solas con ensalada."],
+    conserva: { nevera: "3 días. Al día siguiente están más ricas.", congelar: "Sí, con la salsa, hasta 3 meses." },
+    compra: [["pollo", 400, "g"], ["claras", 35, "ml"], ["avena", 30, "g"], ["tomate-triturado", 400, "g"], ["cebolla", 1, "ud."], ["aceite", 10, "g"], ["ajo", 1, "diente"], ["especias", null], ["spray", null]],
+    usa: ["pollo", "claras", "avena", "tomate-triturado", "aceite"]
+  },
+  {
+    id: "pescado-pisto", corto: "pescado con pisto", nombre: "Merluza al vapor sobre pisto de verduras",
+    cat: ["Comida", "Cena"], met: ["Sartén"], ext: ["Sin huevo", "Sin gluten", "Sin lácteos", "Cena ligera"], tags: ["Muy digestiva", "Un solo recipiente"],
+    gluten: "natural", lacteos: false,
+    raciones: 1, racionesTxt: "1", tiempoTxt: "35 min", min: 35,
+    completa: { kcal: 365, p: 36, g: 13, c: 26 }, racion: { kcal: 365, p: 36, g: 13, c: 26 },
+    ingredientes: [{"t": "Pisto", "items": ["Calabacín: {1} pequeño (unos {150} g)", "Pimiento rojo: {0.5} (unos {100} g)", "Cebolla: {0.5} (unos {75} g)", "Tomate triturado: {150} g", "Aceite de oliva: {1} cucharada ({10} g), sal y una pizca de comino"]}, {"t": "Pescado", "items": ["Lomos de merluza o bacalao fresco: {180} g", "Sal, pimienta y perejil"]}],
+    pasos: ["<b>Pica</b> la cebolla, el pimiento y el calabacín en dados pequeños.", "<b>Sofríe</b> en una sartén con tapa, con el aceite, la cebolla y el pimiento 8 min [[t:8]] a fuego medio. Añade el calabacín y 5 min más.", "<b>Añade el tomate</b> y el comino y deja a fuego suave 10 min [[t:10]], hasta que espese.", "<b>Pon el pescado encima</b> del pisto, con sal y pimienta, tapa y deja 6–8 min a fuego bajo [[t:7]]: se hace al vapor de la verdura.", "<b>Está hecho</b> cuando se separa en láminas. Sirve con perejil."],
+    tabla: {"cols": ["Ración"], "rows": [["Calorías", "~365 kcal"], ["Proteínas", "~36 g"], ["Grasas", "~13 g"], ["Carbohidratos", "~26 g"]]},
+    notaTabla: "Vale para comer o para cenar ligero. Cuentas con lomos de merluza de 82 kcal y 1,2 g de grasa por 100 g (Hacendado).",
+    tips: ["<b>Haz el triple de pisto</b>: se congela muy bien y sirve para huevos, pasta o arroz.", "<b>Para la comida,</b> añade 100 g de patata cocida o una rebanada de pan integral."],
+    conserva: { nevera: "El pisto, 4 días. El pescado, mejor recién hecho.", congelar: "El pisto sí, hasta 3 meses." },
+    compra: [["merluza", 180, "g"], ["calabacin", 1, "ud."], ["pimiento", 0.5, "ud."], ["cebolla", 0.5, "ud."], ["tomate-triturado", 150, "g"], ["aceite", 10, "g"], ["especias", null]],
+    usa: ["merluza", "tomate-triturado", "aceite"]
+  },
+  {
+    id: "brochetas-pollo", corto: "brochetas de pollo", nombre: "Brochetas de pollo y verduras con salsa de yogur",
+    cat: ["Cena", "Comida"], met: ["Airfryer"], ext: ["Sin huevo", "Sin gluten", "Cena ligera"], tags: ["Alta proteína", "Divertida"],
+    gluten: "natural", lacteos: true,
+    raciones: 1, racionesTxt: "1 (3 brochetas)", tiempoTxt: "15 min + 12 min de airfryer", min: 30,
+    completa: { kcal: 305, p: 40, g: 8, c: 16 }, racion: { kcal: 305, p: 40, g: 8, c: 16 },
+    ingredientes: [{"t": "Brochetas", "items": ["Pechuga de pollo: {150} g, en dados de 3 cm", "Pimiento rojo: {0.5}, calabacín: {0.5}, cebolla: {0.5} y champiñones: {4}, en trozos", "Zumo de limón: {0.5}, {1} cdta. de pimentón dulce, ajo en polvo, orégano y sal", "Aceite de oliva: {1} cucharadita ({5} g)", "3 palitos de brocheta de madera"]}, {"t": "Salsa", "items": ["Yogur natural 0%: {60} g, con ajo, limón, eneldo y sal"]}],
+    pasos: ["<b>Remoja los palitos</b> en agua 20 min [[t:20]] para que no se quemen.", "<b>Adoba</b> el pollo con el limón, el aceite y las especias (mínimo 10 min).", "<b>Monta las brochetas</b> alternando pollo y verduras.", "<b>Precalienta</b> la freidora a 200 °C durante 3 minutos [[t:3]].", "<b>Cocina</b> con la bandeja en la posición media a <b>200 °C durante 10–12 min</b> [[t:11]], dándoles la vuelta a mitad. El pollo no tiene que estar rosa por dentro.", "<b>Sirve</b> con la salsa de yogur."],
+    tabla: {"cols": ["Ración"], "rows": [["Calorías", "~305 kcal"], ["Proteínas", "~40 g"], ["Grasas", "~8 g"], ["Carbohidratos", "~16 g"]]},
+    notaTabla: "Para la comida, añade 60 g de arroz o un pan de pita integral.",
+    tips: ["<b>Sin palitos</b> sale igual: todo suelto en la bandeja, removiendo a mitad.", "<b>Con pavo o gambas</b> también funcionan; las gambas, solo 6–7 min."],
+    conserva: { nevera: "2 días.", congelar: "El pollo adobado y crudo, sí." },
+    compra: [["pollo", 150, "g"], ["pimiento", 0.5, "ud."], ["calabacin", 0.5, "ud."], ["cebolla", 0.5, "ud."], ["champinones", 60, "g"], ["yogur", 60, "g"], ["limon", 1, "ud."], ["aceite", 5, "g"], ["especias", null]],
+    usa: ["pollo", "yogur", "aceite"]
+  },
+  {
+    id: "sepia-plancha", corto: "sepia a la plancha", nombre: "Sepia a la plancha con ajo, perejil y verduras",
+    cat: ["Cena"], met: ["Sartén"], ext: ["Sin huevo", "Sin gluten", "Sin lácteos", "Cena ligera"], tags: ["Muy poca grasa", "10 minutos"],
+    gluten: "natural", lacteos: false,
+    raciones: 1, racionesTxt: "1", tiempoTxt: "10 min", min: 10,
+    completa: { kcal: 250, p: 40, g: 6.5, c: 10 }, racion: { kcal: 250, p: 40, g: 6.5, c: 10 },
+    ingredientes: [{"t": "Ingredientes", "items": ["Sepia limpia: {200} g (si es congelada, descongelada en la nevera la noche antes)", "Ajo: {2} dientes, perejil y zumo de limón", "Aceite de oliva: {1} cucharadita ({5} g) y sal en escamas", "Verduras para la plancha: calabacín, espárragos o pimiento, unos {200} g"]}],
+    pasos: ["<b>Seca muy bien la sepia</b> con papel de cocina: si está mojada, cuece en vez de dorarse. Córtala en tiras o hazle unos cortes por encima.", "<b>Haz las verduras</b> a la plancha con sal en una sartén muy caliente con spray, 4–5 min [[t:4]]. Sácalas.", "<b>Majado:</b> pica el ajo y el perejil y mézclalos con el aceite y el limón.", "<b>Sepia a la plancha</b> en la sartén muy caliente, 2–3 min por cada lado [[t:3]]. Más tiempo la endurece.", "<b>Sirve</b> la sepia con el majado por encima y las verduras al lado."],
+    tabla: {"cols": ["Ración"], "rows": [["Calorías", "~250 kcal"], ["Proteínas", "~40 g"], ["Grasas", "~6,5 g"], ["Carbohidratos", "~10 g"]]},
+    notaTabla: "Cuentas con sepia de 78 kcal y 0,5 g de grasa por 100 g (Hacendado). Una de las proteínas más magras que hay.",
+    tips: ["<b>Con calamar o gambas</b> sale igual y con valores parecidos."],
+    conserva: { nevera: "Mejor recién hecha.", congelar: "Cruda, sí; cocinada, se endurece." },
+    compra: [["sepia", 200, "g"], ["verduras", 200, "g"], ["ajo", 2, "dientes"], ["limon", 0.5, "ud."], ["aceite", 5, "g"]],
+    usa: ["sepia", "aceite"]
+  },
+  {
+    id: "tortilla-calabacin", corto: "tortilla de calabacín", nombre: "Tortilla de calabacín con claras",
+    cat: ["Cena"], met: ["Sartén"], ext: ["Sin gluten", "Sin lácteos", "Cena ligera", "Aprovechamiento"], tags: ["Ligera", "Aprovecha claras"],
+    gluten: "natural", lacteos: false,
+    raciones: 1, racionesTxt: "1", tiempoTxt: "20 min", min: 20,
+    completa: { kcal: 215, p: 21, g: 9, c: 11 }, racion: { kcal: 215, p: 21, g: 9, c: 11 },
+    ingredientes: [{"t": "Ingredientes", "items": ["Calabacín: {1} mediano (unos {200} g), en láminas finas o rallado", "Cebolla: {0.5} pequeña (unos {50} g)", "Huevos L: {1}, y claras de huevo: {3} (unos {100} ml)", "Spray de aceite, sal y pimienta"]}],
+    pasos: ["<b>Pocha</b> el calabacín y la cebolla en una sartén antiadherente con spray y sal, tapada, a fuego medio-bajo 10 min [[t:10]], hasta que estén tiernos y suelten el agua.", "<b>Bate</b> el huevo con las claras, sal y pimienta, y mézclalo con la verdura.", "<b>Cuaja</b> en la misma sartén, tapada, a fuego medio-bajo 4 min [[t:4]]. Dale la vuelta con un plato y 2 min más."],
+    tabla: {"cols": ["Ración"], "rows": [["Calorías", "~215 kcal"], ["Proteínas", "~21 g"], ["Grasas", "~9 g"], ["Carbohidratos", "~11 g"]]},
+    notaTabla: "La tortilla de patata clásica (frita) ronda las 500–600 kcal por ración. Esta, con calabacín y claras, menos de la mitad.",
+    tips: ["<b>Con patata pero sin freír:</b> 150 g de patata en láminas finas en el microondas 6–7 min con un poco de agua, y luego con el calabacín (+115 kcal)."],
+    conserva: { nevera: "1–2 días. Fría también está buena.", congelar: "No." },
+    compra: [["calabacin", 1, "ud."], ["cebolla", 0.5, "ud."], ["huevos", 1, "ud."], ["claras", 100, "ml"], ["spray", null]],
+    usa: ["huevos", "claras", "spray"]
   }
 ];
 
@@ -1221,6 +1403,18 @@ const UTENSILIOS = {
   "garbanzos-espinacas": [["Sartén grande"], ["Colador (para lavar los garbanzos)"]],
   "fruta-frutos-secos": [BASCULA("un puñado que quepa en la palma de la mano, sin colmar."), ["Táper pequeño o bolsita para llevar"]],
   "bocadillo-pavo": [["Tostadora (opcional)"], ["Papel de horno o film para llevarlo"]],
+  "porridge-manzana": [["Microondas y bol alto", "Un cazo a fuego medio, 5–6 min removiendo."], BASCULA("50 g de avena son unas 5 cucharadas soperas; 250 ml de leche, una taza grande.")],
+  "tostada-salmon": [["Tostadora", "Sartén sin aceite, 1–2 min por lado, o airfryer a 180 °C, 3–4 min."]],
+  "bizcocho-yogur": [["Freidora de aire", AF_HORNO("unos 175–180 °C y 35–40 min")], ["Molde de 16–18 cm", "Si tu airfryer no admite ese tamaño, usa uno más pequeño (más alto) y alarga 5–10 min, o hazlo en dos moldes pequeños (unos 20 min)."], ["Batidora o picadora (para la harina de avena)", "Compra harina de avena."], ["Varillas o batidora", "A mano con varillas o un tenedor: mezcla lo justo para que no queden grumos."]],
+  "brownie-fit": [["Freidora de aire", AF_HORNO("unos 180 °C y 22–25 min")], ["Molde cuadrado de 15–18 cm y papel de horno", "Un molde redondo o una fuente pequeña sirve igual."], ["Batidora o picadora (para la avena)", "Harina de avena comprada."], ["Tenedor (para el plátano)"]],
+  "galletas-avena": [["Freidora de aire", AF_HORNO("unos 185 °C y 15–18 min")], ["Papel de horno"], ["Tenedor y cuchara"]],
+  "helado-frutos-rojos": [["Batidora potente o picadora", "Sin batidora: deja los frutos rojos 20 min fuera, cháfalos con un tenedor y mézclalos con el queso batido. Queda tipo yogur helado con trozos."]],
+  "pollo-curry": [["Sartén"], ["Cazo y colador (para el arroz)", "El arroz en el microondas: 1 taza de arroz, 2 de agua, 12–14 min tapado."]],
+  "albondigas-pollo": [["Picadora", "Pide en la carnicería que te piquen la pechuga, o cómprala ya picada mirando que sea solo pechuga."], ["Freidora de aire", AF_HORNO("unos 215 °C y 15 min") + " O dóralas en sartén con spray, 5–6 min moviéndolas, y termínalas en la salsa 10 min."], ["Cazo o sartén honda (para la salsa)"]],
+  "pescado-pisto": [["Sartén con tapa", "Sin tapa, un plato grande encima, o papel de aluminio."], ["Cuchillo y tabla"]],
+  "brochetas-pollo": [["Freidora de aire", AF_HORNO("unos 215 °C y 15 min") + " O a la plancha en sartén, 3 min por cada lado."], ["Palitos de brocheta", "Todo suelto en la bandeja, sin palitos."]],
+  "sepia-plancha": [["Sartén antiadherente o plancha"], ["Papel de cocina (para secar la sepia)"]],
+  "tortilla-calabacin": [["Sartén antiadherente con tapa", "Un plato grande encima hace de tapa."], ["Un plato para darle la vuelta"], ["Rallador (opcional)", "Láminas finas con el cuchillo."]],
   "bol-queso-fruta": [["Bol y cuchillo"], BASCULA("200 g de queso batido son unas 13 cucharadas soperas, o 2/5 de una tarrina de 500 g.")]
 };
 
@@ -1351,7 +1545,7 @@ const INGREDIENTES = [
     ] },
   { id: "arroz", nombre: "Arroz integral", pasillo: "Despensa", rol: "Para el arroz salteado.",
     criterio: "<b>Integral</b>: más fibra que el blanco y sacia más. Tarda unos 25–30 min en cocerse.",
-    productos: [{ marca: "bonÀrea", nombre: "Arroz integral", tienda: "bonÀrea", formato: "1 kg", v: [350, 7.5, 2.3, 72.3], src: OFF("8413585035091") }] },
+    productos: [{ marca: "bonÀrea", nombre: "Arroz integral", tienda: "bonÀrea", formato: "1 kg", v: [350, 7.5, 2.3, 72.3], src: OFF("8413585035091") }, { marca: "Hacendado", nombre: "Arroz basmati (blanco)", tienda: "Mercadona", formato: "1 kg", v: [355, 9, 0.6, 78], src: OFF("8480000050021"), nota: "Para el pollo al curry. Se hace en 10–12 min." }] },
   { id: "pasta", nombre: "Pasta integral", pasillo: "Despensa", rol: "Para los macarrones con atún.",
     criterio: "Que ponga <b>«integral»</b> y tenga <b>≥ 6 g de fibra</b> por 100 g.",
     productos: [{ marca: "Consum", nombre: "Macarrones integrales", tienda: "Consum", formato: "—", v: [342, 12, 2, 65], src: OFF("8414807558527") }] },
@@ -1364,6 +1558,15 @@ const INGREDIENTES = [
   { id: "frutos-secos", nombre: "Frutos secos", pasillo: "Despensa", rol: "La grasa buena de media mañana.",
     criterio: "Almendras o nueces <b>naturales o tostadas, sin sal ni miel</b>. Unos 600–650 kcal por 100 g: la cantidad importa más que la marca.",
     nota: "No he verificado marcas concretas. Mira que el único ingrediente sea el fruto seco.", productos: [] },
+  { id: "tomate-triturado", nombre: "Tomate triturado natural", pasillo: "Despensa", rol: "Base de salsas: albóndigas, curry, pisto y pasta.",
+    criterio: "<b>Triturado o tamizado natural</b>, solo tomate (y sal). <b>No tomate frito</b>: lleva aceite y azúcar.",
+    productos: [{ marca: "Hacendado", nombre: "Tomate triturado", tienda: "Mercadona", formato: "400 g", v: [28, 0.8, 0.1, 5.5], src: OFF("8480000160447") }] },
+  { id: "sepia", nombre: "Sepia", pasillo: "Congelados", rol: "Para la sepia a la plancha. Proteína muy magra.",
+    criterio: "<b>Limpia</b>, fresca o congelada. Mira cuánta agua lleva: las «con agua añadida» pierden peso al cocinar.",
+    productos: [{ marca: "Hacendado", nombre: "Sepia troceada (congelada)", tienda: "Mercadona", formato: "360 g", v: [78, 18, 0.5, 0.8], src: OFF("8480000242747") }] },
+  { id: "salmon-ahumado", nombre: "Salmón ahumado", pasillo: "Carne y pescado", rol: "Para la tostada de salmón.",
+    criterio: "Salmón ahumado <b>en lonchas</b>. Tiene bastante sal: con moderación.",
+    productos: [{ marca: "Aguinamar", nombre: "Salmón ahumado", tienda: "Sin dato de tienda", formato: "—", v: [209, 23, 13, null], src: OFF("8422107005122") }] },
   { id: "queso-crema", nombre: "Queso crema light (opcional)", pasillo: "Lácteos y huevos", rol: "Solo si echas de menos el sabor clásico de cheesecake.",
     criterio: "Úsalo poco: <b>30 g como mucho</b> por receta.",
     aviso: "Aunque sea «light», tiene unos 11–12 g de grasa por 100 g. Por eso el libro no lo usa por defecto.",
@@ -1398,16 +1601,18 @@ const EXTRA_ING = {
   judias: ["Judías verdes", "Fruta y verdura"],
   soja: ["Salsa de soja baja en sal", "Despensa"],
   "tomate-triturado": ["Tomate triturado natural", "Despensa"],
-  fruta: ["Fruta de temporada", "Fruta y verdura"]
+  fruta: ["Fruta de temporada", "Fruta y verdura"],
+  pepino: ["Pepino", "Fruta y verdura"],
+  pimiento: ["Pimiento rojo", "Fruta y verdura"]
 };
 const PASILLOS = ["Fruta y verdura", "Carne y pescado", "Lácteos y huevos", "Congelados", "Despensa", "Otros"];
 
 /* ===================== CONFIGURACIÓN ===================== */
-const SABOR = { "tortitas": "avena", "cheesecake-nevera": "frambuesa", "cheesecake-airfryer": "melocoton", "mousse": "cacao", "natillas": "vainilla", "tortilla": "espinaca", "pollo": "melocoton", "merluza": "vainilla", "hamburguesas": "espinaca", "tostada-aguacate": "espinaca", "revuelto-claras": "melocoton", "overnight-oats": "frambuesa", "batido-platano": "vainilla", "crema-calabacin": "espinaca", "merluza-coliflor": "vainilla", "pavo-verduras": "melocoton", "caldo-pollo": "avena", "lentejas": "cacao", "salmon-patata": "melocoton", "arroz-pollo": "avena", "pasta-atun": "frambuesa", "garbanzos-espinacas": "espinaca", "fruta-frutos-secos": "avena", "bocadillo-pavo": "melocoton", "bol-queso-fruta": "frambuesa" };
+const SABOR = { "tortitas": "avena", "cheesecake-nevera": "frambuesa", "cheesecake-airfryer": "melocoton", "mousse": "cacao", "natillas": "vainilla", "tortilla": "espinaca", "pollo": "melocoton", "merluza": "vainilla", "hamburguesas": "espinaca", "tostada-aguacate": "espinaca", "revuelto-claras": "melocoton", "overnight-oats": "frambuesa", "batido-platano": "vainilla", "crema-calabacin": "espinaca", "merluza-coliflor": "vainilla", "pavo-verduras": "melocoton", "caldo-pollo": "avena", "lentejas": "cacao", "salmon-patata": "melocoton", "arroz-pollo": "avena", "pasta-atun": "frambuesa", "garbanzos-espinacas": "espinaca", "fruta-frutos-secos": "avena", "bocadillo-pavo": "melocoton", "bol-queso-fruta": "frambuesa", "porridge-manzana": "avena", "tostada-salmon": "melocoton", "bizcocho-yogur": "vainilla", "brownie-fit": "cacao", "galletas-avena": "avena", "helado-frutos-rojos": "frambuesa", "pollo-curry": "vainilla", "albondigas-pollo": "melocoton", "pescado-pisto": "espinaca", "brochetas-pollo": "melocoton", "sepia-plancha": "vainilla", "tortilla-calabacin": "espinaca" };
 const SABOR_MOMENTO = { Tentempié: "avena", Desayuno: "avena", Comida: "melocoton", Merienda: "frambuesa", Postre: "frambuesa", Cena: "espinaca" };
 const sabor = r => r.sabor || SABOR[r.id] || SABOR_MOMENTO[r.cat[0]] || "avena";
 const CATS = ["Desayuno", "Tentempié", "Comida", "Merienda", "Postre", "Cena"];
-const METS = ["Sin cocinar", "Sin horno", "Airfryer", "Sartén", "Cazo", "Tostadora", "Batidora"];
+const METS = ["Sin cocinar", "Sin horno", "Airfryer", "Sartén", "Cazo", "Microondas", "Tostadora", "Batidora"];
 const EXTS = ["Favoritas", "Cena ligera", "Sin huevo", "Sin gluten", "Sin lácteos", "Aprovechamiento"];
 const KEY_LABEL = { kcal: "calorías", p: "proteína", g: "grasa", c: "carbohidratos", p100: "lo que más llena", min: "tiempo", nombre: "nombre" };
 const LIM = { kcal: 500, p: 0, g: 20 }; // valores de "sin límite" de los deslizadores
