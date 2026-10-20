@@ -716,7 +716,7 @@ const RECETAS = [
       "<b>Sirve</b> todo junto. Queda bien con un chorrito más de limón o una cucharada de yogur 0% con ajo y hierbas."
     ],
     tabla: { cols: ["Ración", "Con 150 g de patata asada"], rows: [["Calorías", "~330 kcal", "~445 kcal"], ["Proteínas", "~49 g", "~52 g"], ["Grasas", "~7 g", "~7 g"], ["Carbohidratos", "~13 g", "~38 g"]] },
-    notaTabla: "Cuentas con pechuga de pollo de 108 kcal y 1,8 g de grasa por 100 g (Hacendado). El aceite del spray es la mitad de la grasa del plato.",
+    notaTabla: "Cuentas con pechuga de pollo de 108 kcal y 1,8 g de grasa por 100 g (Hacendado). El aceite del spray es la mitad de la grasa del plato. Para cenar tarde, mejor con pimentón dulce: el picante a algunas personas les cuesta digerir de noche.",
     tips: [
       "<b>Para una cena más grande:</b> añade 150 g de patata en dados a la bandeja desde el principio, con las verduras, y alarga 5 min.",
       "<b>Prepara de más:</b> haz el doble de pollo y guarda la mitad para una ensalada al día siguiente."
@@ -727,7 +727,7 @@ const RECETAS = [
   },
   {
     id: "merluza", corto: "merluza en papillote", nombre: "Merluza en papillote",
-    cat: ["Cena"], met: ["Airfryer"], ext: ["Sin huevo", "Sin gluten", "Sin lácteos"], tags: ["Muy ligera", "Rápida"],
+    cat: ["Cena"], met: ["Airfryer"], ext: ["Sin huevo", "Sin gluten", "Sin lácteos", "Cena ligera"], tags: ["Muy ligera", "Rápida"],
     gluten: "natural", lacteos: false,
     raciones: 1, racionesTxt: "1", tiempoTxt: "10 min + 15 min de airfryer", min: 25,
     completa: { kcal: 245, p: 38, g: 6, c: 10 }, racion: { kcal: 245, p: 38, g: 6, c: 10 },
@@ -808,7 +808,7 @@ const RECETAS = [
   },
   {
     id: "revuelto-claras", corto: "revuelto de claras", nombre: "Revuelto de claras con espinacas y tostada",
-    cat: ["Desayuno", "Cena"], met: ["Sartén"], ext: ["Sin lácteos", "Aprovechamiento"], tags: ["Alta proteína", "Muy poca grasa", "Aprovecha claras"],
+    cat: ["Desayuno", "Cena"], met: ["Sartén"], ext: ["Sin lácteos", "Aprovechamiento", "Cena ligera"], tags: ["Alta proteína", "Muy poca grasa", "Aprovecha claras"],
     gluten: "pan", lacteos: false,
     raciones: 1, racionesTxt: "1", tiempoTxt: "10 min", min: 10,
     completa: { kcal: 220, p: 23, g: 4, c: 24 }, racion: { kcal: 220, p: 23, g: 4, c: 24 },
@@ -880,6 +880,111 @@ const RECETAS = [
     conserva: { nevera: "Mejor al momento. Hasta el día siguiente en botella cerrada; agítalo antes.", congelar: "No." },
     compra: [["leche", 250, "ml"], ["batido", 100, "g"], ["platano", 1, "ud."], ["avena", 20, "g"], ["canela", null]],
     usa: ["leche", "batido", "avena", "proteina"]
+  },
+  {
+    id: "crema-calabacin", corto: "crema de calabacín", nombre: "Crema de calabacín con tiras de pavo",
+    cat: ["Cena"], met: ["Cazo"], ext: ["Sin huevo", "Sin gluten", "Cena ligera"], tags: ["Muy digestiva", "Caliente"],
+    gluten: "natural", lacteos: true,
+    raciones: 1, racionesTxt: "1 (un bol grande)", tiempoTxt: "25 min", min: 25,
+    completa: { kcal: 270, p: 33, g: 5, c: 25 }, racion: { kcal: 270, p: 33, g: 5, c: 25 },
+    ingredientes: [
+      { t: "Crema", items: ["Calabacín: {2} medianos (unos {400} g)", "Cebolla: {0.5} pequeña (unos {50} g)", "Patata: {1} pequeña (unos {50} g), para que quede cremosa", "Agua o caldo de verduras bajo en sal: lo justo para cubrir", "Queso fresco batido 0%: {2} cucharadas ({30} g)", "Sal, pimienta y una pizca de nuez moscada"] },
+      { t: "Para acompañar", items: ["Filetes de pechuga de pavo: {100} g, en tiras", "Spray de aceite"] }
+    ],
+    pasos: [
+      "<b>Trocea</b> el calabacín (con piel), la cebolla y la patata.",
+      "<b>Rehoga</b> la cebolla 2 min en un cazo con una pulverización de spray. Añade el calabacín y la patata y cubre justo con agua o caldo, con sal.",
+      "<b>Cuece</b> a fuego medio unos 15 min [[t:15]], hasta que la patata esté blanda.",
+      "<b>Tritura</b> con la batidora, con el queso batido, la pimienta y la nuez moscada. Si queda espesa, añade un poco del agua de cocer.",
+      "<b>Mientras tanto</b>, haz las tiras de pavo a la plancha con spray y sal, 3–4 min [[t:4]].",
+      "<b>Sirve</b> la crema caliente con el pavo por encima o al lado."
+    ],
+    tabla: { cols: ["Crema + pavo", "Solo la crema"], rows: [["Calorías", "~270 kcal", "~160 kcal"], ["Proteínas", "~33 g", "~8 g"], ["Grasas", "~5 g", "~3 g"], ["Carbohidratos", "~25 g", "~25 g"]] },
+    notaTabla: "La verdura cocida y triturada se digiere mejor de noche que una ensalada grande en crudo, que a algunas personas les hincha.",
+    tips: [
+      "<b>Haz el triple</b> de crema y guárdala en táperes: así la cena está lista en 3 minutos. Pulsa ×3 en «Cantidades para».",
+      "<b>Otras verduras</b> que salen igual: calabaza, puerro, coliflor o una mezcla. La calabaza queda más dulce."
+    ],
+    conserva: { nevera: "La crema, 3–4 días. El pavo, mejor recién hecho.", congelar: "La crema sí, hasta 3 meses en raciones. Al descongelar, bátela un momento." },
+    compra: [["calabacin", 2, "ud."], ["cebolla", 0.5, "ud."], ["patata", 1, "ud. pequeña"], ["batido", 30, "g"], ["pavo", 100, "g"], ["especias", null], ["spray", null]],
+    usa: ["batido", "pavo", "spray"]
+  },
+  {
+    id: "merluza-coliflor", corto: "merluza con puré de coliflor", nombre: "Merluza a la plancha con puré de coliflor",
+    cat: ["Cena"], met: ["Sartén", "Cazo"], ext: ["Sin huevo", "Sin gluten", "Cena ligera"], tags: ["Alta proteína", "Muy digestiva"],
+    gluten: "natural", lacteos: true,
+    raciones: 1, racionesTxt: "1", tiempoTxt: "20 min", min: 20,
+    completa: { kcal: 250, p: 40, g: 6, c: 10 }, racion: { kcal: 250, p: 40, g: 6, c: 10 },
+    ingredientes: [
+      { t: "Puré", items: ["Coliflor: {250} g en ramilletes (un cuarto de coliflor mediana)", "Queso fresco batido 0%: {2} cucharadas ({30} g)", "Sal, pimienta y nuez moscada"] },
+      { t: "Pescado", items: ["Lomos de merluza: {180} g (si son congelados, descongelados la noche antes)", "Spray de aceite, sal, ajo en polvo y perejil", "Unas gotas de limón"] }
+    ],
+    pasos: [
+      "<b>Cuece la coliflor</b> en agua con sal 10–12 min [[t:11]], hasta que esté muy tierna. También vale al vapor o 6–7 min en el microondas con un poco de agua y tapada.",
+      "<b>Escúrrela bien</b> y tritúrala con el queso batido, la pimienta y la nuez moscada hasta que quede como un puré de patata.",
+      "<b>Seca la merluza</b> con papel de cocina, para que no salte, y ponle sal, ajo en polvo y perejil.",
+      "<b>Hazla a la plancha</b> en una sartén antiadherente bien caliente con spray, 3 min por cada lado [[t:3]], hasta que esté blanca por dentro.",
+      "<b>Sirve</b> la merluza sobre el puré con unas gotas de limón."
+    ],
+    tabla: { cols: ["Ración"], rows: [["Calorías", "~250 kcal"], ["Proteínas", "~40 g"], ["Grasas", "~6 g"], ["Carbohidratos", "~10 g"]] },
+    notaTabla: "El puré de coliflor parece puré de patata pero con muchas menos calorías (unos 60 kcal por 250 g, frente a unos 200 de la patata).",
+    tips: [
+      "<b>Si la coliflor te sienta pesada</b> (a algunas personas les da gases), cámbiala por calabacín cocido o por un puré de calabaza.",
+      "<b>Otros pescados blancos:</b> bacalao fresco, lenguado, abadejo o gallo. Todos con muy poca grasa."
+    ],
+    conserva: { nevera: "El puré, 3 días. La merluza, mejor recién hecha.", congelar: "El puré sí, hasta 2 meses." },
+    compra: [["coliflor", 250, "g"], ["merluza", 180, "g"], ["batido", 30, "g"], ["limon", 0.5, "ud."], ["especias", null], ["spray", null]],
+    usa: ["merluza", "batido", "spray"]
+  },
+  {
+    id: "pavo-verduras", corto: "pavo con verduras", nombre: "Pavo a la plancha con calabacín y champiñones",
+    cat: ["Cena"], met: ["Sartén"], ext: ["Sin huevo", "Sin gluten", "Sin lácteos", "Cena ligera"], tags: ["Alta proteína", "15 minutos"],
+    gluten: "natural", lacteos: false,
+    raciones: 1, racionesTxt: "1", tiempoTxt: "15 min", min: 15,
+    completa: { kcal: 245, p: 42, g: 5, c: 6 }, racion: { kcal: 245, p: 42, g: 5, c: 6 },
+    ingredientes: [
+      { t: "Ingredientes", items: ["Filetes de pechuga de pavo: {150} g", "Calabacín: {1} pequeño (unos {150} g), en medias lunas", "Champiñones: {100} g, laminados", "Ajo: {1} diente laminado, y perejil", "Spray de aceite (unos 3 g), sal, pimienta y unas gotas de limón"] }
+    ],
+    pasos: [
+      "<b>Saltea las verduras:</b> en una sartén antiadherente con spray, primero el ajo 30 segundos y después el calabacín y los champiñones con sal, a fuego medio-alto, 6–7 min [[t:6]], hasta que se doren y suelten el agua. Sácalas.",
+      "<b>Haz el pavo</b> en la misma sartén, bien caliente, con sal y pimienta: 2–3 min por cada lado [[t:3]], según el grosor. Que no quede rosa por dentro.",
+      "<b>Sirve</b> el pavo con las verduras, perejil y unas gotas de limón."
+    ],
+    tabla: { cols: ["Ración"], rows: [["Calorías", "~245 kcal"], ["Proteínas", "~42 g"], ["Grasas", "~5 g"], ["Carbohidratos", "~6 g"]] },
+    notaTabla: "La cena con menos carbohidratos del libro. Si al día siguiente entrenas temprano, añade 1 rebanada de pan integral o 100 g de patata cocida.",
+    tips: [
+      "<b>Para que el pavo no quede seco:</b> filetes finos, sartén muy caliente y poco tiempo. Si los dejas 10 min antes con zumo de limón y especias, quedan más jugosos.",
+      "<b>Cambia la verdura</b> según la temporada: espárragos verdes, judías verdes, pimiento o berenjena."
+    ],
+    conserva: { nevera: "2 días en un táper.", congelar: "Los filetes crudos, sí." },
+    compra: [["pavo", 150, "g"], ["calabacin", 1, "ud."], ["champinones", 100, "g"], ["ajo", 1, "diente"], ["limon", null], ["spray", null], ["especias", null]],
+    usa: ["pavo", "spray"]
+  },
+  {
+    id: "caldo-pollo", corto: "caldo con pollo", nombre: "Caldo de pollo con verduras y fideos finos",
+    cat: ["Cena"], met: ["Cazo"], ext: ["Sin huevo", "Sin lácteos", "Cena ligera"], tags: ["Reconfortante", "Muy digestiva"],
+    gluten: "fideos", lacteos: false,
+    raciones: 1, racionesTxt: "1 (un plato hondo)", tiempoTxt: "25 min", min: 25,
+    completa: { kcal: 275, p: 30, g: 4, c: 25 }, racion: { kcal: 275, p: 30, g: 4, c: 25 },
+    ingredientes: [
+      { t: "Ingredientes", items: ["Caldo de pollo bajo en sal: {500} ml (con menos de 1 g de grasa por 100 ml)", "Pechuga de pollo: {120} g, entera", "Zanahoria, puerro y un trozo de apio: unos {150} g en total, en dados pequeños", "Fideos finos: {20} g (un puñado pequeño)", "Perejil, pimienta y unas gotas de limón"] }
+    ],
+    pasos: [
+      "<b>Calienta el caldo</b> en un cazo con las verduras en dados.",
+      "<b>Cuando hierva</b>, añade la pechuga entera y deja a fuego suave, sin que hierva fuerte, unos 12 min [[t:12]].",
+      "<b>Saca la pechuga</b> y desmígala con dos tenedores.",
+      "<b>Echa los fideos</b> al caldo y cuécelos el tiempo que diga el paquete (2–4 min) [[t:3]].",
+      "<b>Vuelve a poner el pollo</b> desmigado, con perejil, pimienta y unas gotas de limón."
+    ],
+    tabla: { cols: ["Con fideos", "Sin fideos"], rows: [["Calorías", "~275 kcal", "~205 kcal"], ["Proteínas", "~30 g", "~28 g"], ["Grasas", "~4 g", "~4 g"], ["Carbohidratos", "~25 g", "~10 g"]] },
+    notaTabla: "Valores con caldo de brik bajo en grasa. Si haces el caldo casero, desgrásalo: déjalo enfriar en la nevera y quita la capa de grasa de arriba.",
+    tips: [
+      "<b>Sin fideos</b> queda más ligera todavía, o cámbialos por 1 clara batida que se cuaje en el caldo caliente (tipo sopa de huevo).",
+      "<b>Prepara el doble de pollo</b> cocido: el resto vale para una ensalada o un bocadillo al día siguiente."
+    ],
+    conserva: { nevera: "3 días. Los fideos se hinchan: mejor guardar el caldo sin ellos y añadirlos al recalentar.", congelar: "El caldo con el pollo, sí, sin fideos." },
+    compra: [["caldo", 500, "ml"], ["pollo", 120, "g"], ["verduras-caldo", 150, "g"], ["fideos", 20, "g"], ["especias", null]],
+    usa: ["pollo", "caldo"]
   }
 ];
 
@@ -989,6 +1094,9 @@ const INGREDIENTES = [
   { id: "espinacas", nombre: "Espinacas frescas", pasillo: "Fruta y verdura", rol: "Para el revuelto y las cenas. Mucho volumen por casi nada de calorías.",
     criterio: "Bolsa de espinacas <b>lavadas</b> (o baby): se usan directamente.",
     productos: [{ marca: "Hacendado", nombre: "Espinacas lavadas", tienda: "Mercadona", formato: "—", v: [17, 2.9, 0.4, 3.6], src: OFF("8437004687807") }] },
+  { id: "caldo", nombre: "Caldo de pollo", pasillo: "Despensa", rol: "Para el caldo con pollo y para cremas de verdura.",
+    criterio: "<b>Bajo en sal</b> y con <b>menos de 1 g de grasa</b> por 100 ml. Mira que el primer ingrediente sea agua y pollo, no aceite.",
+    nota: "No he verificado marcas concretas. Hay mucha diferencia entre unos y otros en sal y grasa: compara las etiquetas.", productos: [] },
   { id: "queso-crema", nombre: "Queso crema light (opcional)", pasillo: "Lácteos y huevos", rol: "Solo si echas de menos el sabor clásico de cheesecake.",
     criterio: "Úsalo poco: <b>30 g como mucho</b> por receta.",
     aviso: "Aunque sea «light», tiene unos 11–12 g de grasa por 100 g. Por eso el libro no lo usa por defecto.",
@@ -1012,17 +1120,23 @@ const EXTRA_ING = {
   limon: ["Limón", "Fruta y verdura"],
   cebolla: ["Cebolla", "Fruta y verdura"],
   ajo: ["Ajo", "Fruta y verdura"],
-  platano: ["Plátano", "Fruta y verdura"]
+  platano: ["Plátano", "Fruta y verdura"],
+  calabacin: ["Calabacín", "Fruta y verdura"],
+  patata: ["Patata", "Fruta y verdura"],
+  coliflor: ["Coliflor", "Fruta y verdura"],
+  champinones: ["Champiñones", "Fruta y verdura"],
+  "verduras-caldo": ["Zanahoria, puerro y apio", "Fruta y verdura"],
+  fideos: ["Fideos finos", "Despensa"]
 };
 const PASILLOS = ["Fruta y verdura", "Carne y pescado", "Lácteos y huevos", "Congelados", "Despensa", "Otros"];
 
 /* ===================== CONFIGURACIÓN ===================== */
-const SABOR = { "tortitas": "avena", "cheesecake-nevera": "frambuesa", "cheesecake-airfryer": "melocoton", "mousse": "cacao", "natillas": "vainilla", "tortilla": "espinaca", "pollo": "melocoton", "merluza": "vainilla", "hamburguesas": "espinaca", "tostada-aguacate": "espinaca", "revuelto-claras": "melocoton", "overnight-oats": "frambuesa", "batido-platano": "vainilla" };
+const SABOR = { "tortitas": "avena", "cheesecake-nevera": "frambuesa", "cheesecake-airfryer": "melocoton", "mousse": "cacao", "natillas": "vainilla", "tortilla": "espinaca", "pollo": "melocoton", "merluza": "vainilla", "hamburguesas": "espinaca", "tostada-aguacate": "espinaca", "revuelto-claras": "melocoton", "overnight-oats": "frambuesa", "batido-platano": "vainilla", "crema-calabacin": "espinaca", "merluza-coliflor": "vainilla", "pavo-verduras": "melocoton", "caldo-pollo": "avena" };
 const SABOR_MOMENTO = { Desayuno: "avena", Merienda: "frambuesa", Postre: "frambuesa", Cena: "espinaca" };
 const sabor = r => r.sabor || SABOR[r.id] || SABOR_MOMENTO[r.cat[0]] || "avena";
 const CATS = ["Desayuno", "Merienda", "Postre", "Cena"];
 const METS = ["Sin horno", "Airfryer", "Sartén", "Cazo", "Tostadora", "Batidora"];
-const EXTS = ["Favoritas", "Sin huevo", "Sin gluten", "Sin lácteos", "Aprovechamiento"];
+const EXTS = ["Favoritas", "Cena ligera", "Sin huevo", "Sin gluten", "Sin lácteos", "Aprovechamiento"];
 const KEY_LABEL = { kcal: "calorías", p: "proteína", g: "grasa", c: "carbohidratos", p100: "lo que más llena", min: "tiempo", nombre: "nombre" };
 const LIM = { kcal: 500, p: 0, g: 20 }; // valores de "sin límite" de los deslizadores
 const DIAS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
@@ -1392,6 +1506,7 @@ function renderDetail(r) {
   const head = `<tr><th>${t.firstCol || ""}</th>${t.cols.map(c => `<th class="n">${c}</th>`).join("")}</tr>`;
   const body = t.rows.map(row => `<tr class="${r.opciones && row[0].startsWith(state.opcion + ")") ? "hl" : ""}"><td><b>${row[0]}</b></td>${row.slice(1).map(c => `<td class="n">${c}</td>`).join("")}</tr>`).join("");
   const gl = r.gluten === "natural" ? "Sus ingredientes no llevan gluten. Si eres celíaco, revisa las trazas en las etiquetas."
+    : r.gluten === "fideos" ? "Usa fideos sin gluten (de arroz o de maíz), o hazla sin fideos; el resto no lleva gluten."
     : r.gluten === "pan" ? "Usa pan sin gluten, y comprueba que siga teniendo poca grasa: muchos llevan bastante aceite."
     : "Usa copos de avena con la etiqueta «sin gluten»; el resto no lleva gluten.";
   const lc = r.lacteos ? "Cambia los lácteos por sus versiones «sin lactosa» (comprueba que sigan siendo 0% grasa)." : "No lleva lácteos.";
@@ -1673,6 +1788,14 @@ function renderGuide() {
         <div class="box f-espinaca"><b>2 yemas</b>natillas o tortilla</div>
       </div>
       <p>Las [[tortitas]] dejan 3 yemas: van a las [[natillas]] o a la [[tortilla]]. Y al revés: las natillas dejan claras, que sirven para las [[tortitas]] o las [[hamburguesas]].</p></div>
+    <div class="gcard"><h3>Cenas que dejan dormir</h3><ul>
+      <li><b>Cena 2–3 horas antes de acostarte</b>, para que la digestión vaya avanzada cuando te tumbes.</li>
+      <li><b>Raciones moderadas</b>: las cenas del libro están entre 220 y 330 kcal. Marca «Cena ligera» en Filtros para ver las más suaves.</li>
+      <li><b>Mejor cocinado que crudo</b> por la noche: cremas, plancha, vapor o papillote. Una ensalada enorme hincha a algunas personas.</li>
+      <li><b>Lo que más cuesta digerir de noche:</b> fritos, mucha grasa, picante, raciones grandes y alcohol.</li>
+      <li><b>Ojo con el chocolate de noche:</b> el cacao lleva teobromina y algo de cafeína. Si te afecta, deja la mousse para la merienda.</li></ul></div>
+    <div class="gcard"><h3>Algo de grasa sí hace falta</h3>
+      <p>Las recetas van muy bajas en grasa a propósito, pero el cuerpo necesita algo: para absorber las vitaminas A, D, E y K y para las hormonas. Lo más sencillo es ponerla en la comida del mediodía: una cucharada de aceite de oliva en crudo, pescado azul (salmón, sardinas, caballa) 2–3 veces por semana, o un puñado pequeño de frutos secos. Para ajustar las cantidades a ti, lo mejor es un dietista-nutricionista.</p></div>
     <div class="gcard"><h3>Cocinar sin mirar el reloj</h3>
       <p>En cada receta, «Empezar a cocinar» te enseña los pasos de uno en uno, en grande, y mantiene la pantalla encendida si tu navegador lo permite. Los pasos con tiempo tienen un botón de temporizador: suena y vibra al acabar. Puedes tener varios a la vez.</p></div>
     <div class="gcard"><h3>Si no compras claras en brik</h3><ul>
