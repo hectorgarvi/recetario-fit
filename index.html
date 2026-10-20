@@ -306,6 +306,11 @@ tr.hl td { background: var(--ok-bg); }
 .hbtn.big { background: var(--ci); color: var(--c); }
 .scale { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .scale .opts { display: flex; gap: 4px; }
+.stepper.rac { background: rgba(255, 255, 255, .55); border-radius: 12px; padding: 3px; }
+.f-cacao .stepper.rac { background: rgba(255, 255, 255, .16); }
+.stepper.rac button { width: 36px; height: 34px; background: var(--ci); color: var(--c); border-radius: 9px; font-size: 1.1rem; }
+.stepper.rac button:disabled { opacity: .35; cursor: default; }
+.stepper.rac span { min-width: 3ch; font-size: 1.15rem; font-family: var(--display); font-weight: 800; }
 .scale button { border: 0; background: rgba(255, 255, 255, .55); color: inherit; border-radius: 10px; min-width: 44px; padding: 6px 10px; font-weight: 700; cursor: pointer; }
 .f-cacao .scale button, .f-cacao .optsel button { background: rgba(255, 255, 255, .16); }
 .scale button[aria-pressed="true"] { background: var(--ci); color: var(--c); }
@@ -2047,7 +2052,8 @@ function splitHTML(v) {
     <div class="legend"><span><i style="background:var(--prot)"></i>${fmt(v.p)} g proteína</span><span><i style="background:var(--carb)"></i>${fmt(v.c)} g carbohidratos</span><span><i style="background:var(--fat)"></i>${fmt(v.g)} g grasa</span></div>
   </div>`;
 }
-const MULTS = [0.5, 1, 1.5, 2, 3];
+// Raciones: de media en media en recetas pequeñas; de una en una en las de muchas porciones
+const pasoRac = r => (r.raciones >= 4 ? 1 : 0.5);
 function ingHTML(r, m) {
   const op = r.opciones ? r.opciones[state.opcion] : null;
   let n = 0;
@@ -2059,7 +2065,10 @@ function renderDetail(r) {
   const v1 = valores(r, "racion", state.opcion), vc = valores(r, "completa", state.opcion);
   const racTot = r.raciones * m;
   const optSel = r.opciones ? `<div class="optsel"><div class="opts" role="group" aria-label="Opción de huevo">${Object.entries(r.opciones).map(([k, o]) => `<button type="button" data-op="${k}" aria-pressed="${k === state.opcion}">${k}) ${o.corto}</button>`).join("")}</div><p>${op.desc}</p></div>` : "";
-  const scale = `<div class="scale"><span style="font-weight:700">Cantidades para</span><div class="opts" role="group" aria-label="Cantidades">${[...new Set([...MULTS, m])].sort((a, b) => a - b).map(x => `<button type="button" data-mult="${x}" aria-pressed="${x === m}">×${fmtQ(x)}${MULTS.includes(x) ? "" : " (plan)"}</button>`).join("")}</div><span style="font-size:.9rem;opacity:.85">${fmtQ(racTot)} ${racTot === 1 ? "ración" : "raciones"}</span></div>`;
+  const paso = pasoRac(r);
+  const scale = `<div class="scale"><span style="font-weight:700">¿Cuántas raciones?</span>
+    <div class="stepper rac" role="group" aria-label="Raciones"><button type="button" data-rac="-" aria-label="Una ración menos" ${racTot <= paso ? "disabled" : ""}>−</button><span aria-live="polite">${fmtQ(racTot)}</span><button type="button" data-rac="+" aria-label="Una ración más">+</button></div>
+    <span style="font-size:.88rem;opacity:.85">${m === 1 ? `La receta original (${r.racionesTxt})` : `Cantidades ajustadas: ×${fmtQ(m)} de la receta original`}</span></div>`;
   const t = r.tabla;
   const head = `<tr><th>${t.firstCol || ""}</th>${t.cols.map(c => `<th class="n">${c}</th>`).join("")}</tr>`;
   const body = t.rows.map(row => `<tr class="${r.opciones && row[0].startsWith(state.opcion + ")") ? "hl" : ""}"><td><b>${row[0]}</b></td>${row.slice(1).map(c => `<td class="n">${c}</td>`).join("")}</tr>`).join("");
@@ -2089,7 +2098,7 @@ function renderDetail(r) {
       ${(UTENSILIOS[r.id] || []).length ? `<section><h3>Qué necesitas</h3><ul class="tools">${UTENSILIOS[r.id].map(([u, alt]) => `<li><b>${u}</b>${alt ? `<span><em>Si no tienes:</em> ${alt.replace(/^Sin báscula: /, "")}</span>` : ""}</li>`).join("")}</ul></section>` : ""}
       <section><h3>Ingredientes</h3><div id="ings">${ingHTML(r, m)}</div></section>
       <section><h3>Cómo se hace</h3><div class="before">${ANTES}</div><ol class="steps">${r.pasos.map((p, i) => `<li><div>${timersIn(refs(glos(p)), r.corto + ", paso " + (i + 1))}</div></li>`).join("")}</ol><p class="note">Las palabras subrayadas con puntos se explican si las tocas.</p></section>
-      <section><h3>Valores aproximados</h3><div class="tbl-wrap"><table>${head}${body}</table></div>${r.notaTabla ? `<p class="note">${r.notaTabla}</p>` : ""}${m !== 1 ? `<p class="note">Haciendo ×${fmtQ(m)}, la receta entera son unas ${fmt(Math.round(vc.kcal * m))} kcal; cada ración sigue igual.</p>` : ""}</section>
+      <section><h3>Valores aproximados</h3><div class="tbl-wrap"><table>${head}${body}</table></div>${r.notaTabla ? `<p class="note">${r.notaTabla}</p>` : ""}${m !== 1 ? `<p class="note">Con ${fmtQ(racTot)} ${racTot === 1 ? "ración" : "raciones"}, todo junto son unas ${fmt(Math.round(vc.kcal * m))} kcal. Cada ración sigue teniendo lo mismo.</p>` : ""}</section>
       ${r.tips.length ? `<div class="tip">${r.tips.map(x => `<p>${refs(x)}</p>`).join("")}</div>` : ""}
       <section><h3>Conservación e intolerancias</h3><div class="facts2">
         <div><b>Nevera</b><p>${r.conserva.nevera}</p></div>
@@ -2461,7 +2470,11 @@ document.addEventListener("click", e => {
   if ((b = T("[data-open]"))) { openRecipe(b.dataset.open); return; }
   if ((b = T("[data-ing]")) || (b = T("[data-ingtab]"))) { e.preventDefault(); irAMarca(b.dataset.ing || b.dataset.ingtab); return; }
   if ((b = T("[data-op]"))) { state.opcion = b.dataset.op; rerenderDetail(); $('[data-op="' + state.opcion + '"]').focus(); return; }
-  if ((b = T("[data-mult]"))) { state.mult = +b.dataset.mult; rerenderDetail(); $('[data-mult="' + b.dataset.mult + '"]').focus(); return; }
+  if ((b = T("[data-rac]"))) {
+    const r = byId(state.abierta), paso = pasoRac(r);
+    const rac = Math.max(paso, Math.round((r.raciones * state.mult + (b.dataset.rac === "+" ? paso : -paso)) / paso) * paso);
+    state.mult = rac / r.raciones; rerenderDetail(); $('[data-rac="' + b.dataset.rac + '"]').focus(); return;
+  }
   if (T("#fav-btn")) { const d = Saved.receta(state.abierta); Saved.setReceta(state.abierta, { fav: !d.fav }); refrescarPersonal(); renderGrid(); toast(d.fav ? "Quitada de favoritas" : "Añadida a favoritas"); return; }
   if (T("[data-hecha]")) { const d = Saved.receta(state.abierta); Saved.setReceta(state.abierta, { hechas: [...(d.hechas || []), new Date().toISOString()] }); refrescarPersonal(); toast("¡Apuntado!"); return; }
   if (T("[data-deshacer]")) { const d = Saved.receta(state.abierta); Saved.setReceta(state.abierta, { hechas: (d.hechas || []).slice(0, -1) }); refrescarPersonal(); return; }
