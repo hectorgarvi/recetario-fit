@@ -1,0 +1,16 @@
+{
+  "name": "Recetas fit",
+  "short_name": "Recetas fit",
+  "description": "Recetas con mucha proteína y poca grasa, plan semanal, lista de la compra y progreso.",
+  "lang": "es",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f7f5",
+  "theme_color": "#e2336b",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

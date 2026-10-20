@@ -31,6 +31,8 @@ Recetas con mucha proteína y poca grasa que sacien, con filtros, plan semanal, 
 - `UTENSILIOS` (objeto por id de receta): lista de `[utensilio, qué hacer si no lo tienes]`. Toda receta nueva debe tener su entrada; cuando un aparato eléctrico es imprescindible (batidora, picadora, airfryer), da la alternativa a mano o con otro aparato. `AF_HORNO(...)` y `BASCULA(...)` generan los textos de horno convencional y de medidas con cucharas.
 - `NIVEL` (objeto por id): 1 = muy fácil, 2 = fácil, 3 = con un poco de mano. Las de nivel 1 salen con el filtro «Para empezar». Toda receta nueva necesita su nivel.
 - `GLOSARIO`: palabras de cocina que se subrayan solas en los pasos y se explican al tocarlas. El usuario está empezando a cocinar: si una receta nueva usa otro término técnico, añádelo aquí con una explicación sencilla (y, si es de fuego, con el número de la vitro del 1 al 9).
+- `NUTRI` (por id, por ración): `[fibra g, raciones de fruta y verdura (≈80 g o 1 pieza), grupos]`. Los grupos son `pescado`, `azul` y `legumbre`, y alimentan las comprobaciones semanales del plan (AESAN: pescado 3–4/semana con al menos 1 azul, legumbres 2–4, fruta y verdura 5/día; EFSA: fibra 25 g/día). Toda receta nueva necesita su entrada.
+- `SAL`: recetas con bastante sal y el aviso que muestran.
 - `INGREDIENTES`: la guía de marcas, con criterio de etiqueta y `productos`. Cada producto lleva `[kcal, prot, grasa, carb]` por 100 g y un enlace a su ficha.
 - `EXTRA_ING`: ingredientes de la lista de la compra que no tienen ficha de marca.
 - `PASILLOS`: el orden de las zonas del súper en la lista de la compra.
@@ -58,6 +60,20 @@ Antes de publicar, ejecuta en la consola del navegador (o en un navegador headle
 - Las `cat` y los `met` están en `CATS` y `METS`.
 - Los `[[id]]` apuntan a recetas que existen.
 - Los ids de `SEMANA_TIPO` existen.
+
+## Datos personales (repo privado, `datos.json`)
+
+- `recetas`: favorita, hechas, nota, fotos y estrellas de cada receta.
+- `compra`: la lista de la compra.
+- `plan`: `{ semanas: { "AAAA-MM-DD" (lunes): { dias, entreno[7] } }, obj: { kcal, kcalD, p, g } }`. El formato antiguo `plan.dias` se migra solo a la semana actual.
+- `progreso`: `{ registros: [{ fecha, peso, cintura? }] }`. Los consejos se basan en medias semanales: 3 semanas sin cambios → −150–200 kcal; más de 0,5 kg/semana → +150–200 kcal.
+- `despensa`: los ids de lo que el usuario tiene en casa («Con lo que tengo»).
+
+## App instalable
+
+- `manifest.webmanifest`, `sw.js` y los iconos `icon-*.png` y `apple-touch-icon.png`.
+- El service worker pide primero la red para la página y, sin conexión, tira de la copia. Fuentes e iconos van primero desde la caché. No toca la API de GitHub.
+- Si cambias los iconos o el manifest, sube `CACHE` en `sw.js` (`recetario-v2`…).
 
 ## Probar y publicar
 

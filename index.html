@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="Recetas fit con mucha proteína y poca grasa: plan semanal, lista de la compra y modo cocina.">
 <meta name="theme-color" content="#f4f7f5">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <title>Libro de Recetas Fit</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -327,6 +331,60 @@ tr.hl td { background: var(--ok-bg); }
 .gltable { display: grid; gap: 8px; }
 .gltable div { display: grid; gap: 2px; }
 .gltable span { color: var(--ink-soft); font-size: .92rem; }
+.themebtn { border: 0; background: var(--pill); color: var(--ink); width: 32px; height: 32px; border-radius: 50%; font-size: 1rem; cursor: pointer; vertical-align: middle; margin-left: 4px; font-family: var(--body); }
+.tengo-btn[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); box-shadow: none; }
+.tengo { background: var(--paper); border-radius: 20px; padding: 18px; display: grid; gap: 14px; margin-top: 4px; box-shadow: inset 0 0 0 1.5px var(--line); }
+.tengo[hidden] { display: none; }
+.tengo-head { display: grid; gap: 2px; }
+.weeknav { display: flex; align-items: center; gap: 8px; margin: 0 2px 12px; flex-wrap: wrap; }
+.weeknav .stepbtn { height: 34px; width: 38px; }
+.weeknav b { font-family: var(--display); font-size: 1.1rem; }
+.checks { display: grid; gap: 6px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); }
+.chk { display: flex; gap: 8px; align-items: baseline; font-size: .9rem; padding: 6px 10px; border-radius: 10px; background: var(--bg); }
+.chk b { width: 1.1em; }
+.chk.ok b { color: var(--prot); }
+.chk.no b { color: var(--ink-soft); }
+.day-head h3 small { font-family: var(--body); font-size: .8rem; color: var(--ink-soft); font-weight: 600; margin-left: 4px; }
+.gymchip { border: 0; border-radius: 999px; padding: 4px 12px; font-size: .8rem; font-weight: 700; cursor: pointer; background: var(--pill); color: var(--ink-soft); }
+.gymchip[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.day-tot .st { font-weight: 700; }
+.day-tot .st.ok { color: var(--prot); } .day-tot .st.low, .day-tot .st.high { color: var(--warn-ink); }
+.day-avisos { margin: 0; padding: 8px 12px 8px 26px; background: var(--warn-bg); color: var(--warn-ink); border-radius: 12px; font-size: .84rem; display: grid; gap: 2px; }
+.prep h4 { font-size: .95rem; color: var(--ink-soft); margin: 8px 0 2px; }
+.prep-it { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 10px; align-items: start; padding: 6px 0; }
+.prep-it .num { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: var(--ink); color: var(--bg); font-weight: 800; font-size: .85rem; }
+.prep-it small { display: block; color: var(--ink-soft); font-size: .85rem; }
+.prep-it .warn-s { color: var(--warn-ink); }
+.prog { display: grid; gap: 14px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 900px) { .prog { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.weeksum small { display: block; font-size: .75rem; color: var(--ink-soft); margin-top: 2px; }
+.chartbox { position: relative; --viz-1: #2a78d6; --viz-2: #eb6834; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .chartbox { --viz-1: #3987e5; --viz-2: #d95926; } }
+:root[data-theme="dark"] .chartbox { --viz-1: #3987e5; --viz-2: #d95926; }
+.chartbox svg { max-width: 100%; height: auto; display: block; }
+.chartbox .grid { stroke: var(--line); stroke-width: 1; }
+.chartbox .ax { fill: var(--ink-soft); font-size: 12px; font-family: var(--body); font-variant-numeric: tabular-nums; }
+.chartbox .m-line { fill: none; stroke: var(--viz-1); stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
+.chartbox .dot { fill: var(--viz-2); stroke: var(--paper); stroke-width: 2; }
+.chartbox .hit { fill: transparent; cursor: pointer; }
+.chartbox .lbl-dir { fill: var(--ink); font-size: 12px; font-weight: 700; font-family: var(--body); }
+.legend-c { display: flex; gap: 14px; flex-wrap: wrap; font-size: .82rem; color: var(--ink-soft); margin-top: 6px; }
+.legend-c i { display: inline-block; vertical-align: middle; margin-right: 6px; }
+.lg-line { width: 16px; height: 3px; border-radius: 2px; background: var(--viz-1); }
+.lg-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--viz-2); }
+.ctip { position: absolute; background: var(--ink); color: var(--bg); border-radius: 8px; padding: 5px 9px; font-size: .82rem; font-weight: 600; pointer-events: none; white-space: nowrap; }
+.stars { display: flex; align-items: center; gap: 2px; flex-wrap: wrap; }
+.stars button { border: 0; background: none; font-size: 1.6rem; line-height: 1; cursor: pointer; color: var(--line); padding: 2px; }
+.stars button[aria-pressed="true"] { color: var(--carb); }
+.stars .muted { margin-left: 8px; }
+@media print {
+  body { background: #fff; color: #000; }
+  header.top, nav, .panel:not(#panel-compra), #panel-compra .intro, #panel-compra .shop > .panelcard:first-child, #panel-compra .addrow, #marcas, #ing-list, .timers, .toast, .overlay, .cook { display: none !important; }
+  #panel-compra { display: block !important; }
+  #panel-compra .shop { display: block; }
+  #panel-compra .panelcard { box-shadow: none; padding: 0; }
+  .checklist li label { padding: 3px 0; }
+}
 .tools { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
 .tools li { display: grid; gap: 2px; padding: 10px 14px; border-radius: 14px; background: var(--pill); }
 .tools li span { font-size: .9rem; color: var(--ink-soft); }
@@ -432,11 +490,12 @@ tr.hl td { background: var(--ok-bg); }
 <header class="top">
   <div class="wrap">
     <div class="title-row">
-      <h1>Recetas <span>fit</span></h1>
+      <h1>Recetas <span>fit</span> <button type="button" class="themebtn" id="themebtn" aria-label="Cambiar entre modo claro, oscuro y automático"></button></h1>
       <nav class="tabs" aria-label="Secciones">
         <a href="#recetas" data-tab="recetas">Recetas</a>
         <a href="#plan" data-tab="plan">Plan</a>
         <a href="#compra" data-tab="compra">Compra</a>
+        <a href="#progreso" data-tab="progreso">Progreso</a>
         <a href="#trucos" data-tab="trucos">Trucos</a>
       </nav>
     </div>
@@ -445,7 +504,7 @@ tr.hl td { background: var(--ok-bg); }
         <input class="search" id="q" type="search" placeholder="Busca por receta o ingrediente" aria-label="Buscar recetas">
         <button class="filter-btn" id="toggle-filters" type="button" aria-expanded="false" aria-controls="filters">Filtros<b id="nfilters" hidden>0</b></button>
       </div>
-      <div class="moments" id="f-cat" role="group" aria-label="Momento del día" style="margin-top:10px"></div>
+      <div class="moments" id="f-cat" role="group" aria-label="Momento del día" style="margin-top:10px"><button type="button" class="moment tengo-btn" id="tengo-toggle" aria-expanded="false" aria-controls="tengo-box">Con lo que tengo</button></div>
     </div>
   </div>
 </header>
@@ -467,6 +526,11 @@ tr.hl td { background: var(--ok-bg); }
       </div></div>
       <div class="sheet-foot"><button type="button" class="btn-text" id="clear">Quitar filtros</button><button type="button" class="filter-btn" id="close-filters" style="padding:10px 18px">Ver recetas</button></div>
     </div>
+    <div class="tengo" id="tengo-box" hidden>
+      <div class="tengo-head"><b>¿Qué tienes en casa?</b><span class="muted">Marca lo que tienes y las recetas se ordenan por lo que te falta. Lo básico (aceite, especias, ajo, limón, edulcorante…) se da por hecho.</span></div>
+      <div id="tengo-chips"></div>
+      <div class="rowbtns"><button type="button" class="pbtn acc" id="tengo-on" aria-pressed="false">Ordenar por lo que me falta</button><button type="button" class="btn-text" id="tengo-clear">Desmarcar todo</button></div>
+    </div>
     <div class="listhead">
       <p id="count"></p>
       <div class="listtools">
@@ -485,6 +549,7 @@ tr.hl td { background: var(--ok-bg); }
             <option value="p100">lo que más llena</option>
             <option value="nivel">dificultad</option>
             <option value="min">tiempo</option>
+            <option value="estrellas">mejor valoradas</option>
             <option value="nombre">nombre</option>
           </select>
           <button type="button" class="dirbtn" id="dir" aria-label="Cambiar sentido"></button>
@@ -501,16 +566,20 @@ tr.hl td { background: var(--ok-bg); }
       <p>Elige qué vas a tomar cada día. Cada hueco es <b>una ración</b> (lo que come una persona). Pulsa ×1 para cambiarla a ×1,5 (ración y media) o ×2 (doble), y «Ver» para abrir la receta con las cantidades ya calculadas para ese hueco. Si ese día comes algo que ya tienes (un táper del congelador), elige «Algo que ya tengo». «Rellenar con la semana tipo» solo llena los huecos vacíos.</p>
       <p class="savebar" id="save-plan"><i></i><span></span></p>
     </div>
+    <div class="weeknav"><button type="button" class="stepbtn" id="wk-prev" aria-label="Semana anterior">←</button><b id="wk-label"></b><button type="button" class="stepbtn" id="wk-next" aria-label="Semana siguiente">→</button><button type="button" class="btn-text" id="wk-hoy">Esta semana</button></div>
     <div class="panelcard" style="margin-bottom:14px">
       <div class="weeksum" id="weeksum"></div>
-      <div class="rowbtns"><button type="button" class="pbtn" id="plan-tipo">Rellenar con la semana tipo</button><button type="button" class="pbtn acc" id="plan-to-shop">Añadir el plan a la compra</button><button type="button" class="pbtn alt" id="plan-clear">Vaciar el plan</button></div>
+      <div class="checks" id="wk-checks"></div>
+      <div class="rowbtns"><button type="button" class="pbtn" id="plan-tipo">Rellenar con la semana tipo</button><button type="button" class="pbtn alt" id="plan-copiar">Copiar la semana anterior</button><button type="button" class="pbtn acc" id="plan-to-shop">Añadir el plan a la compra</button><button type="button" class="pbtn alt" id="plan-clear">Vaciar el plan</button></div>
       <div class="objrow"><span>Tu objetivo diario</span>
-        <label>kcal <input type="number" inputmode="numeric" id="obj-kcal" min="1000" max="5000" step="50" placeholder="2300"></label>
+        <label>kcal días de gym <input type="number" inputmode="numeric" id="obj-kcal" min="1000" max="5000" step="50" placeholder="2300"></label>
+        <label>kcal días de descanso <input type="number" inputmode="numeric" id="obj-kcalD" min="1000" max="5000" step="50" placeholder="2100"></label>
         <label>proteína mín. (g) <input type="number" inputmode="numeric" id="obj-p" min="0" max="400" placeholder="120"></label>
         <label>grasa mín. (g) <input type="number" inputmode="numeric" id="obj-g" min="0" max="200" placeholder="55"></label></div>
       <p class="notice" id="plan-note" hidden></p>
       <p class="muted" id="plan-confirm" hidden></p>
     </div>
+    <div class="panelcard prep" id="prep-box" style="margin-bottom:14px"></div>
     <div class="plan" id="plan"></div>
   </section>
 
@@ -525,7 +594,7 @@ tr.hl td { background: var(--ok-bg); }
       <div class="panelcard">
         <h3>Recetas en la lista</h3>
         <div class="inlist" id="shop-recipes"></div>
-        <div class="rowbtns"><button type="button" class="pbtn alt" id="shop-clear-done">Quitar lo tachado</button><button type="button" class="pbtn alt" id="shop-clear">Vaciar la lista</button></div>
+        <div class="rowbtns"><button type="button" class="pbtn alt" id="shop-clear-done">Quitar lo tachado</button><button type="button" class="pbtn alt" id="shop-clear">Vaciar la lista</button><button type="button" class="pbtn alt" id="shop-print">Imprimir</button></div>
         <p class="muted" id="shop-confirm" hidden></p>
       </div>
       <div class="panelcard">
@@ -541,6 +610,31 @@ tr.hl td { background: var(--ok-bg); }
       <p class="note">Datos de <a href="https://es.openfoodfacts.org" target="_blank" rel="noopener">Open Food Facts</a> y fichas de tiendas, consultados el 19/10/2026. Open Food Facts es colaborativo y puede tener erratas: si tu envase dice otra cosa, manda la etiqueta. La tienda es la de la ficha; puede haberlo en más sitios.</p>
     </div>
     <div class="ing-list" id="ing-list"></div>
+  </section>
+
+  <!-- ================= PROGRESO ================= -->
+  <section class="panel" id="panel-progreso" aria-label="Progreso" hidden>
+    <div class="intro">
+      <h2>Progreso</h2>
+      <p>Apunta tu peso 1–2 veces por semana, siempre igual: por la mañana, en ayunas y después de ir al baño. La cintura, una vez por semana, a la altura del ombligo y sin apretar la cinta.</p>
+      <p class="savebar"><i></i><span></span></p>
+    </div>
+    <div class="prog">
+      <div class="panelcard">
+        <h3>Nuevo registro</h3>
+        <div class="objrow">
+          <label>Fecha <input type="date" id="pr-fecha"></label>
+          <label>Peso (kg) <input type="number" inputmode="decimal" id="pr-peso" step="0.1" min="30" max="250" placeholder="75,0"></label>
+          <label>Cintura (cm, opcional) <input type="number" inputmode="decimal" id="pr-cintura" step="0.5" min="40" max="200" placeholder="82"></label>
+        </div>
+        <div class="rowbtns"><button type="button" class="pbtn acc" id="pr-guardar">Guardar</button></div>
+        <p class="muted" id="pr-msg"></p>
+      </div>
+      <div class="panelcard" id="pr-resumen"></div>
+      <div class="panelcard"><h3>Peso</h3><div class="chartbox" id="ch-peso"></div></div>
+      <div class="panelcard"><h3>Cintura</h3><div class="chartbox" id="ch-cintura"></div></div>
+      <div class="panelcard"><h3>Registros</h3><div id="pr-tabla"></div></div>
+    </div>
   </section>
 
   <!-- ================= TRUCOS ================= -->
@@ -1393,6 +1487,25 @@ const RECETAS = [
   }
 ];
 
+/* ===================== NUTRICIÓN EXTRA (por ración) =====================
+   [fibra en g, raciones de fruta y verdura (≈80 g o 1 pieza), grupos] — estimados a partir de los ingredientes.
+   Grupos: pescado, azul (pescado azul), legumbre. Para las guías de variedad semanal. */
+const NUTRI = {
+  "tortitas": [8, 1, []], "cheesecake-nevera": [3.3, 0.5, []], "cheesecake-airfryer": [3.3, 0.5, []], "mousse": [2.4, 0, []], "natillas": [0, 0, []],
+  "tortilla": [3.8, 3, []], "pollo": [5, 3, []], "merluza": [4, 2.5, ["pescado"]], "hamburguesas": [3, 1.5, []], "tostada-aguacate": [6.8, 1, []],
+  "revuelto-claras": [4.5, 1.5, []], "overnight-oats": [8, 1, []], "batido-platano": [4.6, 1, []], "crema-calabacin": [5.8, 5, []], "merluza-coliflor": [5, 3, ["pescado"]],
+  "pavo-verduras": [2.5, 3, []], "caldo-pollo": [3.6, 2, []], "lentejas": [12.4, 2.5, ["legumbre"]], "salmon-patata": [7.5, 2, ["pescado", "azul"]], "arroz-pollo": [6.9, 2.5, []],
+  "pasta-atun": [8.6, 3, ["pescado", "azul"]], "garbanzos-espinacas": [18, 2, ["legumbre"]], "fruta-frutos-secos": [6, 1, []], "bocadillo-pavo": [5.9, 0.5, []], "bol-queso-fruta": [4, 1, []],
+  "porridge-manzana": [7.4, 1, []], "tostada-salmon": [4.4, 0.5, ["pescado", "azul"]], "bizcocho-yogur": [2.5, 0, []], "brownie-fit": [3.5, 0.5, []], "galletas-avena": [4.3, 0.5, []],
+  "helado-frutos-rojos": [5, 1.5, []], "pollo-curry": [4.1, 2.5, []], "albondigas-pollo": [4.8, 3, []], "pescado-pisto": [7, 5, ["pescado"]], "brochetas-pollo": [5, 3.5, []],
+  "sepia-plancha": [4, 2.5, ["pescado"]], "tortilla-calabacin": [2.9, 3, []]
+};
+const nutri = r => NUTRI[r.id] || [0, 0, []];
+// Recetas con bastante sal (salmón ahumado, caldo de brik)
+const SAL = { "tostada-salmon": "El salmón ahumado lleva bastante sal: no la añadas al resto.", "caldo-pollo": "Los caldos de brik llevan sal: usa uno «bajo en sal» y no añadas más." };
+// Días que aguanta en la nevera, a partir del texto de conservación
+const diasNevera = r => { const t = r.conserva.nevera; if (/^(Mejor|Al momento|Montado|Hecho)/i.test(t)) return 0; if (/No hace falta/i.test(t)) return 7; const m = t.match(/(\d+)/); return m ? +m[1] : 0; };
+
 /* ===================== PARA EMPEZAR: GLOSARIO, NIVEL Y PASO 0 ===================== */
 // Palabras de cocina que se subrayan en los pasos; al tocarlas se explican.
 const GLOSARIO = [
@@ -1687,7 +1800,7 @@ const sabor = r => r.sabor || SABOR[r.id] || SABOR_MOMENTO[r.cat[0]] || "avena";
 const CATS = ["Desayuno", "Tentempié", "Comida", "Merienda", "Postre", "Cena"];
 const METS = ["Sin cocinar", "Sin horno", "Airfryer", "Sartén", "Cazo", "Microondas", "Tostadora", "Batidora"];
 const EXTS = ["Para empezar", "Favoritas", "Cena ligera", "Sin huevo", "Sin gluten", "Sin lácteos", "Aprovechamiento"];
-const KEY_LABEL = { kcal: "calorías", p: "proteína", g: "grasa", c: "carbohidratos", p100: "lo que más llena", min: "tiempo", nombre: "nombre", nivel: "dificultad" };
+const KEY_LABEL = { kcal: "calorías", p: "proteína", g: "grasa", c: "carbohidratos", p100: "lo que más llena", min: "tiempo", nombre: "nombre", nivel: "dificultad", estrellas: "valoración" };
 const LIM = { kcal: 500, p: 0, g: 20 }; // valores de "sin límite" de los deslizadores
 const DIAS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
 const HUECOS = [["desayuno", "Desayuno", ["Desayuno"]], ["media", "Media mañana", ["Tentempié"]], ["comida", "Comida", ["Comida"]], ["merienda", "Merienda", ["Merienda", "Tentempié"]], ["cena", "Cena", ["Cena"]], ["postre", "Postre", ["Postre"]]];
@@ -1712,7 +1825,7 @@ const state = {
   q: "", cat: new Set(), met: new Set(), ext: new Set(),
   maxK: LIM.kcal, minP: LIM.p, maxG: LIM.g,
   sort: prefs.get("sort", "kcal"), dir: prefs.get("dir", "asc"), base: prefs.get("base", "racion"),
-  view: prefs.get("view", "mosaico"), opcion: "B", mult: 1, abierta: null, cookIdx: 0
+  view: prefs.get("view", "mosaico"), opcion: "B", mult: 1, abierta: null, cookIdx: 0, semana: null, tengoOn: false
 };
 
 /* ===================== UTILIDADES ===================== */
@@ -1739,6 +1852,13 @@ const fecha = iso => new Date(iso).toLocaleDateString("es-ES", { day: "numeric",
 let toastT = null;
 function toast(msg) { const t = $("#toast"); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => (t.hidden = true), 2600); }
 
+/* ===================== FECHAS ===================== */
+const iso = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+const lunesDe = d => { const x = new Date(d.getFullYear(), d.getMonth(), d.getDate()); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return iso(x); };
+const masDias = (isoTxt, n) => { const [y, m, dd] = isoTxt.split("-").map(Number); const x = new Date(y, m - 1, dd + n); return iso(x); };
+const fechaCorta = isoTxt => { const [y, m, dd] = isoTxt.split("-").map(Number); return new Date(y, m - 1, dd).toLocaleDateString("es-ES", { day: "numeric", month: "short" }); };
+const ENTRENO_DEF = [true, true, true, true, true, false, false];
+
 /* ===================== GUARDADO =====================
    Siempre se guarda en este navegador. Si conectas GitHub (un token que solo da acceso
    al repositorio privado de datos), además se sincroniza en datos.json de ese repositorio,
@@ -1751,7 +1871,7 @@ const bufToB64 = buf => { const bytes = new Uint8Array(buf); let bin = ""; for (
 const Saved = {
   mode: "local", // local | github | offline | error
   error: "", token: "", sha: null,
-  recetas: {}, compra: { recetas: {}, tachados: {}, extra: [] }, plan: { dias: {} },
+  recetas: {}, compra: { recetas: {}, tachados: {}, extra: [] }, plan: { semanas: {}, obj: {} }, progreso: { registros: [] }, despensa: [],
   sucios: new Set(), tPush: null, subiendo: false, otraVez: false, fotosUrl: {},
   async init() {
     this.cargarLocal();
@@ -1761,11 +1881,17 @@ const Saved = {
     // Al volver a la página, trae lo último del otro dispositivo
     document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible" && this.token && !this.sucios.size) this.pull().then(alCambiarDatos); });
   },
-  datos() { return { recetas: this.recetas, compra: this.compra, plan: this.plan }; },
+  datos() { return { recetas: this.recetas, compra: this.compra, plan: this.plan, progreso: this.progreso, despensa: this.despensa }; },
   aplicar(d) {
     this.recetas = d.recetas || {};
     this.compra = Object.assign({ recetas: {}, tachados: {}, extra: [] }, d.compra || {});
-    this.plan = Object.assign({ dias: {} }, d.plan || {});
+    this.plan = Object.assign({ semanas: {}, obj: {} }, d.plan || {});
+    if (this.plan.dias) { // formato antiguo: un solo plan sin fecha → semana actual
+      if (!this.plan.semanas[lunesDe(new Date())]) this.plan.semanas[lunesDe(new Date())] = { dias: this.plan.dias };
+      delete this.plan.dias;
+    }
+    this.progreso = Object.assign({ registros: [] }, d.progreso || {});
+    this.despensa = Array.isArray(d.despensa) ? d.despensa : [];
   },
   cargarLocal() { try { this.aplicar(JSON.parse(localStorage.getItem("rf-datos") || "{}")); } catch (e) {} },
   guardarLocal() { try { localStorage.setItem("rf-datos", JSON.stringify(this.datos())); } catch (e) {} },
@@ -1813,7 +1939,8 @@ const Saved = {
           const remoto = JSON.parse(b64dec(j.content)), local = this.datos();
           if (!this.sucios.has("todo")) {
             const m = { recetas: Object.assign({}, remoto.recetas), compra: remoto.compra, plan: remoto.plan };
-            this.sucios.forEach(k => { if (k === "compra") m.compra = local.compra; else if (k === "plan") m.plan = local.plan; else if (k.startsWith("r-")) m.recetas[k.slice(2)] = local.recetas[k.slice(2)]; });
+            m.progreso = remoto.progreso; m.despensa = remoto.despensa;
+            this.sucios.forEach(k => { if (k === "compra") m.compra = local.compra; else if (k === "plan") m.plan = local.plan; else if (k === "progreso") m.progreso = local.progreso; else if (k === "despensa") m.despensa = local.despensa; else if (k.startsWith("r-")) m.recetas[k.slice(2)] = local.recetas[k.slice(2)]; });
             this.aplicar(m); this.guardarLocal();
           }
           r = await subir();
@@ -1836,6 +1963,8 @@ const Saved = {
   setReceta(rid, cambios) { this.recetas[rid] = Object.assign({}, this.receta(rid), cambios); return this.guardar("r-" + rid); },
   setCompra() { return this.guardar("compra"); },
   setPlan() { return this.guardar("plan"); },
+  setProgreso() { return this.guardar("progreso"); },
+  setDespensa() { return this.guardar("despensa"); },
   async conectar(token) {
     const prev = this.token; this.token = token;
     const r = await this.api(`https://api.github.com/repos/${GH.owner}/${GH.repo}`).catch(() => null);
@@ -1860,11 +1989,16 @@ const Saved = {
     const lc = local.compra || {};
     Object.entries(lc.recetas || {}).forEach(([k, e]) => { if (!this.compra.recetas[k]) { this.compra.recetas[k] = e; cambio = true; } });
     (lc.extra || []).forEach(x => { if (!this.compra.extra.some(y => y.txt === x.txt)) { this.compra.extra.push(x); cambio = true; } });
-    Object.entries((local.plan || {}).dias || {}).forEach(([di, d]) => {
-      const cur = Object.assign({}, this.plan.dias[di]);
-      Object.entries(d).forEach(([h, rid]) => { if (!cur[h]) { cur[h] = rid; cambio = true; } });
-      this.plan.dias[di] = cur;
+    Object.entries((local.plan || {}).semanas || {}).forEach(([wk, sem]) => {
+      const cur = this.plan.semanas[wk] || (this.plan.semanas[wk] = { dias: {} });
+      Object.entries(sem.dias || {}).forEach(([di, d]) => {
+        const dd = Object.assign({}, cur.dias[di]);
+        Object.entries(d).forEach(([h, rid]) => { if (!dd[h]) { dd[h] = rid; cambio = true; } });
+        cur.dias[di] = dd;
+      });
     });
+    ((local.progreso || {}).registros || []).forEach(x => { if (!this.progreso.registros.some(y => y.fecha === x.fecha)) { this.progreso.registros.push(x); cambio = true; } });
+    (local.despensa || []).forEach(x => { if (!this.despensa.includes(x)) { this.despensa.push(x); cambio = true; } });
     return cambio;
   },
   desconectar() { this.token = ""; prefs.set("ghtoken", ""); this.mode = "local"; this.error = ""; this.sha = null; alCambiarDatos(); },
@@ -1902,6 +2036,8 @@ function estadoGuardado() {
 }
 function alCambiarDatos() {
   estadoGuardado();
+  renderProgreso();
+  renderTengo();
   renderGrid();
   renderPlan();
   renderCompra();
@@ -1963,22 +2099,24 @@ function matches(r) {
 }
 function sortVal(r) {
   const v = valores(r, state.base);
+  if (state.sort === "estrellas") return (Saved.receta(r.id).estrellas || 0) * 1000 - r.min;
   if (state.sort === "p100") return p100(v);
   if (state.sort === "min") return r.min;
   if (state.sort === "nivel") return nivel(r) * 1000 + r.min; // a igual dificultad, la más rápida primero
   if (state.sort === "nombre") return norm(r.nombre);
   return v[state.sort];
 }
-const favMark = r => (Saved.receta(r.id).fav ? '<span class="fav" aria-label="Favorita">♥</span>' : "");
+const favMark = r => { const d = Saved.receta(r.id); const t = (d.fav ? "♥" : "") + (d.estrellas ? ` ★${d.estrellas}` : ""); return t ? `<span class="fav" aria-label="${d.fav ? "Favorita. " : ""}${d.estrellas ? d.estrellas + " estrellas" : ""}">${t.trim()}</span>` : ""; };
 function renderGrid() {
   const list = RECETAS.filter(matches).sort((a, b) => {
+    if (state.tengoOn) { const d = faltan(a).length - faltan(b).length; if (d) return d; }
     const x = sortVal(a), y = sortVal(b);
     const d = typeof x === "string" ? x.localeCompare(y) : x - y;
     return state.dir === "asc" ? d : -d;
   });
   const n = state.met.size + state.ext.size + (state.base === "completa" ? 1 : 0) + (state.maxK < LIM.kcal) + (state.minP > LIM.p) + (state.maxG < LIM.g);
   $("#nfilters").hidden = !n; $("#nfilters").textContent = n;
-  $("#count").textContent = list.length === RECETAS.length ? `${list.length} recetas, valores ${state.base === "racion" ? "por ración" : "de la receta completa"}` : `${list.length} de ${RECETAS.length} recetas`;
+  $("#count").textContent = state.tengoOn ? `${list.length} recetas, primero las que tienes casi todo` : list.length === RECETAS.length ? `${list.length} recetas, valores ${state.base === "racion" ? "por ración" : "de la receta completa"}` : `${list.length} de ${RECETAS.length} recetas`;
   $("#dir").textContent = state.dir === "asc" ? "↑" : "↓";
   $("#dir").setAttribute("aria-label", state.dir === "asc" ? "De menor a mayor. Pulsa para invertir" : "De mayor a menor. Pulsa para invertir");
   const grid = $("#grid");
@@ -1993,7 +2131,8 @@ function renderGrid() {
   grid.innerHTML = list.map(r => {
     const v = valores(r, state.base);
     const on = k => (state.sort === k ? ' class="on"' : "");
-    const sub = r.opciones ? "Valores de la opción B" : (state.base === "racion" && r.raciones > 1 ? `1 ración de ${r.raciones}` : (r.min < 60 ? r.min + " min" : ""));
+    const f = state.tengoOn ? faltan(r) : null;
+    const sub = f ? (f.length ? `Te falta: ${f.map(i => ingNombre(i).replace(/ \(.*\)$/, "").toLowerCase()).join(", ")}` : "✓ Tienes todo") : r.opciones ? "Valores de la opción B" : (state.base === "racion" && r.raciones > 1 ? `1 ración de ${r.raciones}` : (r.min < 60 ? r.min + " min" : ""));
     return `<button type="button" class="card f-${sabor(r)}" data-open="${r.id}" aria-label="${esc(r.nombre)}, ${fmt(v.kcal)} kcal">
       <span class="blob"></span>${favMark(r)}
       <div class="kind">${[...r.cat.slice(0, 1), ...r.met, NIVEL_TXT[nivel(r)]].map(t => `<span>${t}</span>`).join("")}</div>
@@ -2042,7 +2181,8 @@ function fitLast() {
   const rem = (feature + cards.length - 1) % cols;
   if (rem) cards[cards.length - 1].style.gridColumn = "span " + (cols - rem + 1);
 }
-window.addEventListener("resize", () => fitLast());
+let rsT = null;
+window.addEventListener("resize", () => { fitLast(); clearTimeout(rsT); rsT = setTimeout(() => { if (!$("#panel-progreso").hidden) renderProgreso(); }, 200); });
 
 /* ===================== FICHA DE RECETA ===================== */
 function splitHTML(v) {
@@ -2091,6 +2231,7 @@ function renderDetail(r) {
       ${optSel}
       <div class="hero-num"><div class="big">${fmt(v1.kcal)}<small>kcal</small></div><div class="per">${r.raciones > 1 ? `por ración<br>${fmt(vc.kcal)} kcal la receta entera` : "la ración"}</div></div>
       ${splitHTML(v1)}
+      <div class="facts"><span>${fmt(nutri(r)[0])} g de fibra</span><span>${fmtQ(nutri(r)[1])} ${nutri(r)[1] <= 1 ? "ración" : "raciones"} de fruta y verdura</span>${SAL[r.id] ? `<span>⚠ Lleva bastante sal</span>` : ""}</div>
       ${scale}
       <div class="hero-actions"><button type="button" class="hbtn big" data-cook>Empezar a cocinar</button><button type="button" class="hbtn" data-addshop>Añadir a la compra</button></div>
     </div>
@@ -2099,7 +2240,7 @@ function renderDetail(r) {
       <section><h3>Ingredientes</h3><div id="ings">${ingHTML(r, m)}</div></section>
       <section><h3>Cómo se hace</h3><div class="before">${ANTES}</div><ol class="steps">${r.pasos.map((p, i) => `<li><div>${timersIn(refs(glos(p)), r.corto + ", paso " + (i + 1))}</div></li>`).join("")}</ol><p class="note">Las palabras subrayadas con puntos se explican si las tocas.</p></section>
       <section><h3>Valores aproximados</h3><div class="tbl-wrap"><table>${head}${body}</table></div>${r.notaTabla ? `<p class="note">${r.notaTabla}</p>` : ""}${m !== 1 ? `<p class="note">Con ${fmtQ(racTot)} ${racTot === 1 ? "ración" : "raciones"}, todo junto son unas ${fmt(Math.round(vc.kcal * m))} kcal. Cada ración sigue teniendo lo mismo.</p>` : ""}</section>
-      ${r.tips.length ? `<div class="tip">${r.tips.map(x => `<p>${refs(x)}</p>`).join("")}</div>` : ""}
+      ${r.tips.length || SAL[r.id] ? `<div class="tip">${SAL[r.id] ? `<p><b>Sal:</b> ${SAL[r.id]}</p>` : ""}${r.tips.map(x => `<p>${refs(x)}</p>`).join("")}</div>` : ""}
       <section><h3>Conservación e intolerancias</h3><div class="facts2">
         <div><b>Nevera</b><p>${r.conserva.nevera}</p></div>
         <div><b>Congelador</b><p>${r.conserva.congelar}</p></div>
@@ -2127,6 +2268,7 @@ function refrescarPersonal() {
   const sinGuardar = false;
   const html = `<h3>Lo tuyo</h3>
     <div style="display:grid;gap:14px">
+      <div class="stars" role="group" aria-label="Tu valoración">${[1, 2, 3, 4, 5].map(n => `<button type="button" data-star="${n}" aria-pressed="${(d.estrellas || 0) >= n}" aria-label="${n} ${n === 1 ? "estrella" : "estrellas"}">★</button>`).join("")}<span class="muted">${d.estrellas ? "Tu nota: " + d.estrellas + " de 5" : "¿Qué tal te ha salido? Puntúala"}</span></div>
       <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button type="button" class="pbtn" data-hecha ${sinGuardar ? "disabled" : ""}>La he hecho hoy</button><span class="muted">${hechasTxt}</span>${hechas.length ? '<button type="button" class="x" data-deshacer>Deshacer la última</button>' : ""}</div>
       <div class="notes"><label for="nota" style="font-weight:700">Mis notas</label><textarea id="nota" placeholder="Por ejemplo: con el batido de Lidl queda más firme. La próxima vez, menos edulcorante.">${esc(d.nota || "")}</textarea><div class="st" id="nota-st"></div></div>
       <div><b>Mis fotos</b>
@@ -2298,16 +2440,32 @@ function confirmar(btn, aviso, accion) {
 /* ===================== PLAN SEMANAL ===================== */
 /* Un hueco guarda "id", "id|2" (ración doble) o "otro" (algo que ya tienes, sin contar) */
 const slotParse = v => { if (!v) return { id: "", x: 1 }; const [id, x] = v.split("|"); return { id, x: +x || 1 }; };
+function semanaActual() { const w = Saved.plan.semanas[state.semana]; return w || { dias: {} }; }
+function guardarSemana(cambios) {
+  const w = Object.assign({ dias: {} }, Saved.plan.semanas[state.semana], cambios);
+  Saved.plan.semanas = Object.assign({}, Saved.plan.semanas, { [state.semana]: w });
+  Saved.setPlan(); renderPlan();
+}
+const entrenoDe = w => (Array.isArray(w.entreno) ? w.entreno : ENTRENO_DEF);
 function renderPlan() {
-  const dias = Saved.plan.dias || {};
-  let tot = { kcal: 0, p: 0, g: 0 }, nDias = 0, conOtro = false;
+  if (!state.semana) state.semana = lunesDe(new Date());
+  const w = semanaActual(), dias = w.dias || {}, entreno = entrenoDe(w), obj = Saved.plan.obj || {};
+  const hoy = lunesDe(new Date());
+  $("#wk-label").textContent = `Semana del ${fechaCorta(state.semana)}${state.semana === hoy ? " (esta)" : state.semana === masDias(hoy, 7) ? " (la próxima)" : ""}`;
+  $("#wk-hoy").hidden = state.semana === hoy;
+  let tot = { kcal: 0, p: 0, g: 0, fib: 0, fv: 0 }, nDias = 0, conOtro = false, pescado = 0, azul = 0, legumbre = 0;
   $("#plan").innerHTML = DIAS.map((dn, di) => {
-    const d = dias[di] || {};
-    const t = { kcal: 0, p: 0, g: 0 }; let alguno = false, otro = false;
+    const d = dias[di] || {}, gym = entreno[di];
+    const t = { kcal: 0, p: 0, g: 0, fib: 0, fv: 0 }; let alguno = false, otro = false; const bajas = [];
     const slots = HUECOS.map(([k, label, cats]) => {
       const { id: sel, x } = slotParse(d[k]);
       const r = sel && sel !== "otro" ? byId(sel) : null;
-      if (r) { const v = valores(r, "racion"); t.kcal += v.kcal * x; t.p += v.p * x; t.g += v.g * x; alguno = true; }
+      if (r) {
+        const v = valores(r, "racion"), [fib, fv, gr] = nutri(r);
+        t.kcal += v.kcal * x; t.p += v.p * x; t.g += v.g * x; t.fib += fib * x; t.fv += fv * x; alguno = true;
+        if (gr.includes("pescado")) pescado++; if (gr.includes("azul")) azul++; if (gr.includes("legumbre")) legumbre++;
+        if (["desayuno", "comida", "cena"].includes(k) && v.p * x < 20) bajas.push(label.toLowerCase());
+      }
       if (sel === "otro") otro = true;
       const opts = RECETAS.filter(y => y.cat.some(c => cats.includes(c))).map(y => `<option value="${y.id}" ${y.id === sel ? "selected" : ""}>${y.nombre} (${fmt(valores(y, "racion").kcal)} kcal)</option>`).join("");
       const dbl = r ? `<button type="button" class="stepbtn" data-doble="${di}|${k}" aria-pressed="${x !== 1}" aria-label="Tamaño de la ración: ×${fmtQ(x)}. Pulsa para cambiar">×${fmtQ(x)}</button><button type="button" class="stepbtn" data-planopen="${sel}|${x / r.raciones}" aria-label="Ver la receta con las cantidades de este hueco">Ver</button>` : "";
@@ -2315,17 +2473,35 @@ function renderPlan() {
         : `${fmtQ(x)} de las ${r.raciones} raciones que da la receta${x / r.raciones === 1 ? " (la receta entera)" : ` (${fmtQ(x / r.raciones)} de la receta)`}. «Ver» te da las cantidades.`;
       return `<div class="slot"><span>${label}</span><div class="slot-in"><select data-dia="${di}" data-hueco="${k}" class="${r ? "set f-" + sabor(r) : ""}" aria-label="${label} del ${dn.toLowerCase()}"><option value="">Nada</option>${opts}<option value="otro" ${sel === "otro" ? "selected" : ""}>Algo que ya tengo (no se cuenta)</option></select>${dbl}</div>${hint ? `<small class="slot-hint">${hint}</small>` : ""}</div>`;
     }).join("");
-    if (alguno) { nDias++; tot.kcal += t.kcal; tot.p += t.p; tot.g += t.g; }
+    if (alguno) { nDias++; ["kcal", "p", "g", "fib", "fv"].forEach(q => (tot[q] += t[q])); }
     if (otro) conOtro = true;
-    return `<div class="day"><div class="day-head"><h3>${dn}</h3>${alguno ? `<div class="day-tot"><span>${fmt(Math.round(t.kcal))} kcal${otro ? " + lo tuyo" : ""}</span><span class="p">${fmt(Math.round(t.p))} g prot.</span><span class="g">${fmt(Math.round(t.g * 10) / 10)} g grasa</span></div>` : ""}</div>${slots}</div>`;
+    const meta = gym ? obj.kcal : (obj.kcalD || obj.kcal);
+    const marca = !alguno || !meta || otro ? "" : Math.abs(t.kcal - meta) <= 150 ? `<span class="st ok">✓ en objetivo</span>` : t.kcal < meta ? `<span class="st low">▼ ${fmt(Math.round(meta - t.kcal))} kcal por debajo</span>` : `<span class="st high">▲ ${fmt(Math.round(t.kcal - meta))} kcal por encima</span>`;
+    const avisos = alguno ? [
+      bajas.length ? `Poca proteína en ${bajas.join(" y ")} (menos de 20 g)` : "",
+      t.fib < 25 ? `Fibra: ${fmt(Math.round(t.fib))} de 25 g` : "",
+      t.fv < 5 ? `Fruta y verdura: ${fmtQ(Math.round(t.fv * 2) / 2)} de 5 raciones` : ""
+    ].filter(Boolean) : [];
+    return `<div class="day"><div class="day-head"><h3>${dn} <small>${fechaCorta(masDias(state.semana, di))}</small></h3><button type="button" class="gymchip" data-gym="${di}" aria-pressed="${gym}">${gym ? "Gym" : "Descanso"}</button></div>
+      ${alguno ? `<div class="day-tot"><span>${fmt(Math.round(t.kcal))} kcal${otro ? " + lo tuyo" : ""}</span><span class="p">${fmt(Math.round(t.p))} g prot.</span><span class="g">${fmt(Math.round(t.g * 10) / 10)} g grasa</span><span>${fmt(Math.round(t.fib))} g fibra</span>${marca}</div>` : ""}
+      ${avisos.length ? `<ul class="day-avisos">${avisos.map(a => `<li>${a}</li>`).join("")}</ul>` : ""}
+      ${slots}</div>`;
   }).join("");
   const med = k => (nDias ? Math.round(tot[k] / nDias * 10) / 10 : 0);
   $("#weeksum").innerHTML = `<div><b>${fmt(Math.round(med("kcal")))}</b><span>kcal al día (media)</span></div><div><b>${fmt(Math.round(med("p")))} g</b><span>proteína al día</span></div><div><b>${fmt(med("g"))} g</b><span>grasa al día</span></div>`;
-  const obj = Saved.plan.obj || {};
-  ["kcal", "p", "g"].forEach(k => { const el = $("#obj-" + k); if (el && document.activeElement !== el) el.value = obj[k] || ""; });
+  const chk = (ok, txt) => `<div class="chk ${ok ? "ok" : "no"}"><b>${ok ? "✓" : "○"}</b><span>${txt}</span></div>`;
+  $("#wk-checks").innerHTML = nDias ? [
+    chk(pescado >= 3, `Pescado: ${pescado} de 3–4 veces por semana`),
+    chk(azul >= 1, `Pescado azul: ${azul} de al menos 1`),
+    chk(legumbre >= 2, `Legumbres: ${legumbre} de 2–4 veces`),
+    chk(med("fib") >= 25, `Fibra: ${fmt(Math.round(med("fib")))} g al día de 25–30`),
+    chk(med("fv") >= 5, `Fruta y verdura: ${fmtQ(Math.round(med("fv") * 2) / 2)} raciones al día de 5`)
+  ].join("") + `<p class="muted" style="grid-column:1/-1">Referencias: guías de alimentación de la AESAN para población adulta (pescado, legumbres, fruta y verdura) y EFSA para la fibra. La fibra y las raciones de fruta y verdura son estimaciones.</p>` : "";
+  ["kcal", "kcalD", "p", "g"].forEach(k => { const el = $("#obj-" + k); if (el && document.activeElement !== el) el.value = obj[k] || ""; });
   let aviso = "";
-  if (nDias && obj.kcal) {
-    const dk = Math.round(med("kcal") - obj.kcal);
+  const metaMedia = obj.kcal ? (obj.kcal * entreno.filter(Boolean).length + (obj.kcalD || obj.kcal) * entreno.filter(x => !x).length) / 7 : 0;
+  if (nDias && metaMedia) {
+    const dk = Math.round(med("kcal") - metaMedia);
     aviso = `Media de ${fmt(Math.round(med("kcal")))} kcal: ${Math.abs(dk) <= 100 ? "en tu objetivo" : dk < 0 ? fmt(-dk) + " kcal por debajo de tu objetivo. Añade pan integral y una pieza de fruta en la comida (unas 235 kcal) o sube alguna ración" : fmt(dk) + " kcal por encima de tu objetivo"}. `;
     if (obj.p && med("p") < obj.p) aviso += `Proteína por debajo de ${obj.p} g. `;
     if (obj.g && med("g") < obj.g) aviso += `Grasa por debajo de ${obj.g} g: añade frutos secos o una cucharada de aceite de oliva en la comida. `;
@@ -2334,11 +2510,12 @@ function renderPlan() {
   }
   $("#plan-note").textContent = nDias ? aviso + (conOtro ? "Los huecos con «Algo que ya tengo» no suman: los totales se quedan cortos esos días. " : "") + "Los totales son solo lo que está en el plan." : "";
   $("#plan-note").hidden = !nDias;
+  renderPrep();
   estadoGuardado();
 }
 function planACompra() {
   const cuenta = {};
-  Object.values(Saved.plan.dias || {}).forEach(d => HUECOS.forEach(([k]) => { const { id, x } = slotParse(d[k]); if (id && id !== "otro" && byId(id)) cuenta[id] = (cuenta[id] || 0) + x; }));
+  Object.values(semanaActual().dias || {}).forEach(d => HUECOS.forEach(([k]) => { const { id, x } = slotParse(d[k]); if (id && id !== "otro" && byId(id)) cuenta[id] = (cuenta[id] || 0) + x; }));
   const ids = Object.keys(cuenta);
   if (!ids.length) { toast("El plan está vacío"); return; }
   ids.forEach(id => { const r = byId(id); addToShop(id, Math.ceil(cuenta[id] / r.raciones * 2) / 2); }); // redondeo a media receta
@@ -2346,10 +2523,42 @@ function planACompra() {
 }
 function semanaTipo() {
   // Solo rellena los huecos vacíos: lo que ya tengas puesto se respeta
-  const dias = JSON.parse(JSON.stringify(Saved.plan.dias || {})); let n = 0;
+  const dias = JSON.parse(JSON.stringify(semanaActual().dias || {})); let n = 0;
   SEMANA_TIPO.forEach((fila, di) => { const d = dias[di] || (dias[di] = {}); HUECOS.forEach(([k], i) => { if (!d[k] && fila[i]) { d[k] = fila[i]; n++; } }); });
-  Saved.plan.dias = dias; Saved.setPlan(); renderPlan();
+  guardarSemana({ dias });
   toast(n ? `Rellenados ${n} huecos con la semana tipo` : "No quedaban huecos vacíos");
+}
+/* Preparar la semana: qué cocinar el domingo y en qué orden */
+function renderPrep() {
+  const box = $("#prep-box"); const dias = semanaActual().dias || {};
+  const uso = {};
+  Object.entries(dias).forEach(([di, d]) => HUECOS.forEach(([k]) => { const { id, x } = slotParse(d[k]); const r = id && id !== "otro" ? byId(id) : null; if (r) (uso[id] = uso[id] || { r, por: [] }), uso[id].por.push({ di: +di, x }); }));
+  // Para el domingo solo cuenta lo que se come mientras aguanta en la nevera (o se puede congelar)
+  const items = Object.values(uso).map(u => {
+    const keep = diasNevera(u.r), cg = u.r.conserva.congelar, congela = /(^|\s)sí[,.\s]/i.test(cg) && !/^(No|Mejor no)\b/i.test(cg);
+    const dentro = u.por.filter(p => p.di + 1 <= keep), fuera = u.por.filter(p => p.di + 1 > keep);
+    const lleva = dentro.length ? [...dentro, ...(congela ? fuera : [])] : [];
+    return { r: u.r, keep, congela, rac: lleva.reduce((a, p) => a + p.x, 0), dias: lleva.map(p => p.di), fuera: fuera.map(p => p.di), todos: u.por.map(p => p.di) };
+  });
+  if (!items.length) { box.innerHTML = `<h3>Prepara la semana</h3><p class="muted">Cuando tengas el plan, aquí verás qué puedes dejar cocinado el domingo y en qué orden.</p>`; return; }
+  const sinCocinar = r => r.met.includes("Sin cocinar") || (r.min <= 5 && !/nevera|noche/.test(r.tiempoTxt));
+  const antes = items.filter(({ r, dias: ds, keep }) => !sinCocinar(r) && ds.length && keep >= 2 && (ds.length >= 2 || r.raciones >= 2 || r.min >= 25 || /nevera|noche/.test(r.tiempoTxt)));
+  const fresco = items.filter(x => !antes.includes(x) && !sinCocinar(x.r));
+  const grupo = r => (/nevera|noche/.test(r.tiempoTxt) ? 0 : r.met.includes("Airfryer") ? 2 : r.min >= 30 ? 1 : 3);
+  const GN = ["Primero, lo que tiene que enfriar o reposar en la nevera", "Después, los guisos y cocciones largas (y mientras se hacen…)", "La airfryer", "Lo rápido, al final"];
+  antes.sort((a, b) => grupo(a.r) - grupo(b.r) || b.r.min - a.r.min);
+  let html = `<h3>Prepara la semana</h3><p class="muted">Lo que conviene dejar hecho el domingo, en este orden. El resto se hace en el momento.</p>`;
+  let g = -1, n = 0;
+  html += antes.length ? antes.map(({ r, rac, dias: ds }) => {
+    const gg = grupo(r), cab = gg !== g ? `<h4>${GN[gg]}</h4>` : ""; g = gg; n++;
+    const it = items.find(i => i.r === r), dd = n => DIAS[n].toLowerCase();
+    const aviso = !it.fuera.length ? "" : it.congela
+      ? `<small class="warn-s">Aguanta ${it.keep} días en la nevera: congela lo del ${it.fuera.map(dd).join(" y ")} y pásalo a la nevera la noche antes.</small>`
+      : `<small class="warn-s">Aguanta ${it.keep} días: para el ${it.fuera.map(dd).join(" y ")}, haz otra tanda a mitad de semana.</small>`;
+    return `${cab}<div class="prep-it"><span class="num">${n}</span><div><button type="button" class="xref" data-planopen="${r.id}|${rac / r.raciones}">${r.nombre}</button><small>${fmtQ(rac)} ${rac === 1 ? "ración" : "raciones"} para ${ds.map(i => DIAS[i].slice(0, 3).toLowerCase()).join(", ")} · ${r.tiempoTxt}</small>${aviso}</div></div>`;
+  }).join("") : `<p class="muted">Esta semana no hay nada que merezca la pena dejar hecho: todo es rápido o mejor recién hecho.</p>`;
+  if (fresco.length) html += `<h4>Más adelante en la semana, o recién hecho</h4><p class="muted">${fresco.map(({ r }) => `<button type="button" class="xref" data-goto="${r.id}">${r.corto}</button>`).join(", ")}.</p>`;
+  box.innerHTML = html;
 }
 
 /* ===================== MARCAS ===================== */
@@ -2433,8 +2642,129 @@ function renderGuide() {
   renderConexion();
 }
 
+/* ===================== PROGRESO ===================== */
+function mediasSemanales(regs, campo) {
+  const g = {};
+  regs.filter(r => r[campo] > 0).forEach(r => { const [y, m, d] = r.fecha.split("-").map(Number); const k = lunesDe(new Date(y, m - 1, d)); (g[k] = g[k] || []).push(r[campo]); });
+  return Object.keys(g).sort().map(k => ({ semana: k, media: g[k].reduce((a, b) => a + b, 0) / g[k].length, n: g[k].length }));
+}
+function consejoProgreso(regs) {
+  const p = mediasSemanales(regs, "peso"), c = mediasSemanales(regs, "cintura");
+  if (p.length < 2) return { tipo: "info", txt: "Con 2 semanas de registros te digo cómo vas. Lo que cuenta es la media de cada semana, no el número de un día: el peso sube y baja 1–2 kg por agua, sal o lo que comiste ayer." };
+  const ult = p[p.length - 1].media, prev = p[p.length - 2].media, ritmo = ult - prev;
+  const cBaja = c.length >= 2 && c[c.length - 1].media < c[Math.max(0, c.length - 4)].media - 0.4;
+  if (p.length >= 4) {
+    const d3 = ult - p[p.length - 4].media;
+    if (Math.abs(d3) < 0.3 && !cBaja) return { tipo: "warn", txt: `3 semanas sin cambios (${fmt(Math.round(d3 * 10) / 10)} kg) y la cintura tampoco baja: quita unas 150–200 kcal al día a tu objetivo del plan.` };
+    if (Math.abs(d3) < 0.3 && cBaja) return { tipo: "ok", txt: "El peso no se mueve pero la cintura baja: estás perdiendo grasa y ganando músculo, justo lo que buscas. Sigue igual." };
+  }
+  const ritmo2 = p.length >= 3 ? (ult - p[p.length - 3].media) / 2 : ritmo;
+  if (ritmo2 < -0.5) return { tipo: "warn", txt: `Bajas unos ${fmt(Math.round(-ritmo2 * 10) / 10)} kg por semana: demasiado rápido para no perder músculo. Sube unas 150–200 kcal al día.` };
+  if (ritmo2 > 0.2 && !cBaja) return { tipo: "warn", txt: `Subes unos ${fmt(Math.round(ritmo2 * 10) / 10)} kg por semana. Si no buscas ganar peso, revisa que el plan esté en tu objetivo y baja unas 150 kcal.` };
+  return { tipo: "ok", txt: `Vas a buen ritmo: ${ritmo2 <= 0 ? "unos " + fmt(Math.round(-ritmo2 * 10) / 10) + " kg menos por semana" : "peso estable"}${cBaja ? " y la cintura bajando" : ""}. Sigue igual.` };
+}
+function grafica(id, regs, campo, ud) {
+  const box = $("#" + id), pts = regs.filter(r => r[campo] > 0).sort((a, b) => a.fecha.localeCompare(b.fecha));
+  if (pts.length < 2) { box.innerHTML = `<p class="muted">${pts.length ? "Con un registro más verás la gráfica." : "Todavía no hay registros."}</p>`; return; }
+  // El SVG se dibuja al ancho real de la caja, para que el texto salga a su tamaño
+  const W = Math.max(300, Math.round(box.clientWidth || 340)), H = 200, L = 40, R = 12, T = 14, B = 28;
+  const medias = mediasSemanales(pts, campo).map(m => ({ f: masDias(m.semana, 3), v: m.media }));
+  const tf = f => new Date(f + "T12:00").getTime();
+  const t0 = Math.min(tf(pts[0].fecha), ...medias.map(m => tf(m.f))), t1 = Math.max(tf(pts[pts.length - 1].fecha), ...medias.map(m => tf(m.f)), t0 + 86400000 * 6);
+  const vals = pts.map(p => p[campo]); let lo = Math.min(...vals), hi = Math.max(...vals); const pad = Math.max(0.5, (hi - lo) * 0.15); lo -= pad; hi += pad;
+  const x = f => L + (tf(f) - t0) / (t1 - t0) * (W - L - R), y = v => T + (hi - v) / (hi - lo) * (H - T - B);
+  const paso = (hi - lo) > 6 ? 2 : (hi - lo) > 3 ? 1 : 0.5, ticks = []; for (let v = Math.ceil(lo / paso) * paso; v <= hi; v += paso) ticks.push(v);
+  const linea = medias.length >= 2 ? `<polyline class="m-line" points="${medias.map(m => `${x(m.f).toFixed(1)},${y(m.v).toFixed(1)}`).join(" ")}"/>` : "";
+  const etq = "";
+  const fechasX = [pts[0].fecha, pts[pts.length - 1].fecha];
+  box.innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Evolución de ${campo === "peso" ? "peso" : "cintura"}: de ${fmt(vals[0])} a ${fmt(vals[vals.length - 1])} ${ud}">
+    ${ticks.map(v => `<line class="grid" x1="${L}" x2="${W - R}" y1="${y(v).toFixed(1)}" y2="${y(v).toFixed(1)}"/><text class="ax" x="${L - 8}" y="${(y(v) + 4).toFixed(1)}" text-anchor="end">${fmt(v)}</text>`).join("")}
+    ${fechasX.map((f, i) => `<text class="ax" x="${x(f).toFixed(1)}" y="${H - 8}" text-anchor="${i ? "end" : "start"}">${fechaCorta(f)}</text>`).join("")}
+    ${linea}
+    ${pts.map(p => `<circle class="dot" cx="${x(p.fecha).toFixed(1)}" cy="${y(p[campo]).toFixed(1)}" r="4.5"/>`).join("")}
+    ${pts.map(p => `<circle class="hit" cx="${x(p.fecha).toFixed(1)}" cy="${y(p[campo]).toFixed(1)}" r="14" data-tip="${fechaCorta(p.fecha)}: ${fmt(p[campo])} ${ud}"/>`).join("")}
+    ${etq}
+  </svg>
+  <div class="legend-c">${medias.length >= 2 ? `<span><i class="lg-line"></i>Media semanal</span>` : ""}<span><i class="lg-dot"></i>Cada registro</span></div>
+  <div class="ctip" hidden></div>`;
+}
+function renderProgreso() {
+  if (!$("#pr-fecha").value) $("#pr-fecha").value = iso(new Date());
+  const regs = (Saved.progreso.registros || []).slice().sort((a, b) => b.fecha.localeCompare(a.fecha));
+  const pesoS = mediasSemanales(regs, "peso"), cS = mediasSemanales(regs, "cintura");
+  const cons = consejoProgreso(regs);
+  const ultP = pesoS[pesoS.length - 1], antP = pesoS[pesoS.length - 2], ultC = cS[cS.length - 1], antC = cS[cS.length - 2];
+  const dif = (a, b, ud) => (a && b ? `${a.media - b.media <= 0 ? "▼" : "▲"} ${fmt(Math.round(Math.abs(a.media - b.media) * 10) / 10)} ${ud} vs. la semana anterior` : "");
+  $("#pr-resumen").innerHTML = regs.length ? `<h3>Cómo vas</h3>
+    <div class="weeksum"><div><b>${ultP ? fmt(Math.round(ultP.media * 10) / 10) : "—"}</b><span>kg, media de esta semana</span><small>${dif(ultP, antP, "kg")}</small></div>
+    <div><b>${ultC ? fmt(Math.round(ultC.media * 10) / 10) : "—"}</b><span>cm de cintura</span><small>${dif(ultC, antC, "cm")}</small></div>
+    <div><b>${regs.length}</b><span>registros</span></div></div>
+    <div class="${cons.tipo === "warn" ? "warn" : "look"}">${cons.tipo === "warn" ? "⚠ " : ""}${cons.txt}</div>
+    <p class="muted">Si cambias tu objetivo de calorías, hazlo en la pestaña Plan. Estas pautas son orientativas; un dietista-nutricionista las ajusta mejor.</p>`
+    : `<h3>Cómo vas</h3><p class="muted">Apunta tu primer peso arriba. Con 2 semanas de registros verás cómo vas y si tienes que ajustar las calorías.</p>`;
+  grafica("ch-peso", regs, "peso", "kg");
+  grafica("ch-cintura", regs, "cintura", "cm");
+  $("#pr-tabla").innerHTML = regs.length ? `<div class="tbl-wrap"><table><tr><th>Fecha</th><th class="n">Peso</th><th class="n">Cintura</th><th></th></tr>${regs.slice(0, 30).map(r => `<tr><td>${fechaCorta(r.fecha)}</td><td class="n">${r.peso ? fmt(r.peso) + " kg" : "—"}</td><td class="n">${r.cintura ? fmt(r.cintura) + " cm" : "—"}</td><td class="n"><button type="button" class="x" data-prdel="${r.fecha}" aria-label="Borrar el registro del ${fechaCorta(r.fecha)}">✕</button></td></tr>`).join("")}</table></div>` : `<p class="muted">Sin registros todavía.</p>`;
+  estadoGuardado();
+}
+$("#pr-guardar").addEventListener("click", () => {
+  const fecha = $("#pr-fecha").value, peso = parseFloat(($("#pr-peso").value || "").replace(",", ".")), cint = parseFloat(($("#pr-cintura").value || "").replace(",", "."));
+  if (!fecha || !(peso > 30 && peso < 250)) { $("#pr-msg").textContent = "Pon la fecha y un peso válido (en kg, por ejemplo 75,2)."; return; }
+  const regs = (Saved.progreso.registros || []).filter(r => r.fecha !== fecha);
+  regs.push({ fecha, peso, ...(cint > 40 && cint < 200 ? { cintura: cint } : {}) });
+  Saved.progreso = Object.assign({}, Saved.progreso, { registros: regs }); Saved.setProgreso();
+  $("#pr-peso").value = ""; $("#pr-cintura").value = ""; $("#pr-msg").textContent = "Guardado.";
+  renderProgreso();
+});
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-prdel]"); if (!b) return;
+  confirmar(b, "¿Borrar?", () => { Saved.progreso = Object.assign({}, Saved.progreso, { registros: Saved.progreso.registros.filter(r => r.fecha !== b.dataset.prdel) }); Saved.setProgreso(); renderProgreso(); });
+});
+// Tooltip de las gráficas (ratón y dedo)
+document.addEventListener("pointerover", e => {
+  const c = e.target.closest(".hit"); if (!c) return;
+  const box = c.closest(".chartbox"), tip = box.querySelector(".ctip"), r = box.getBoundingClientRect(), cr = c.getBoundingClientRect();
+  tip.textContent = c.dataset.tip; tip.hidden = false;
+  tip.style.left = Math.min(r.width - 150, Math.max(0, cr.left - r.left - 60)) + "px"; tip.style.top = Math.max(0, cr.top - r.top - 40) + "px";
+});
+document.addEventListener("pointerout", e => { const c = e.target.closest(".hit"); if (c) c.closest(".chartbox").querySelector(".ctip").hidden = true; });
+
+/* ===================== CON LO QUE TENGO ===================== */
+const BASICOS = new Set(["especias", "spray", "aceite", "edulcorante", "canela", "vainilla", "levadura", "limon", "ajo", "soja"]);
+const ingsReceta = r => [...new Set([...r.compra, ...(r.opciones ? r.opciones[r.opcionDefecto].compra : [])].map(c => c[0]).filter(i => !BASICOS.has(i)))];
+const faltan = r => ingsReceta(r).filter(i => !Saved.despensa.includes(i));
+function renderTengo() {
+  const todos = [...new Set(RECETAS.flatMap(ingsReceta))];
+  const grupos = PASILLOS.map(p => [p, todos.filter(i => ingPasillo(i) === p).sort((a, b) => ingNombre(a).localeCompare(ingNombre(b)))]).filter(([, l]) => l.length);
+  $("#tengo-chips").innerHTML = grupos.map(([p, l]) => `<div class="fgroup"><span>${p}</span><div class="chips">${l.map(i => `<button type="button" class="chip" data-tengo="${i}" aria-pressed="${Saved.despensa.includes(i)}">${esc(ingNombre(i).replace(/ \(.*\)$/, ""))}</button>`).join("")}</div></div>`).join("");
+  $("#tengo-on").setAttribute("aria-pressed", state.tengoOn);
+  $("#tengo-on").textContent = state.tengoOn ? "Quitar el orden por lo que me falta" : "Ordenar por lo que me falta";
+}
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-tengo]"); if (!b) return;
+  const i = b.dataset.tengo; Saved.despensa = Saved.despensa.includes(i) ? Saved.despensa.filter(x => x !== i) : [...Saved.despensa, i];
+  Saved.setDespensa(); b.setAttribute("aria-pressed", Saved.despensa.includes(i)); if (state.tengoOn) renderGrid();
+});
+$("#tengo-toggle").addEventListener("click", e => { const box = $("#tengo-box"); box.hidden = !box.hidden; e.currentTarget.setAttribute("aria-expanded", !box.hidden); e.currentTarget.setAttribute("aria-pressed", !box.hidden); });
+$("#tengo-on").addEventListener("click", () => { state.tengoOn = !state.tengoOn; renderTengo(); renderGrid(); });
+$("#tengo-clear").addEventListener("click", () => { Saved.despensa = []; Saved.setDespensa(); renderTengo(); renderGrid(); });
+
+/* ===================== TEMA E IMPRIMIR ===================== */
+const TEMAS = ["auto", "light", "dark"], TEMA_TXT = { auto: "◐", light: "☀", dark: "☾" }, TEMA_LBL = { auto: "automático", light: "claro", dark: "oscuro" };
+function aplicarTema(t) {
+  if (t === "auto") delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme = t;
+  $("#themebtn").textContent = TEMA_TXT[t]; $("#themebtn").setAttribute("aria-label", `Modo ${TEMA_LBL[t]}. Pulsa para cambiar`); $("#themebtn").title = `Modo ${TEMA_LBL[t]}`;
+}
+aplicarTema(prefs.get("tema", "auto"));
+$("#themebtn").addEventListener("click", () => { const t = TEMAS[(TEMAS.indexOf(prefs.get("tema", "auto")) + 1) % 3]; prefs.set("tema", t); aplicarTema(t); toast(`Modo ${TEMA_LBL[t]}`); });
+$("#shop-print").addEventListener("click", () => window.print());
+
+/* ===================== SIN CONEXIÓN ===================== */
+if ("serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("sw.js").catch(() => {});
+window.addEventListener("online", () => { if (Saved.token && Saved.sucios.size) Saved.push(); });
+
 /* ===================== NAVEGACIÓN Y EVENTOS ===================== */
-const TABS = ["recetas", "plan", "compra", "trucos"];
+const TABS = ["recetas", "plan", "compra", "progreso", "trucos"];
 function showTab(tab, scrollTo) {
   if (!TABS.includes(tab)) tab = "recetas";
   TABS.forEach(t => { $("#panel-" + t).hidden = t !== tab; });
@@ -2442,6 +2772,7 @@ function showTab(tab, scrollTo) {
   document.querySelectorAll(".tabs a").forEach(a => a.setAttribute("aria-current", a.dataset.tab === tab ? "page" : "false"));
   prefs.set("tab", tab);
   if (tab === "recetas") fitLast();
+  if (tab === "progreso") renderProgreso();
   if (scrollTo) { const el = document.getElementById(scrollTo); if (el) el.scrollIntoView({ block: "start" }); }
   else window.scrollTo(0, 0);
 }
@@ -2476,6 +2807,7 @@ document.addEventListener("click", e => {
     state.mult = rac / r.raciones; rerenderDetail(); $('[data-rac="' + b.dataset.rac + '"]').focus(); return;
   }
   if (T("#fav-btn")) { const d = Saved.receta(state.abierta); Saved.setReceta(state.abierta, { fav: !d.fav }); refrescarPersonal(); renderGrid(); toast(d.fav ? "Quitada de favoritas" : "Añadida a favoritas"); return; }
+  if ((b = T("[data-star]"))) { const n = +b.dataset.star, d = Saved.receta(state.abierta); Saved.setReceta(state.abierta, { estrellas: d.estrellas === n ? 0 : n }); refrescarPersonal(); renderGrid(); return; }
   if (T("[data-hecha]")) { const d = Saved.receta(state.abierta); Saved.setReceta(state.abierta, { hechas: [...(d.hechas || []), new Date().toISOString()] }); refrescarPersonal(); toast("¡Apuntado!"); return; }
   if (T("[data-deshacer]")) { const d = Saved.receta(state.abierta); Saved.setReceta(state.abierta, { hechas: (d.hechas || []).slice(0, -1) }); refrescarPersonal(); return; }
   if ((b = T("[data-delfoto]"))) {
@@ -2504,7 +2836,7 @@ document.addEventListener("click", e => {
   if ((b = T("[data-sortkey]"))) {
     const k = b.dataset.sortkey;
     if (state.sort === k) state.dir = state.dir === "asc" ? "desc" : "asc";
-    else { state.sort = k; state.dir = ["p", "p100"].includes(k) ? "desc" : "asc"; }
+    else { state.sort = k; state.dir = ["p", "p100", "estrellas"].includes(k) ? "desc" : "asc"; }
     $("#sort").value = state.sort; prefs.set("sort", state.sort); prefs.set("dir", state.dir); renderGrid(); return;
   }
   if ((b = T("[data-base]"))) { state.base = b.dataset.base; prefs.set("base", state.base); syncBase(); renderGrid(); return; }
@@ -2515,9 +2847,9 @@ document.addEventListener("change", e => {
   const t = e.target;
   if (t.dataset.tach) { const tach = Object.assign({}, Saved.compra.tachados); if (t.checked) tach[t.dataset.tach] = true; else delete tach[t.dataset.tach]; Saved.compra.tachados = tach; Saved.setCompra(); return; }
   if (t.dataset.dia !== undefined && t.dataset.hueco) {
-    const dias = Object.assign({}, Saved.plan.dias); const d = Object.assign({}, dias[t.dataset.dia]);
+    const dias = Object.assign({}, semanaActual().dias); const d = Object.assign({}, dias[t.dataset.dia]);
     if (t.value) d[t.dataset.hueco] = t.value; else delete d[t.dataset.hueco]; // al cambiar de receta vuelve a ración simple
-    dias[t.dataset.dia] = d; Saved.plan.dias = dias; Saved.setPlan(); renderPlan();
+    dias[t.dataset.dia] = d; guardarSemana({ dias });
   }
 });
 $("#overlay").addEventListener("click", e => { if (e.target.id === "overlay") closeRecipe(); });
@@ -2537,7 +2869,7 @@ $("#shop-clear-done").textContent = "Desmarcar todo";
 $("#shop-clear").addEventListener("click", e => confirmar(e.currentTarget, "Pulsa otra vez para vaciar", () => { Saved.compra = { recetas: {}, tachados: {}, extra: [] }; Saved.setCompra(); renderCompra(); toast("Lista vaciada"); }));
 $("#plan-to-shop").addEventListener("click", planACompra);
 $("#plan-tipo").addEventListener("click", semanaTipo);
-["kcal", "p", "g"].forEach(k => $("#obj-" + k).addEventListener("change", e => {
+["kcal", "kcalD", "p", "g"].forEach(k => $("#obj-" + k).addEventListener("change", e => {
   const v = parseInt(e.target.value, 10);
   const obj = Object.assign({}, Saved.plan.obj); if (v > 0) obj[k] = v; else delete obj[k];
   Saved.plan.obj = obj; Saved.setPlan(); renderPlan();
@@ -2545,11 +2877,25 @@ $("#plan-tipo").addEventListener("click", semanaTipo);
 document.addEventListener("click", e => {
   const b = e.target.closest("[data-doble]"); if (!b) return;
   const [di, k] = b.dataset.doble.split("|");
-  const dias = Object.assign({}, Saved.plan.dias); const d = Object.assign({}, dias[di]);
+  const dias = Object.assign({}, semanaActual().dias); const d = Object.assign({}, dias[di]);
   const { id, x } = slotParse(d[k]); const sig = x === 1 ? 1.5 : x === 1.5 ? 2 : 1; d[k] = sig === 1 ? id : id + "|" + sig;
-  dias[di] = d; Saved.plan.dias = dias; Saved.setPlan(); renderPlan();
+  dias[di] = d; guardarSemana({ dias });
 });
-$("#plan-clear").addEventListener("click", e => confirmar(e.currentTarget, "Pulsa otra vez para vaciar", () => { Saved.plan = { dias: {} }; Saved.setPlan(); renderPlan(); toast("Plan vaciado"); }));
+$("#plan-clear").addEventListener("click", e => confirmar(e.currentTarget, "Pulsa otra vez para vaciar", () => { guardarSemana({ dias: {} }); toast("Semana vaciada"); }));
+$("#plan-copiar").addEventListener("click", () => {
+  const prev = Saved.plan.semanas[masDias(state.semana, -7)];
+  if (!prev || !Object.keys(prev.dias || {}).length) { toast("La semana anterior está vacía"); return; }
+  const dias = JSON.parse(JSON.stringify(semanaActual().dias || {})); let n = 0;
+  Object.entries(prev.dias).forEach(([di, d]) => { const cur = dias[di] || (dias[di] = {}); Object.entries(d).forEach(([k, v]) => { if (!cur[k]) { cur[k] = v; n++; } }); });
+  guardarSemana({ dias, entreno: prev.entreno || entrenoDe(semanaActual()) }); toast(n ? `Copiados ${n} huecos` : "No quedaban huecos vacíos");
+});
+$("#wk-prev").addEventListener("click", () => { state.semana = masDias(state.semana, -7); renderPlan(); });
+$("#wk-next").addEventListener("click", () => { state.semana = masDias(state.semana, 7); renderPlan(); });
+$("#wk-hoy").addEventListener("click", () => { state.semana = lunesDe(new Date()); renderPlan(); });
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-gym]"); if (!b) return;
+  const ent = [...entrenoDe(semanaActual())]; ent[+b.dataset.gym] = !ent[+b.dataset.gym]; guardarSemana({ entreno: ent });
+});
 
 function syncView() { document.querySelectorAll("[data-view]").forEach(b => b.setAttribute("aria-pressed", b.dataset.view === state.view)); }
 function syncBase() { document.querySelectorAll("[data-base]").forEach(b => b.setAttribute("aria-pressed", b.dataset.base === state.base)); }
@@ -2577,7 +2923,7 @@ $("#clear").addEventListener("click", clearFilters);
 $("#q").addEventListener("input", e => { state.q = e.target.value.trim(); renderGrid(); });
 $("#sort").addEventListener("change", e => {
   state.sort = e.target.value;
-  state.dir = ["p", "p100"].includes(state.sort) ? "desc" : "asc"; // más proteína primero; menos de lo demás primero
+  state.dir = ["p", "p100", "estrellas"].includes(state.sort) ? "desc" : "asc"; // más proteína primero; menos de lo demás primero
   prefs.set("sort", state.sort); prefs.set("dir", state.dir); renderGrid();
 });
 $("#dir").addEventListener("click", () => { state.dir = state.dir === "asc" ? "desc" : "asc"; prefs.set("dir", state.dir); renderGrid(); });
