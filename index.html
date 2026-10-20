@@ -1046,7 +1046,29 @@ const Saved = {
       this.token = prev;
       return r && r.status === 401 ? "Ese token no es válido. Cópialo entero, sin espacios." : "El token no da permiso de escritura en recetario-datos. Revisa el paso 3.";
     }
-    prefs.set("ghtoken", token); await this.pull(); alCambiarDatos(); return "";
+    // Lo apuntado en este navegador antes de conectar se mezcla con lo que ya haya en GitHub
+    const local = JSON.parse(JSON.stringify(this.datos()));
+    prefs.set("ghtoken", token); await this.pull();
+    if (this.mode === "github" && !this.sucios.has("todo") && this.mezclar(local)) { this.guardarLocal(); this.sucios.add("todo"); this.programar(0); }
+    alCambiarDatos(); return "";
+  },
+  mezclar(local) {
+    let cambio = false;
+    Object.entries(local.recetas || {}).forEach(([rid, d]) => {
+      const r = this.recetas[rid];
+      if (!r) { this.recetas[rid] = d; cambio = true; return; }
+      const m = { fav: r.fav || d.fav, hechas: [...new Set([...(r.hechas || []), ...(d.hechas || [])])].sort(), nota: r.nota && d.nota && r.nota !== d.nota ? r.nota + "\n" + d.nota : (r.nota || d.nota || ""), fotos: [...new Set([...(r.fotos || []), ...(d.fotos || [])])] };
+      if (JSON.stringify(m) !== JSON.stringify(r)) { this.recetas[rid] = m; cambio = true; }
+    });
+    const lc = local.compra || {};
+    Object.entries(lc.recetas || {}).forEach(([k, e]) => { if (!this.compra.recetas[k]) { this.compra.recetas[k] = e; cambio = true; } });
+    (lc.extra || []).forEach(x => { if (!this.compra.extra.some(y => y.txt === x.txt)) { this.compra.extra.push(x); cambio = true; } });
+    Object.entries((local.plan || {}).dias || {}).forEach(([di, d]) => {
+      const cur = Object.assign({}, this.plan.dias[di]);
+      Object.entries(d).forEach(([h, rid]) => { if (!cur[h]) { cur[h] = rid; cambio = true; } });
+      this.plan.dias[di] = cur;
+    });
+    return cambio;
   },
   desconectar() { this.token = ""; prefs.set("ghtoken", ""); this.mode = "local"; this.error = ""; this.sha = null; alCambiarDatos(); },
   /* Fotos: se reducen a 1200 px en JPEG antes de subirlas */
