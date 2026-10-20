@@ -40,7 +40,7 @@ Recetas con mucha proteína y poca grasa que sacien, con filtros, plan semanal, 
 - Valores nutricionales **aproximados**, calculados con productos reales.
   - Verifica los productos en Open Food Facts: `https://search.openfoodfacts.org/search?q=...`, filtrando por `countries_tags` que contenga `en:spain`.
   - Si no hay un producto verificable, deja `productos: []` y explica el criterio en el texto. Nunca inventes una marca.
-- Cocina del usuario: freidora de aire Princess de 10 L, sartén, cazo y microondas.
+- Cocina del usuario: freidora de aire Princess de 10 L (tipo horno, con varias alturas de bandeja), sartén, cazo y microondas. Toda receta de airfryer debe incluir: precalentado (temperatura y 3 min), altura de la bandeja, temperatura y tiempo de cada fase y cómo saber si está hecho.
 - Revisa que `completa` sea `racion × raciones`. Comprueba también que kcal ≈ 4·p + 4·c + 9·g, con margen por la fibra.
 
 ## Probar y publicar
