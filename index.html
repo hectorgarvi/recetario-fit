@@ -311,6 +311,10 @@ tr.hl td { background: var(--ok-bg); }
 .scale button[aria-pressed="true"] { background: var(--ci); color: var(--c); }
 .timer-btn { border: 0; background: var(--pill); color: var(--ink); border-radius: 999px; padding: 3px 10px; font-weight: 700; font-size: .85rem; cursor: pointer; margin-left: 4px; white-space: nowrap; }
 .timer-btn:hover { background: var(--accent); color: var(--on-accent); }
+.tools { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.tools li { display: grid; gap: 2px; padding: 10px 14px; border-radius: 14px; background: var(--pill); }
+.tools li span { font-size: .9rem; color: var(--ink-soft); }
+.tools li em { font-style: normal; font-weight: 700; color: var(--ink); }
 .facts2 { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); }
 .facts2 > div { background: var(--pill); border-radius: 16px; padding: 12px 14px; display: grid; gap: 4px; }
 .facts2 b { font-size: .95rem; }
@@ -1188,6 +1192,38 @@ const RECETAS = [
   }
 ];
 
+/* ===================== UTENSILIOS =====================
+   Por receta: [utensilio, qué hacer si no lo tienes (opcional)]. */
+const AF_HORNO = t => `Horno convencional: unos 15–20 °C más que en la airfryer y un 20–25 % más de tiempo (${t}). Es aproximado: vigila los últimos minutos.`;
+const BASCULA = alt => ["Báscula de cocina", "Sin báscula: " + alt];
+const UTENSILIOS = {
+  "tortitas": [BASCULA("40 g de copos son unas 4 cucharadas soperas; 50 g de queso batido, unas 3."), ["Batidora o picadora (para la harina de avena)", "Compra harina de avena, o usa copos finos sin triturar: la masa queda con más textura, pero sale igual de rica."], ["Bol y tenedor o varillas"], ["Sartén antiadherente y espátula"]],
+  "cheesecake-nevera": [BASCULA("300 g de queso batido son unas 20 cucharadas soperas, o 3/5 de una tarrina de 500 g."), ["Molde de 10–12 cm", "Un vaso ancho, una taza grande o un táper redondo. Se come en el mismo recipiente."], ["Picadora (para la base, opcional)", "Mete la avena en una bolsa cerrada y pásale un rodillo o una botella."], ["Bol y varillas"], ["Microondas (para calentar la leche)", "Un cazo pequeño a fuego medio, sin que hierva."]],
+  "cheesecake-airfryer": [BASCULA("300 g de queso batido son unas 20 cucharadas soperas; 10 g de Maizena, 1 cucharada sopera rasa."), ["Freidora de aire", AF_HORNO("unos 170 °C y 30–35 min; la base, 5–6 min a 180 °C")], ["Molde de 12 cm y papel de horno", "Cualquier recipiente pequeño apto para horno: una fuente de cristal o de barro."], ["Batidora o varillas eléctricas", "Varillas a mano: bate 2–3 min hasta que no queden grumos. Disuelve antes la Maizena en un poco de clara para que no haga bolitas."], ["Picadora (para la base, opcional)", "Avena en una bolsa cerrada y un rodillo o una botella por encima."]],
+  "mousse": [BASCULA("300 g de queso batido son unas 20 cucharadas soperas; 15 g de cacao, cucharada y media."), ["Varillas eléctricas o batidora de varillas", "Varillas a mano con energía durante 2–3 min. Queda algo menos esponjosa, pero igual de buena."], ["Microondas (para la leche)", "Un cazo pequeño a fuego medio."], ["Bol y 2 vasitos"]],
+  "natillas": [["Cazo"], ["Varillas o cuchara de madera", "Un tenedor sirve para mezclar las yemas con la Maizena."], ["Bol y 2 vasitos"], ["Colador (opcional)", "Si te salen grumos, pásalas por un colador al servirlas."]],
+  "tortilla": [["Sartén antiadherente con tapa", "Sin tapa: un plato grande puesto encima hace lo mismo."], ["Un plato para darle la vuelta"], ["Bol y tenedor"]],
+  "pollo": [["Freidora de aire", AF_HORNO("unos 205 °C: verduras 8 min y luego todo junto 15–18 min") + " O en sartén: pollo a la plancha 6–8 min y verduras salteadas aparte."], ["Bol para el adobo"], ["Termómetro de cocina (opcional)", "Corta el trozo más gordo: tiene que estar blanco por dentro."]],
+  "merluza": [["Freidora de aire", AF_HORNO("unos 195–200 °C y 15–18 min") + " O en una sartén tapada a fuego bajo, 10–12 min."], ["Papel de horno", "Papel de aluminio también vale para el paquete."]],
+  "hamburguesas": [["Picadora", "Pide en la carnicería que te piquen la pechuga, o pícala con un cuchillo grande unos 5 min, hasta que quede muy fina."], ["Rallador (para la cebolla)", "Pica la cebolla muy fina con el cuchillo."], ["Freidora de aire", AF_HORNO("unos 205 °C y 13–15 min") + " O en sartén antiadherente, 4–5 min por cada lado a fuego medio."], ["Termómetro de cocina (opcional)", "Parte una por la mitad: no tiene que quedar nada rosa."]],
+  "tostada-aguacate": [["Tostadora", "En una sartén sin aceite, 1–2 min por cada lado, o en la airfryer a 180 °C, 3–4 min."], ["Tenedor (para aplastar el aguacate)"]],
+  "revuelto-claras": [["Sartén antiadherente y espátula"], ["Tostadora", "En la misma sartén antes de hacer el revuelto, 1–2 min por lado."]],
+  "overnight-oats": [["Tarro o táper con tapa", "Un vaso o un bol tapado con film."], BASCULA("40 g de avena son unas 4 cucharadas soperas; 150 g de queso batido, unas 10; 100 ml de leche, medio vaso.")],
+  "batido-platano": [["Batidora de vaso o de brazo", "Sin batidora no hay batido, pero sí un bol: chafa el plátano con un tenedor y mézclalo con el queso batido, la avena y un chorrito de leche. Queda como unas gachas frías."], ["Vaso alto o botella para llevar"]],
+  "crema-calabacin": [["Cazo u olla mediana"], ["Batidora de brazo o de vaso", "Pasapurés. Si no, chafa con un tenedor o un machacador de patatas: queda tipo sopa con tropezones, igual de buena."], ["Sartén (para el pavo)"]],
+  "merluza-coliflor": [["Cazo (o microondas)", "La coliflor se puede hacer en el microondas en un bol tapado con un poco de agua, 6–7 min."], ["Batidora o picadora (para el puré)", "Pasapurés o tenedor: queda más rústico, como un puré de patata casero."], ["Sartén antiadherente"]],
+  "pavo-verduras": [["Sartén antiadherente grande"], ["Cuchillo y tabla"]],
+  "caldo-pollo": [["Cazo u olla mediana"], ["Dos tenedores (para desmigar el pollo)"]],
+  "lentejas": [["Olla con tapa", "Con olla exprés, unos 10–12 min desde que sube la válvula."], ["Rallador (para el tomate)", "Usa tomate triturado de bote: 2–3 cucharadas."]],
+  "salmon-patata": [["Freidora de aire", AF_HORNO("unos 205 °C: patata 15 min y luego todo junto 12–15 min")]],
+  "arroz-pollo": [["Cazo u olla y colador"], ["Sartén grande o wok"]],
+  "pasta-atun": [["Olla y colador"], ["Sartén"]],
+  "garbanzos-espinacas": [["Sartén grande"], ["Colador (para lavar los garbanzos)"]],
+  "fruta-frutos-secos": [BASCULA("un puñado que quepa en la palma de la mano, sin colmar."), ["Táper pequeño o bolsita para llevar"]],
+  "bocadillo-pavo": [["Tostadora (opcional)"], ["Papel de horno o film para llevarlo"]],
+  "bol-queso-fruta": [["Bol y cuchillo"], BASCULA("200 g de queso batido son unas 13 cucharadas soperas, o 2/5 de una tarrina de 500 g.")]
+};
+
 /* ===================== INGREDIENTES (guía de marcas) ===================== */
 const OFF = c => "https://es.openfoodfacts.org/producto/" + c;
 const INGREDIENTES = [
@@ -1775,6 +1811,7 @@ function renderDetail(r) {
       <div class="hero-actions"><button type="button" class="hbtn big" data-cook>Empezar a cocinar</button><button type="button" class="hbtn" data-addshop>Añadir a la compra</button></div>
     </div>
     <div class="body">
+      ${(UTENSILIOS[r.id] || []).length ? `<section><h3>Qué necesitas</h3><ul class="tools">${UTENSILIOS[r.id].map(([u, alt]) => `<li><b>${u}</b>${alt ? `<span><em>Si no tienes:</em> ${alt.replace(/^Sin báscula: /, "")}</span>` : ""}</li>`).join("")}</ul></section>` : ""}
       <section><h3>Ingredientes</h3><div id="ings">${ingHTML(r, m)}</div></section>
       <section><h3>Cómo se hace</h3><ol class="steps">${r.pasos.map((p, i) => `<li><div>${timersIn(refs(p), r.corto + ", paso " + (i + 1))}</div></li>`).join("")}</ol></section>
       <section><h3>Valores aproximados</h3><div class="tbl-wrap"><table>${head}${body}</table></div>${r.notaTabla ? `<p class="note">${r.notaTabla}</p>` : ""}${m !== 1 ? `<p class="note">Haciendo ×${fmtQ(m)}, la receta entera son unas ${fmt(Math.round(vc.kcal * m))} kcal; cada ración sigue igual.</p>` : ""}</section>
