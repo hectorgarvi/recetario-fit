@@ -389,7 +389,10 @@ tr.hl td { background: var(--ok-bg); }
 .day-tot .p { color: var(--prot); } .day-tot .g { color: var(--fat); }
 .slot { display: grid; grid-template-columns: 82px minmax(0, 1fr); align-items: center; gap: 8px; }
 .slot span { font-size: .88rem; color: var(--ink-soft); font-weight: 600; }
-.slot select { width: 100%; min-width: 0; border: 0; border-radius: 12px; padding: 9px 10px; background: var(--bg); box-shadow: inset 0 0 0 1.5px var(--line); font-weight: 600; }
+.slot-in { display: flex; gap: 6px; min-width: 0; }
+.stepbtn { flex: none; border: 0; border-radius: 10px; padding: 0 10px; background: var(--pill); font-weight: 800; cursor: pointer; color: var(--ink); }
+.stepbtn[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.slot select { flex: 1; width: 100%; min-width: 0; border: 0; border-radius: 12px; padding: 9px 10px; background: var(--bg); box-shadow: inset 0 0 0 1.5px var(--line); font-weight: 600; }
 .slot select.set { box-shadow: inset 0 0 0 2px var(--c); background: var(--paper); }
 .weeksum { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
 .weeksum div { background: var(--bg); border-radius: 14px; padding: 10px; text-align: center; }
@@ -469,12 +472,13 @@ tr.hl td { background: var(--ok-bg); }
   <section class="panel" id="panel-plan" aria-label="Plan semanal" hidden>
     <div class="intro">
       <h2>Plan de la semana</h2>
-      <p>Elige qué vas a tomar cada día. Cada hueco cuenta como una ración, y los totales salen solos.</p>
+      <p>Elige qué vas a tomar cada día. Cada hueco es una ración; pulsa ×2 para ración doble. Si ese día comes algo que ya tienes (un táper del congelador), elige «Algo que ya tengo». «Rellenar con la semana tipo» solo llena los huecos vacíos.</p>
       <p class="savebar" id="save-plan"><i></i><span></span></p>
     </div>
     <div class="panelcard" style="margin-bottom:14px">
       <div class="weeksum" id="weeksum"></div>
-      <div class="rowbtns"><button type="button" class="pbtn acc" id="plan-to-shop">Añadir el plan a la compra</button><button type="button" class="pbtn alt" id="plan-clear">Vaciar el plan</button></div>
+      <div class="rowbtns"><button type="button" class="pbtn" id="plan-tipo">Rellenar con la semana tipo</button><button type="button" class="pbtn acc" id="plan-to-shop">Añadir el plan a la compra</button><button type="button" class="pbtn alt" id="plan-clear">Vaciar el plan</button></div>
+      <p class="notice" id="plan-note"></p>
       <p class="muted" id="plan-confirm" hidden></p>
     </div>
     <div class="plan" id="plan"></div>
@@ -699,7 +703,7 @@ const RECETAS = [
   },
   {
     id: "pollo", corto: "pollo especiado", nombre: "Pollo especiado con verduras",
-    cat: ["Cena"], met: ["Airfryer"], ext: ["Sin huevo", "Sin gluten"], tags: ["Alta proteína", "La que más llena"],
+    cat: ["Comida", "Cena"], met: ["Airfryer"], ext: ["Sin huevo", "Sin gluten"], tags: ["Alta proteína", "La que más llena"],
     gluten: "natural", lacteos: true,
     raciones: 1, racionesTxt: "1", tiempoTxt: "10 min + 15 min de airfryer", min: 30,
     completa: { kcal: 330, p: 49, g: 7, c: 13 }, racion: { kcal: 330, p: 49, g: 7, c: 13 },
@@ -754,7 +758,7 @@ const RECETAS = [
   },
   {
     id: "hamburguesas", corto: "hamburguesas de pavo", nombre: "Hamburguesas caseras de pavo",
-    cat: ["Cena"], met: ["Airfryer"], ext: ["Aprovechamiento", "Sin lácteos"], tags: ["Alta proteína", "Aprovecha 1 clara"],
+    cat: ["Comida", "Cena"], met: ["Airfryer"], ext: ["Aprovechamiento", "Sin lácteos"], tags: ["Alta proteína", "Aprovecha 1 clara"],
     gluten: "avena", lacteos: false,
     raciones: 2, racionesTxt: "2 hamburguesas (ración = 1)", tiempoTxt: "15 min + 12 min de airfryer", min: 30,
     completa: { kcal: 470, p: 82, g: 7, c: 16 }, racion: { kcal: 235, p: 41, g: 3.5, c: 8 },
@@ -985,6 +989,133 @@ const RECETAS = [
     conserva: { nevera: "3 días. Los fideos se hinchan: mejor guardar el caldo sin ellos y añadirlos al recalentar.", congelar: "El caldo con el pollo, sí, sin fideos." },
     compra: [["caldo", 500, "ml"], ["pollo", 120, "g"], ["verduras-caldo", 150, "g"], ["fideos", 20, "g"], ["especias", null]],
     usa: ["pollo", "caldo"]
+  },
+  {
+    id: "lentejas", corto: "lentejas con pavo", nombre: "Lentejas con verduras y pavo",
+    cat: ["Comida"], met: ["Cazo"], ext: ["Sin huevo", "Sin gluten", "Sin lácteos", "Para dos días"], tags: ["Mucha fibra", "Alta proteína"],
+    gluten: "natural", lacteos: false,
+    raciones: 2, racionesTxt: "2 (para dos días)", tiempoTxt: "15 min + 35 min de cocción", min: 50,
+    completa: { kcal: 945, p: 88, g: 26, c: 68 }, racion: { kcal: 475, p: 44, g: 13, c: 34 },
+    ingredientes: [
+      { t: "Ingredientes", items: ["Lentejas pardinas secas: {140} g (o 2 botes de lentejas cocidas, unos {480} g escurridas)", "Filetes de pechuga de pavo: {200} g, en dados", "Verduras: {1} zanahoria, {0.5} cebolla, {0.5} pimiento verde y {1} tomate (unos {400} g en total)", "Ajo: {2} dientes, {1} hoja de laurel, {1} cdta. de pimentón dulce y una pizca de comino", "Aceite de oliva virgen extra: {2} cucharadas ({20} g)", "Agua: lo justo para cubrir (unos {800} ml) y sal"] }
+    ],
+    pasos: [
+      "<b>Lava las lentejas</b> (las pardinas no necesitan remojo).",
+      "<b>Sofríe</b> en una olla con el aceite la cebolla, el pimiento, el ajo y la zanahoria en dados pequeños, 5 min [[t:5]] a fuego medio. Añade el tomate rallado y 2 min más.",
+      "<b>Añade el pavo</b> en dados y dóralo 2 min. Fuera del fuego, añade el pimentón y el comino (se queman enseguida).",
+      "<b>Echa las lentejas</b>, el laurel y agua hasta cubrir con dos dedos. Cuando hierva, baja el fuego y cuece tapado unos 30–35 min [[t:30]], hasta que estén tiernas. Si se quedan sin caldo, añade un poco de agua caliente.",
+      "<b>Prueba de sal</b> y deja reposar 5 min. Guarda la mitad para mañana.",
+      "<b>Con lentejas de bote:</b> haz el sofrito y el pavo igual, añade las lentejas escurridas y lavadas con un vaso de agua, y cuece solo 10 min [[t:10]]."
+    ],
+    tabla: { cols: ["Por ración (½)", "Olla entera"], rows: [["Calorías", "~475 kcal", "~945 kcal"], ["Proteínas", "~44 g", "~88 g"], ["Grasas", "~13 g", "~26 g"], ["Carbohidratos", "~34 g", "~68 g"]] },
+    notaTabla: "Cuentas con lentejas pardinas de 308 kcal y 1,9 g de grasa por 100 g en seco (Luengo). La grasa es casi toda del aceite de oliva: aquí sí tiene sentido, es la grasa buena del día.",
+    tips: [
+      "<b>Sin chorizo ni morcilla:</b> son lo que hace pesadas las lentejas de siempre. El pimentón y el comino dan el sabor ahumado.",
+      "<b>Al día siguiente están más ricas.</b> Si espesan en la nevera, añade un chorrito de agua al calentar."
+    ],
+    conserva: { nevera: "3–4 días.", congelar: "Sí, hasta 3 meses en raciones." },
+    compra: [["lentejas", 140, "g (secas)"], ["pavo", 200, "g"], ["verduras-guiso", 400, "g"], ["ajo", 2, "dientes"], ["aceite", 20, "g"], ["especias", null]],
+    usa: ["lentejas", "pavo", "aceite"]
+  },
+  {
+    id: "salmon-patata", corto: "salmón con patata", nombre: "Salmón con patata y judías verdes",
+    cat: ["Comida"], met: ["Airfryer"], ext: ["Sin huevo", "Sin gluten", "Sin lácteos"], tags: ["Omega-3", "La grasa buena de la semana"],
+    gluten: "natural", lacteos: false,
+    raciones: 1, racionesTxt: "1", tiempoTxt: "10 min + 20 min de airfryer", min: 30,
+    completa: { kcal: 440, p: 32, g: 19, c: 31 }, racion: { kcal: 440, p: 32, g: 19, c: 31 },
+    ingredientes: [
+      { t: "Ingredientes", items: ["Lomo de salmón: {130} g (fresco o congelado y descongelado)", "Patata: {1} mediana (unos {150} g), en gajos", "Judías verdes: {150} g (frescas o congeladas)", "Limón, eneldo o perejil, ajo en polvo, sal y pimienta", "Spray de aceite (el salmón ya tiene su propia grasa)"] }
+    ],
+    pasos: [
+      "<b>Patata primero:</b> gajos con spray, sal y pimentón dulce en la airfryer a 190 °C durante 10 min [[t:10]].",
+      "<b>Añade el salmón</b> (piel abajo, con sal, pimienta, ajo y eneldo) y las judías verdes con una pulverización de spray. Todo junto 10–12 min más a 190 °C [[t:11]].",
+      "<b>Comprueba:</b> el salmón está hecho cuando se separa en láminas y está rosa claro por dentro. Mejor jugoso que seco.",
+      "<b>Sirve</b> con un buen chorro de limón."
+    ],
+    tabla: { cols: ["Ración"], rows: [["Calorías", "~440 kcal"], ["Proteínas", "~32 g"], ["Grasas", "~19 g"], ["Carbohidratos", "~31 g"]] },
+    notaTabla: "Es la receta con más grasa del libro, y está bien que sea así: la grasa del salmón es omega-3, de la que conviene comer pescado azul 2–3 veces por semana. Valores con salmón de piscifactoría (unos 13 g de grasa por 100 g, valor medio).",
+    tips: [
+      "<b>Otros pescados azules</b> que salen igual en la airfryer: caballa, sardinas o trucha (esta última con menos grasa).",
+      "<b>Las judías congeladas</b> no hace falta descongelarlas: van directas a la bandeja."
+    ],
+    conserva: { nevera: "1 día. Frío está muy bueno desmigado en una ensalada.", congelar: "El salmón crudo, sí. Cocinado, mejor no." },
+    compra: [["salmon", 130, "g"], ["patata", 1, "ud. mediana"], ["judias", 150, "g"], ["limon", 0.5, "ud."], ["especias", null], ["spray", null]],
+    usa: ["salmon", "spray"]
+  },
+  {
+    id: "arroz-pollo", corto: "arroz con pollo", nombre: "Arroz integral salteado con pollo y verduras",
+    cat: ["Comida"], met: ["Sartén", "Cazo"], ext: ["Sin huevo", "Sin lácteos"], tags: ["Alta proteína", "Tipo wok"],
+    gluten: "soja", lacteos: false,
+    raciones: 1, racionesTxt: "1", tiempoTxt: "35 min (el arroz integral tarda)", min: 35,
+    completa: { kcal: 525, p: 40, g: 14.5, c: 53 }, racion: { kcal: 525, p: 40, g: 14.5, c: 53 },
+    ingredientes: [
+      { t: "Ingredientes", items: ["Arroz integral: {60} g en crudo", "Pechuga de pollo: {150} g, en tiras", "Verduras: pimiento rojo, calabacín, cebolla y zanahoria, unos {200} g en total, en tiras", "Aceite de oliva: {1} cucharada ({10} g)", "Salsa de soja baja en sal: {1} cucharada, y jengibre o ajo al gusto"] }
+    ],
+    pasos: [
+      "<b>Cuece el arroz integral</b> en abundante agua con sal unos 25–30 min [[t:28]] (mira el paquete). Escúrrelo.",
+      "<b>Mientras</b>, saltea el pollo en una sartén grande muy caliente con la mitad del aceite, 4–5 min [[t:5]], hasta que se dore. Sácalo.",
+      "<b>Saltea las verduras</b> con el resto del aceite a fuego fuerte, 4 min, que queden algo crujientes.",
+      "<b>Junta todo</b> en la sartén (arroz, pollo y verduras), añade la soja y el jengibre, y saltea 1–2 min más."
+    ],
+    tabla: { cols: ["Ración"], rows: [["Calorías", "~525 kcal"], ["Proteínas", "~40 g"], ["Grasas", "~14,5 g"], ["Carbohidratos", "~53 g"]] },
+    notaTabla: "Cuentas con arroz integral de 350 kcal por 100 g en crudo (bonÀrea).",
+    tips: [
+      "<b>Cuece arroz para 3 días</b>: frío en la nevera aguanta bien y salteado queda incluso mejor (como en los wok).",
+      "<b>Sin soja</b> también queda bien: con limón, pimentón y perejil."
+    ],
+    conserva: { nevera: "3 días. El arroz cocido, enfríalo rápido y a la nevera en menos de 2 horas.", congelar: "Sí, en raciones, hasta 2 meses." },
+    compra: [["arroz", 60, "g"], ["pollo", 150, "g"], ["verduras", 200, "g"], ["aceite", 10, "g"], ["soja", 1, "cda."], ["especias", null]],
+    usa: ["arroz", "pollo", "aceite"]
+  },
+  {
+    id: "pasta-atun", corto: "pasta con atún", nombre: "Macarrones integrales con atún y tomate",
+    cat: ["Comida"], met: ["Cazo", "Sartén"], ext: ["Sin huevo", "Sin lácteos"], tags: ["Despensa", "20 minutos"],
+    gluten: "pasta", lacteos: false,
+    raciones: 1, racionesTxt: "1", tiempoTxt: "20 min", min: 20,
+    completa: { kcal: 515, p: 38, g: 13, c: 58 }, racion: { kcal: 515, p: 38, g: 13, c: 58 },
+    ingredientes: [
+      { t: "Ingredientes", items: ["Macarrones integrales: {70} g en crudo", "Atún al natural: {2} latas (unos {110} g escurrido)", "Tomate triturado natural: {200} g (el de bote, sin azúcar; no tomate frito)", "Cebolla: {0.5} pequeña, y {1} diente de ajo", "Aceite de oliva: {1} cucharada ({10} g)", "Orégano o albahaca, sal y pimienta"] }
+    ],
+    pasos: [
+      "<b>Cuece la pasta</b> en agua con sal el tiempo del paquete (unos 10–12 min) [[t:11]].",
+      "<b>Mientras</b>, sofríe la cebolla y el ajo picados en el aceite, 4 min a fuego medio.",
+      "<b>Añade el tomate</b> con sal, pimienta y orégano, y deja que espese 8 min [[t:8]].",
+      "<b>Al final</b> añade el atún escurrido, sin cocinarlo apenas (se seca). Mezcla con la pasta escurrida."
+    ],
+    tabla: { cols: ["Ración"], rows: [["Calorías", "~515 kcal"], ["Proteínas", "~38 g"], ["Grasas", "~13 g"], ["Carbohidratos", "~58 g"]] },
+    notaTabla: "Cuentas con macarrones integrales de 342 kcal por 100 g en crudo. El tomate frito de bote suele llevar aceite y azúcar: con tomate triturado y tu cucharada de aceite sabes lo que comes.",
+    tips: [
+      "<b>Atún al natural, no en aceite:</b> el de aceite, aunque lo escurras, tiene bastante más grasa.",
+      "<b>Con más verdura:</b> añade al sofrito calabacín o berenjena en dados. Más volumen y llena más."
+    ],
+    conserva: { nevera: "2 días.", congelar: "La salsa sí; la pasta queda blanda." },
+    compra: [["pasta", 70, "g"], ["atun", 2, "latas"], ["tomate-triturado", 200, "g"], ["cebolla", 0.5, "ud."], ["ajo", 1, "diente"], ["aceite", 10, "g"], ["especias", null]],
+    usa: ["pasta", "atun", "aceite"]
+  },
+  {
+    id: "garbanzos-espinacas", corto: "garbanzos con espinacas", nombre: "Garbanzos con espinacas y pollo",
+    cat: ["Comida"], met: ["Sartén"], ext: ["Sin huevo", "Sin gluten", "Sin lácteos"], tags: ["Mucha fibra", "15 minutos con bote"],
+    gluten: "natural", lacteos: false,
+    raciones: 1, racionesTxt: "1", tiempoTxt: "15 min", min: 15,
+    completa: { kcal: 430, p: 39, g: 17, c: 28 }, racion: { kcal: 430, p: 39, g: 17, c: 28 },
+    ingredientes: [
+      { t: "Ingredientes", items: ["Garbanzos cocidos de bote: {250} g escurridos (un bote grande)", "Espinacas frescas: {150} g", "Pechuga de pollo: {100} g, en dados", "Ajo: {2} dientes, {1} cdta. de comino y {1} cdta. de pimentón dulce", "Aceite de oliva: {1} cucharada ({10} g) y un chorrito de vinagre"] }
+    ],
+    pasos: [
+      "<b>Lava y escurre</b> los garbanzos de bote (así pierden el sabor del líquido y parte de la sal).",
+      "<b>Dora el pollo</b> en una sartén grande con la mitad del aceite, 4–5 min [[t:5]]. Sácalo.",
+      "<b>Sofríe el ajo</b> laminado en el resto del aceite, 1 min. Fuera del fuego añade el comino y el pimentón.",
+      "<b>Añade las espinacas</b> a puñados, hasta que se arruguen. Después los garbanzos, el pollo, un chorrito de vinagre y medio vaso de agua. Cuece 5 min [[t:5]] para que se mezclen los sabores."
+    ],
+    tabla: { cols: ["Ración"], rows: [["Calorías", "~430 kcal"], ["Proteínas", "~39 g"], ["Grasas", "~17 g"], ["Carbohidratos", "~28 g"]] },
+    notaTabla: "Cuentas con garbanzos cocidos de unos 83 kcal y 2 g de grasa por 100 g (Ferrer, El Corte Inglés).",
+    tips: [
+      "<b>Es una versión ligera de los garbanzos con espinacas sevillanos</b>, sin el pan frito majado, que es lo que más grasa tiene.",
+      "<b>Sin pollo</b> también es un plato completo: añade 1 huevo cocido picado por encima."
+    ],
+    conserva: { nevera: "3 días.", congelar: "Sí, hasta 2 meses." },
+    compra: [["garbanzos", 250, "g (escurridos)"], ["espinacas", 150, "g"], ["pollo", 100, "g"], ["ajo", 2, "dientes"], ["aceite", 10, "g"], ["especias", null]],
+    usa: ["garbanzos", "espinacas", "pollo", "aceite"]
   }
 ];
 
@@ -1097,6 +1228,34 @@ const INGREDIENTES = [
   { id: "caldo", nombre: "Caldo de pollo", pasillo: "Despensa", rol: "Para el caldo con pollo y para cremas de verdura.",
     criterio: "<b>Bajo en sal</b> y con <b>menos de 1 g de grasa</b> por 100 ml. Mira que el primer ingrediente sea agua y pollo, no aceite.",
     nota: "No he verificado marcas concretas. Hay mucha diferencia entre unos y otros en sal y grasa: compara las etiquetas.", productos: [] },
+  { id: "aceite", nombre: "Aceite de oliva virgen extra", pasillo: "Despensa", rol: "La grasa buena del día, en las comidas de mediodía.",
+    criterio: "<b>Virgen extra</b>. Mídelo con cuchara: 1 cucharada son unos 10 g, 90 kcal y 10 g de grasa.",
+    nota: "Todos tienen prácticamente los mismos valores (unos 900 kcal y 100 g de grasa por 100 g). La diferencia está en el sabor y la calidad, no en las calorías.", productos: [] },
+  { id: "lentejas", nombre: "Lentejas pardinas", pasillo: "Despensa", rol: "Para las lentejas. Mucha fibra y proteína vegetal.",
+    criterio: "Pardinas: no necesitan remojo y se cuecen en 30 min. Las de bote <b>al natural</b> (solo lentejas, agua y sal) ahorran tiempo.",
+    productos: [
+      { marca: "Luengo", nombre: "Lenteja pardina (seca)", tienda: "Carrefour, Eroski, El Corte Inglés", formato: "1 kg", v: [308, 24, 1.9, 36], src: OFF("8410505420906") },
+      { marca: "Eroski", nombre: "Lenteja pardina (seca)", tienda: "Eroski", formato: "500 g", v: [309, 22, 2.6, 36], src: OFF("8480010187076") },
+      { marca: "Consum", nombre: "Lentejas pardinas cocidas (bote)", tienda: "Consum", formato: "300 g", v: [87, 6.6, 0, 13], src: OFF("8414807502322") }
+    ] },
+  { id: "garbanzos", nombre: "Garbanzos cocidos", pasillo: "Despensa", rol: "Para los garbanzos con espinacas, en 15 minutos.",
+    criterio: "De bote <b>al natural</b>: solo garbanzos, agua y sal. Lávalos antes de usarlos.",
+    productos: [
+      { marca: "Ferrer", nombre: "Garbanzos pedrosillanos extra", tienda: "Sin dato de tienda", formato: "—", v: [83, 4.9, 2, 9.1], src: OFF("8411026040024") },
+      { marca: "El Corte Inglés", nombre: "Garbanzos cocidos al natural", tienda: "El Corte Inglés", formato: "—", v: [82, 4.9, 2, 9.1], src: OFF("8433329009119") }
+    ] },
+  { id: "arroz", nombre: "Arroz integral", pasillo: "Despensa", rol: "Para el arroz salteado.",
+    criterio: "<b>Integral</b>: más fibra que el blanco y sacia más. Tarda unos 25–30 min en cocerse.",
+    productos: [{ marca: "bonÀrea", nombre: "Arroz integral", tienda: "bonÀrea", formato: "1 kg", v: [350, 7.5, 2.3, 72.3], src: OFF("8413585035091") }] },
+  { id: "pasta", nombre: "Pasta integral", pasillo: "Despensa", rol: "Para los macarrones con atún.",
+    criterio: "Que ponga <b>«integral»</b> y tenga <b>≥ 6 g de fibra</b> por 100 g.",
+    productos: [{ marca: "Consum", nombre: "Macarrones integrales", tienda: "Consum", formato: "—", v: [342, 12, 2, 65], src: OFF("8414807558527") }] },
+  { id: "atun", nombre: "Atún al natural", pasillo: "Despensa", rol: "Proteína de despensa para la pasta y ensaladas.",
+    criterio: "<b>Al natural</b>, no en aceite. Unos 100–110 kcal, 24–26 g de proteína y menos de 1 g de grasa por 100 g escurrido.",
+    nota: "No he encontrado una ficha fiable de una marca concreta. Cualquiera «al natural» encaja; compara la etiqueta.", productos: [] },
+  { id: "salmon", nombre: "Salmón", pasillo: "Carne y pescado", rol: "El pescado azul de la semana: grasa omega-3.",
+    criterio: "Lomos sin piel o con piel, frescos o <b>congelados al natural</b> (sin marinar). Unos 200 kcal y 13 g de grasa por 100 g (valor medio).",
+    nota: "No he verificado una marca concreta. La caballa y las sardinas son más baratas y también son pescado azul.", productos: [] },
   { id: "queso-crema", nombre: "Queso crema light (opcional)", pasillo: "Lácteos y huevos", rol: "Solo si echas de menos el sabor clásico de cheesecake.",
     criterio: "Úsalo poco: <b>30 g como mucho</b> por receta.",
     aviso: "Aunque sea «light», tiene unos 11–12 g de grasa por 100 g. Por eso el libro no lo usa por defecto.",
@@ -1126,21 +1285,35 @@ const EXTRA_ING = {
   coliflor: ["Coliflor", "Fruta y verdura"],
   champinones: ["Champiñones", "Fruta y verdura"],
   "verduras-caldo": ["Zanahoria, puerro y apio", "Fruta y verdura"],
-  fideos: ["Fideos finos", "Despensa"]
+  fideos: ["Fideos finos", "Despensa"],
+  "verduras-guiso": ["Zanahoria, cebolla, pimiento verde y tomate", "Fruta y verdura"],
+  judias: ["Judías verdes", "Fruta y verdura"],
+  soja: ["Salsa de soja baja en sal", "Despensa"],
+  "tomate-triturado": ["Tomate triturado natural", "Despensa"]
 };
 const PASILLOS = ["Fruta y verdura", "Carne y pescado", "Lácteos y huevos", "Congelados", "Despensa", "Otros"];
 
 /* ===================== CONFIGURACIÓN ===================== */
-const SABOR = { "tortitas": "avena", "cheesecake-nevera": "frambuesa", "cheesecake-airfryer": "melocoton", "mousse": "cacao", "natillas": "vainilla", "tortilla": "espinaca", "pollo": "melocoton", "merluza": "vainilla", "hamburguesas": "espinaca", "tostada-aguacate": "espinaca", "revuelto-claras": "melocoton", "overnight-oats": "frambuesa", "batido-platano": "vainilla", "crema-calabacin": "espinaca", "merluza-coliflor": "vainilla", "pavo-verduras": "melocoton", "caldo-pollo": "avena" };
-const SABOR_MOMENTO = { Desayuno: "avena", Merienda: "frambuesa", Postre: "frambuesa", Cena: "espinaca" };
+const SABOR = { "tortitas": "avena", "cheesecake-nevera": "frambuesa", "cheesecake-airfryer": "melocoton", "mousse": "cacao", "natillas": "vainilla", "tortilla": "espinaca", "pollo": "melocoton", "merluza": "vainilla", "hamburguesas": "espinaca", "tostada-aguacate": "espinaca", "revuelto-claras": "melocoton", "overnight-oats": "frambuesa", "batido-platano": "vainilla", "crema-calabacin": "espinaca", "merluza-coliflor": "vainilla", "pavo-verduras": "melocoton", "caldo-pollo": "avena", "lentejas": "cacao", "salmon-patata": "melocoton", "arroz-pollo": "avena", "pasta-atun": "frambuesa", "garbanzos-espinacas": "espinaca" };
+const SABOR_MOMENTO = { Desayuno: "avena", Comida: "melocoton", Merienda: "frambuesa", Postre: "frambuesa", Cena: "espinaca" };
 const sabor = r => r.sabor || SABOR[r.id] || SABOR_MOMENTO[r.cat[0]] || "avena";
-const CATS = ["Desayuno", "Merienda", "Postre", "Cena"];
+const CATS = ["Desayuno", "Comida", "Merienda", "Postre", "Cena"];
 const METS = ["Sin horno", "Airfryer", "Sartén", "Cazo", "Tostadora", "Batidora"];
 const EXTS = ["Favoritas", "Cena ligera", "Sin huevo", "Sin gluten", "Sin lácteos", "Aprovechamiento"];
 const KEY_LABEL = { kcal: "calorías", p: "proteína", g: "grasa", c: "carbohidratos", p100: "lo que más llena", min: "tiempo", nombre: "nombre" };
 const LIM = { kcal: 500, p: 0, g: 20 }; // valores de "sin límite" de los deslizadores
 const DIAS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
-const HUECOS = [["desayuno", "Desayuno", ["Desayuno"]], ["merienda", "Merienda", ["Merienda", "Postre"]], ["cena", "Cena", ["Cena"]]];
+const HUECOS = [["desayuno", "Desayuno", ["Desayuno"]], ["comida", "Comida", ["Comida"]], ["merienda", "Merienda", ["Merienda", "Postre"]], ["cena", "Cena", ["Cena"]]];
+/* Semana tipo: [desayuno, comida, merienda, cena]; "|2" = ración doble */
+const SEMANA_TIPO = [
+  ["overnight-oats", "lentejas", "mousse|2", "merluza-coliflor"],
+  ["tortitas", "lentejas", "cheesecake-nevera|2", "crema-calabacin"],
+  ["overnight-oats", "salmon-patata", "batido-platano", "pavo-verduras"],
+  ["tostada-aguacate", "arroz-pollo", "mousse|2", "caldo-pollo"],
+  ["overnight-oats", "pasta-atun", "natillas|2", "revuelto-claras"],
+  ["tortitas", "garbanzos-espinacas", "cheesecake-airfryer|2", "merluza"],
+  ["revuelto-claras", "pollo", "cheesecake-airfryer|2", "crema-calabacin"]
+];
 
 /* Preferencias de este navegador (vista, orden…) */
 const prefs = {
@@ -1507,6 +1680,8 @@ function renderDetail(r) {
   const body = t.rows.map(row => `<tr class="${r.opciones && row[0].startsWith(state.opcion + ")") ? "hl" : ""}"><td><b>${row[0]}</b></td>${row.slice(1).map(c => `<td class="n">${c}</td>`).join("")}</tr>`).join("");
   const gl = r.gluten === "natural" ? "Sus ingredientes no llevan gluten. Si eres celíaco, revisa las trazas en las etiquetas."
     : r.gluten === "fideos" ? "Usa fideos sin gluten (de arroz o de maíz), o hazla sin fideos; el resto no lleva gluten."
+    : r.gluten === "pasta" ? "Usa pasta sin gluten (de legumbres, arroz o maíz). La de lentejas o garbanzos tiene además más proteína."
+    : r.gluten === "soja" ? "La salsa de soja normal lleva trigo: usa tamari sin gluten. El resto no lleva gluten."
     : r.gluten === "pan" ? "Usa pan sin gluten, y comprueba que siga teniendo poca grasa: muchos llevan bastante aceite."
     : "Usa copos de avena con la etiqueta «sin gluten»; el resto no lleva gluten.";
   const lc = r.lacteos ? "Cambia los lácteos por sus versiones «sin lactosa» (comprueba que sigan siendo 0% grasa)." : "No lleva lácteos.";
@@ -1725,33 +1900,47 @@ function confirmar(btn, aviso, accion) {
 }
 
 /* ===================== PLAN SEMANAL ===================== */
+/* Un hueco guarda "id", "id|2" (ración doble) o "otro" (algo que ya tienes, sin contar) */
+const slotParse = v => { if (!v) return { id: "", x: 1 }; const [id, x] = v.split("|"); return { id, x: +x || 1 }; };
 function renderPlan() {
   const dias = Saved.plan.dias || {};
-  let tot = { kcal: 0, p: 0, g: 0 }, nDias = 0;
+  let tot = { kcal: 0, p: 0, g: 0 }, nDias = 0, conOtro = false;
   $("#plan").innerHTML = DIAS.map((dn, di) => {
     const d = dias[di] || {};
-    const t = { kcal: 0, p: 0, g: 0 }; let alguno = false;
+    const t = { kcal: 0, p: 0, g: 0 }; let alguno = false, otro = false;
     const slots = HUECOS.map(([k, label, cats]) => {
-      const sel = d[k] || "";
-      const r = sel ? byId(sel) : null;
-      if (r) { const v = valores(r, "racion"); t.kcal += v.kcal; t.p += v.p; t.g += v.g; alguno = true; }
-      const opts = RECETAS.filter(x => x.cat.some(c => cats.includes(c))).map(x => `<option value="${x.id}" ${x.id === sel ? "selected" : ""}>${x.nombre} (${fmt(valores(x, "racion").kcal)} kcal)</option>`).join("");
-      return `<div class="slot"><span>${label}</span><select data-dia="${di}" data-hueco="${k}" class="${r ? "set f-" + sabor(r) : ""}" aria-label="${label} del ${dn.toLowerCase()}"><option value="">Nada</option>${opts}</select></div>`;
+      const { id: sel, x } = slotParse(d[k]);
+      const r = sel && sel !== "otro" ? byId(sel) : null;
+      if (r) { const v = valores(r, "racion"); t.kcal += v.kcal * x; t.p += v.p * x; t.g += v.g * x; alguno = true; }
+      if (sel === "otro") otro = true;
+      const opts = RECETAS.filter(y => y.cat.some(c => cats.includes(c))).map(y => `<option value="${y.id}" ${y.id === sel ? "selected" : ""}>${y.nombre} (${fmt(valores(y, "racion").kcal)} kcal)</option>`).join("");
+      const dbl = r ? `<button type="button" class="stepbtn" data-doble="${di}|${k}" aria-pressed="${x === 2}" title="Ración doble">×2</button>` : "";
+      return `<div class="slot"><span>${label}</span><div class="slot-in"><select data-dia="${di}" data-hueco="${k}" class="${r ? "set f-" + sabor(r) : ""}" aria-label="${label} del ${dn.toLowerCase()}"><option value="">Nada</option>${opts}<option value="otro" ${sel === "otro" ? "selected" : ""}>Algo que ya tengo (no se cuenta)</option></select>${dbl}</div></div>`;
     }).join("");
     if (alguno) { nDias++; tot.kcal += t.kcal; tot.p += t.p; tot.g += t.g; }
-    return `<div class="day"><div class="day-head"><h3>${dn}</h3>${alguno ? `<div class="day-tot"><span>${fmt(t.kcal)} kcal</span><span class="p">${fmt(Math.round(t.p))} g prot.</span><span class="g">${fmt(Math.round(t.g * 10) / 10)} g grasa</span></div>` : ""}</div>${slots}</div>`;
+    if (otro) conOtro = true;
+    return `<div class="day"><div class="day-head"><h3>${dn}</h3>${alguno ? `<div class="day-tot"><span>${fmt(Math.round(t.kcal))} kcal${otro ? " + lo tuyo" : ""}</span><span class="p">${fmt(Math.round(t.p))} g prot.</span><span class="g">${fmt(Math.round(t.g * 10) / 10)} g grasa</span></div>` : ""}</div>${slots}</div>`;
   }).join("");
   const med = k => (nDias ? Math.round(tot[k] / nDias * 10) / 10 : 0);
   $("#weeksum").innerHTML = `<div><b>${fmt(Math.round(med("kcal")))}</b><span>kcal al día (media)</span></div><div><b>${fmt(Math.round(med("p")))} g</b><span>proteína al día</span></div><div><b>${fmt(med("g"))} g</b><span>grasa al día</span></div>`;
+  const bajo = nDias && med("kcal") < 1500 ? `Ojo: ${fmt(Math.round(med("kcal")))} kcal al día es poco para la mayoría de adultos, incluso para perder peso. Completa con fruta (2 piezas, unas 150 kcal), pan integral en la comida (unas 150 kcal) o un puñado de frutos secos (unas 180 kcal), y consulta tus calorías con un dietista-nutricionista. ` : "";
+  $("#plan-note").textContent = nDias ? bajo + (conOtro ? "Los huecos con «Algo que ya tengo» no suman: los totales se quedan cortos esos días. " : "") + "Los totales son solo las comidas del plan." : "";
   estadoGuardado();
 }
 function planACompra() {
   const cuenta = {};
-  Object.values(Saved.plan.dias || {}).forEach(d => HUECOS.forEach(([k]) => { if (d[k]) cuenta[d[k]] = (cuenta[d[k]] || 0) + 1; }));
+  Object.values(Saved.plan.dias || {}).forEach(d => HUECOS.forEach(([k]) => { const { id, x } = slotParse(d[k]); if (id && id !== "otro" && byId(id)) cuenta[id] = (cuenta[id] || 0) + x; }));
   const ids = Object.keys(cuenta);
   if (!ids.length) { toast("El plan está vacío"); return; }
   ids.forEach(id => { const r = byId(id); addToShop(id, Math.ceil(cuenta[id] / r.raciones)); });
   toast(`Añadidas ${ids.length} recetas a la compra`);
+}
+function semanaTipo() {
+  // Solo rellena los huecos vacíos: lo que ya tengas puesto se respeta
+  const dias = JSON.parse(JSON.stringify(Saved.plan.dias || {})); let n = 0;
+  SEMANA_TIPO.forEach((fila, di) => { const d = dias[di] || (dias[di] = {}); HUECOS.forEach(([k], i) => { if (!d[k] && fila[i]) { d[k] = fila[i]; n++; } }); });
+  Saved.plan.dias = dias; Saved.setPlan(); renderPlan();
+  toast(n ? `Rellenados ${n} huecos con la semana tipo` : "No quedaban huecos vacíos");
 }
 
 /* ===================== MARCAS ===================== */
@@ -1893,7 +2082,7 @@ document.addEventListener("change", e => {
   if (t.dataset.tach) { const tach = Object.assign({}, Saved.compra.tachados); if (t.checked) tach[t.dataset.tach] = true; else delete tach[t.dataset.tach]; Saved.compra.tachados = tach; Saved.setCompra(); return; }
   if (t.dataset.dia !== undefined && t.dataset.hueco) {
     const dias = Object.assign({}, Saved.plan.dias); const d = Object.assign({}, dias[t.dataset.dia]);
-    if (t.value) d[t.dataset.hueco] = t.value; else delete d[t.dataset.hueco];
+    if (t.value) d[t.dataset.hueco] = t.value; else delete d[t.dataset.hueco]; // al cambiar de receta vuelve a ración simple
     dias[t.dataset.dia] = d; Saved.plan.dias = dias; Saved.setPlan(); renderPlan();
   }
 });
@@ -1913,6 +2102,14 @@ $("#shop-clear-done").addEventListener("click", () => { Saved.compra.tachados = 
 $("#shop-clear-done").textContent = "Desmarcar todo";
 $("#shop-clear").addEventListener("click", e => confirmar(e.currentTarget, "Pulsa otra vez para vaciar", () => { Saved.compra = { recetas: {}, tachados: {}, extra: [] }; Saved.setCompra(); renderCompra(); toast("Lista vaciada"); }));
 $("#plan-to-shop").addEventListener("click", planACompra);
+$("#plan-tipo").addEventListener("click", semanaTipo);
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-doble]"); if (!b) return;
+  const [di, k] = b.dataset.doble.split("|");
+  const dias = Object.assign({}, Saved.plan.dias); const d = Object.assign({}, dias[di]);
+  const { id, x } = slotParse(d[k]); d[k] = x === 2 ? id : id + "|2";
+  dias[di] = d; Saved.plan.dias = dias; Saved.setPlan(); renderPlan();
+});
 $("#plan-clear").addEventListener("click", e => confirmar(e.currentTarget, "Pulsa otra vez para vaciar", () => { Saved.plan = { dias: {} }; Saved.setPlan(); renderPlan(); toast("Plan vaciado"); }));
 
 function syncView() { document.querySelectorAll("[data-view]").forEach(b => b.setAttribute("aria-pressed", b.dataset.view === state.view)); }
