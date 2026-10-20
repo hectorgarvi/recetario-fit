@@ -779,6 +779,107 @@ const RECETAS = [
     conserva: { nevera: "Crudas, 1 día. Cocinadas, 2 días.", congelar: "Sí, mejor crudas, hasta 3 meses. Se hacen directamente congeladas: 15–16 min a 190 °C." },
     compra: [["pavo", 300, "g"], ["claras", 35, "ml (o la clara que te sobre)"], ["avena", 20, "g"], ["cebolla", 0.5, "ud."], ["ajo", 1, "diente"], ["especias", null], ["spray", null], ["verduras", 200, "g (ensalada)"]],
     usa: ["pavo", "claras", "avena", "spray"]
+  },
+  {
+    id: "tostada-aguacate", corto: "tostada de aguacate", nombre: "Tostada de aguacate, tomate y pavo",
+    cat: ["Desayuno"], met: ["Tostadora"], ext: ["Sin huevo", "Sin lácteos"], tags: ["Rápida", "Grasa buena, con medida"],
+    gluten: "pan", lacteos: false,
+    raciones: 1, racionesTxt: "1 (2 tostadas)", tiempoTxt: "5 min", min: 5,
+    completa: { kcal: 265, p: 18, g: 7, c: 30 }, racion: { kcal: 265, p: 18, g: 7, c: 30 },
+    ingredientes: [
+      { t: "Ingredientes", items: ["Pan de molde 100% integral: {2} rebanadas (unos {60} g)", "Aguacate: {30} g (2 cucharadas, un cuarto de aguacate pequeño)", "Tomate: {0.5} (unos {60} g), en rodajas finas", "Pechuga de pavo en lonchas, la de más del 90% de carne: {50} g", "Unas gotas de limón, sal en escamas, pimienta y, si te gusta, una pizca de chile"] }
+    ],
+    pasos: [
+      "<b>Tuesta el pan</b> hasta que esté crujiente.",
+      "<b>Aplasta el aguacate</b> con un tenedor, con unas gotas de limón, sal y pimienta. El limón evita que se ponga negro.",
+      "<b>Unta</b> el aguacate repartido en las dos tostadas, muy fino.",
+      "<b>Monta</b> las rodajas de tomate y las lonchas de pavo por encima. Sal en escamas y pimienta al gusto."
+    ],
+    tabla: { cols: ["Con 30 g de aguacate", "Con medio aguacate (70 g)"], rows: [["Calorías", "~265 kcal", "~330 kcal"], ["Proteínas", "~18 g", "~19 g"], ["Grasas", "~7 g", "~13 g"], ["Carbohidratos", "~30 g", "~31 g"]] },
+    notaTabla: "El aguacate es grasa buena (sobre todo monoinsaturada), pero es grasa: unos 15 g por 100 g. Por eso la receta usa solo 30 g. Si un día te apetece más, la columna de la derecha te dice lo que cambia.",
+    tips: [
+      "<b>Más proteína:</b> añade 2 claras a la plancha encima (+35 kcal, +8 g de proteína, casi sin grasa).",
+      "<b>Para que el aguacate cunda:</b> mézclalo con 1 cucharada de queso batido 0%. Queda más cremoso y con menos grasa por tostada.",
+      "<b>Guardar el resto del aguacate:</b> con el hueso, un chorrito de limón y film pegado a la superficie, aguanta 1–2 días en la nevera."
+    ],
+    conserva: { nevera: "Mejor al momento: el pan se reblandece.", congelar: "El pan de molde sí se congela bien: saca las rebanadas y tuéstalas directamente." },
+    compra: [["pan", 60, "g"], ["aguacate", 30, "g"], ["tomate", 0.5, "ud."], ["pavo-fiambre", 50, "g"], ["limon", null], ["especias", null]],
+    usa: ["pan", "aguacate", "pavo-fiambre"]
+  },
+  {
+    id: "revuelto-claras", corto: "revuelto de claras", nombre: "Revuelto de claras con espinacas y tostada",
+    cat: ["Desayuno", "Cena"], met: ["Sartén"], ext: ["Sin lácteos", "Aprovechamiento"], tags: ["Alta proteína", "Muy poca grasa", "Aprovecha claras"],
+    gluten: "pan", lacteos: false,
+    raciones: 1, racionesTxt: "1", tiempoTxt: "10 min", min: 10,
+    completa: { kcal: 220, p: 23, g: 4, c: 24 }, racion: { kcal: 220, p: 23, g: 4, c: 24 },
+    ingredientes: [
+      { t: "Ingredientes", items: ["Claras de huevo: {150} ml (unas {4} claras). Las que te sobren de las [[natillas]] sirven", "Espinacas frescas: {80} g (un buen puñado)", "Tomates cherry: {5} (opcional)", "Pan de molde 100% integral: {1} rebanada grande (unos {40} g)", "Spray de aceite, sal, pimienta y una pizca de ajo en polvo o pimentón"] }
+    ],
+    pasos: [
+      "<b>Saltea las espinacas</b> en una sartén antiadherente con una pulverización de spray y una pizca de sal, 1–2 min, hasta que se arruguen.",
+      "<b>Añade las claras</b> con sal, pimienta y ajo en polvo. Remueve a fuego medio-bajo 2–3 min [[t:3]], sin parar, hasta que cuajen pero sigan jugosas. Si se pasan, quedan secas.",
+      "<b>Tuesta el pan</b> mientras tanto.",
+      "<b>Sirve</b> el revuelto sobre la tostada o al lado, con los tomates cherry partidos."
+    ],
+    tabla: { cols: ["Ración", "Con 1 huevo entero en vez de 1 clara"], rows: [["Calorías", "~220 kcal", "~260 kcal"], ["Proteínas", "~23 g", "~26 g"], ["Grasas", "~4 g", "~9 g"], ["Carbohidratos", "~24 g", "~24 g"]] },
+    notaTabla: "Las claras solas son casi proteína pura. Si las notas sosas, la versión con 1 huevo entero sabe más a huevo, a cambio de unos 5 g más de grasa.",
+    tips: [
+      "<b>Más sabor sin grasa:</b> unas hierbas frescas (cebollino, perejil), cebolla en polvo o un poco de mostaza en las claras.",
+      "<b>También sirve de cena rápida:</b> quita el pan y añade más verdura (champiñones, calabacín)."
+    ],
+    conserva: { nevera: "Mejor recién hecho.", congelar: "No." },
+    compra: [["claras", 150, "ml"], ["espinacas", 80, "g"], ["pan", 40, "g"], ["tomate", 5, "cherry"], ["spray", null], ["especias", null]],
+    usa: ["claras", "espinacas", "pan", "spray"]
+  },
+  {
+    id: "overnight-oats", corto: "overnight oats", nombre: "Avena de la noche anterior con frutos rojos",
+    cat: ["Desayuno"], met: ["Sin horno"], ext: ["Sin huevo"], tags: ["Se prepara la noche antes", "Sacia mucho"],
+    gluten: "avena", lacteos: true,
+    raciones: 1, racionesTxt: "1 tarro", tiempoTxt: "5 min + toda la noche en la nevera", min: 5,
+    completa: { kcal: 295, p: 22, g: 4, c: 39 }, racion: { kcal: 295, p: 22, g: 4, c: 39 },
+    ingredientes: [
+      { t: "Ingredientes", items: ["Copos de avena: {40} g", "Queso fresco batido 0%: {150} g (o skyr 0%)", "Leche desnatada: {100} ml", "Frutos rojos congelados: {100} g", "Canela, aroma de vainilla y edulcorante al gusto"] }
+    ],
+    pasos: [
+      "<b>Mezcla</b> en un tarro o táper la avena, el queso batido, la leche, la canela, la vainilla y el edulcorante.",
+      "<b>Añade los frutos rojos</b> por encima, congelados tal cual: se descongelan durante la noche y sueltan su jugo.",
+      "<b>Tapa y a la nevera</b> toda la noche, o mínimo 4 horas [[t:240]].",
+      "<b>Por la mañana</b> remueve y cómetelo frío. Si está muy espeso, añade un chorrito de leche."
+    ],
+    tabla: { cols: ["Ración"], rows: [["Calorías", "~295 kcal"], ["Proteínas", "~22 g"], ["Grasas", "~4 g"], ["Carbohidratos", "~39 g"]] },
+    notaTabla: "La avena aporta fibra que se digiere despacio: es de los desayunos que más aguantan hasta media mañana.",
+    tips: [
+      "<b>Prepara 3 de golpe</b> el domingo: aguantan hasta el miércoles. Pulsa ×3 en «Cantidades para» y te calcula todo.",
+      "<b>Variantes:</b> de chocolate, con 1 cdta. de cacao puro desgrasado. De manzana y canela, con media manzana rallada en vez de frutos rojos. Más proteína: 15 g de proteína en polvo de vainilla y un poco más de leche.",
+      "<b>Ojo con los añadidos:</b> semillas de chía, frutos secos o crema de cacahuete suben mucho la grasa. Si te apetecen, 1 cucharadita, no más."
+    ],
+    conserva: { nevera: "Hasta 3 días en tarros cerrados.", congelar: "No: la textura cambia." },
+    compra: [["avena", 40, "g"], ["batido", 150, "g"], ["leche", 100, "ml"], ["frutos", 100, "g"], ["canela", null], ["vainilla", null], ["edulcorante", null]],
+    usa: ["avena", "batido", "skyr", "leche", "frutos", "edulcorante", "cacao", "proteina"]
+  },
+  {
+    id: "batido-platano", corto: "batido de plátano", nombre: "Batido de plátano, avena y canela",
+    cat: ["Desayuno", "Merienda"], met: ["Batidora"], ext: ["Sin huevo"], tags: ["Para llevar", "2 minutos"],
+    gluten: "avena", lacteos: true,
+    raciones: 1, racionesTxt: "1 vaso grande", tiempoTxt: "3 min", min: 3,
+    completa: { kcal: 300, p: 20, g: 3, c: 48 }, racion: { kcal: 300, p: 20, g: 3, c: 48 },
+    ingredientes: [
+      { t: "Ingredientes", items: ["Leche desnatada: {250} ml", "Queso fresco batido 0%: {100} g", "Plátano: {1} pequeño (unos {100} g sin piel). Si está maduro, no hace falta edulcorante", "Copos de avena: {20} g", "Canela y unos cubitos de hielo"] }
+    ],
+    pasos: [
+      "<b>Pon todo en el vaso de la batidora</b>: la leche, el queso batido, el plátano en trozos, la avena, la canela y el hielo.",
+      "<b>Bate</b> 30–40 segundos, hasta que no queden grumos de avena.",
+      "<b>Sirve</b> en el momento o llévatelo en una botella."
+    ],
+    tabla: { cols: ["Vaso"], rows: [["Calorías", "~300 kcal"], ["Proteínas", "~20 g"], ["Grasas", "~3 g"], ["Carbohidratos", "~48 g"]] },
+    notaTabla: "Es el desayuno con más carbohidratos del libro, por el plátano y la leche. Va muy bien antes de entrenar.",
+    tips: [
+      "<b>Plátanos muy maduros:</b> pélalos, trocéalos y congélalos. Con plátano congelado el batido sale más espeso y frío, sin hielo.",
+      "<b>Más proteína:</b> 15 g de proteína en polvo de vainilla (+60 kcal, +12 g de proteína). Si quieres menos carbohidratos, quita la avena."
+    ],
+    conserva: { nevera: "Mejor al momento. Hasta el día siguiente en botella cerrada; agítalo antes.", congelar: "No." },
+    compra: [["leche", 250, "ml"], ["batido", 100, "g"], ["platano", 1, "ud."], ["avena", 20, "g"], ["canela", null]],
+    usa: ["leche", "batido", "avena", "proteina"]
   }
 ];
 
@@ -868,6 +969,26 @@ const INGREDIENTES = [
   { id: "frutos", nombre: "Frutos rojos congelados", pasillo: "Congelados", rol: "Cobertura y topping. Mucho volumen y fibra por muy pocas calorías.",
     criterio: "<b>Solo fruta</b>, sin azúcar ni almíbar.",
     productos: [{ marca: "Hacendado", nombre: "Mezcla de frutas rojas ultracongeladas", tienda: "Mercadona", formato: "300 g", v: [39, 0.9, 0, 5.5], src: OFF("8480000610263") }] },
+  { id: "pan", nombre: "Pan de molde 100% integral", pasillo: "Despensa", rol: "Para las tostadas del desayuno.",
+    criterio: "Que ponga <b>«100% integral»</b> (si no, puede ser casi todo harina blanca) y grasa <b>≤ 4 g</b> por 100 g. Compara: hay panes integrales con el doble de grasa.",
+    productos: [
+      { marca: "Hacendado", nombre: "Pan de molde 100% integral", tienda: "Mercadona", formato: "700 g", v: [265, 10.6, 3.4, 45.9], src: OFF("8480000678065") },
+      { marca: "bonÀrea", nombre: "Pan rebanado 100% integral", tienda: "bonÀrea", formato: "—", v: [231, 9, 4, 36], src: OFF("8413585025177") }
+    ],
+    nota: "Ojo: el «Pan integral 100%» de Hacendado (el de barra) tiene 6,7 g de grasa por 100 g según su ficha, el doble que el de molde." },
+  { id: "pavo-fiambre", nombre: "Pechuga de pavo en lonchas", pasillo: "Carne y pescado", rol: "Proteína rápida para tostadas.",
+    criterio: "Que ponga <b>90% de carne o más</b> y grasa <b>≤ 2 g</b> por 100 g. Las baratas llevan almidón y agua: menos proteína.",
+    productos: [
+      { marca: "Argal", nombre: "Pechuga de pavo", tienda: "Sin dato de tienda", formato: "115 g", v: [95, 21, 1, 0.4], src: OFF("8410764015882"), nota: "La que más proteína tiene de las que he encontrado." },
+      { marca: "ElPozo", nombre: "Pechuga de pavo", tienda: "Sin dato de tienda", formato: "—", v: [74, 17, 0.5, 0.5], src: OFF("8410843463719") }
+    ] },
+  { id: "aguacate", nombre: "Aguacate", pasillo: "Fruta y verdura", rol: "Para la tostada. Grasa buena, pero grasa.",
+    criterio: "Que ceda un poco al apretarlo. Si está duro, déjalo 2–3 días fuera de la nevera.",
+    aviso: "Unos 160 kcal y 15 g de grasa por 100 g (valor medio, no de un producto concreto). Por eso las recetas usan 30 g, un cuarto de aguacate pequeño.",
+    productos: [] },
+  { id: "espinacas", nombre: "Espinacas frescas", pasillo: "Fruta y verdura", rol: "Para el revuelto y las cenas. Mucho volumen por casi nada de calorías.",
+    criterio: "Bolsa de espinacas <b>lavadas</b> (o baby): se usan directamente.",
+    productos: [{ marca: "Hacendado", nombre: "Espinacas lavadas", tienda: "Mercadona", formato: "—", v: [17, 2.9, 0.4, 3.6], src: OFF("8437004687807") }] },
   { id: "queso-crema", nombre: "Queso crema light (opcional)", pasillo: "Lácteos y huevos", rol: "Solo si echas de menos el sabor clásico de cheesecake.",
     criterio: "Úsalo poco: <b>30 g como mucho</b> por receta.",
     aviso: "Aunque sea «light», tiene unos 11–12 g de grasa por 100 g. Por eso el libro no lo usa por defecto.",
@@ -890,16 +1011,17 @@ const EXTRA_ING = {
   tomate: ["Tomate", "Fruta y verdura"],
   limon: ["Limón", "Fruta y verdura"],
   cebolla: ["Cebolla", "Fruta y verdura"],
-  ajo: ["Ajo", "Fruta y verdura"]
+  ajo: ["Ajo", "Fruta y verdura"],
+  platano: ["Plátano", "Fruta y verdura"]
 };
 const PASILLOS = ["Fruta y verdura", "Carne y pescado", "Lácteos y huevos", "Congelados", "Despensa", "Otros"];
 
 /* ===================== CONFIGURACIÓN ===================== */
-const SABOR = { "tortitas": "avena", "cheesecake-nevera": "frambuesa", "cheesecake-airfryer": "melocoton", "mousse": "cacao", "natillas": "vainilla", "tortilla": "espinaca", "pollo": "melocoton", "merluza": "vainilla", "hamburguesas": "espinaca" };
+const SABOR = { "tortitas": "avena", "cheesecake-nevera": "frambuesa", "cheesecake-airfryer": "melocoton", "mousse": "cacao", "natillas": "vainilla", "tortilla": "espinaca", "pollo": "melocoton", "merluza": "vainilla", "hamburguesas": "espinaca", "tostada-aguacate": "espinaca", "revuelto-claras": "melocoton", "overnight-oats": "frambuesa", "batido-platano": "vainilla" };
 const SABOR_MOMENTO = { Desayuno: "avena", Merienda: "frambuesa", Postre: "frambuesa", Cena: "espinaca" };
 const sabor = r => r.sabor || SABOR[r.id] || SABOR_MOMENTO[r.cat[0]] || "avena";
 const CATS = ["Desayuno", "Merienda", "Postre", "Cena"];
-const METS = ["Sin horno", "Airfryer", "Sartén", "Cazo"];
+const METS = ["Sin horno", "Airfryer", "Sartén", "Cazo", "Tostadora", "Batidora"];
 const EXTS = ["Favoritas", "Sin huevo", "Sin gluten", "Sin lácteos", "Aprovechamiento"];
 const KEY_LABEL = { kcal: "calorías", p: "proteína", g: "grasa", c: "carbohidratos", p100: "lo que más llena", min: "tiempo", nombre: "nombre" };
 const LIM = { kcal: 500, p: 0, g: 20 }; // valores de "sin límite" de los deslizadores
@@ -1269,7 +1391,9 @@ function renderDetail(r) {
   const t = r.tabla;
   const head = `<tr><th>${t.firstCol || ""}</th>${t.cols.map(c => `<th class="n">${c}</th>`).join("")}</tr>`;
   const body = t.rows.map(row => `<tr class="${r.opciones && row[0].startsWith(state.opcion + ")") ? "hl" : ""}"><td><b>${row[0]}</b></td>${row.slice(1).map(c => `<td class="n">${c}</td>`).join("")}</tr>`).join("");
-  const gl = r.gluten === "natural" ? "Sus ingredientes no llevan gluten. Si eres celíaco, revisa las trazas en las etiquetas." : "Usa copos de avena con la etiqueta «sin gluten»; el resto no lleva gluten.";
+  const gl = r.gluten === "natural" ? "Sus ingredientes no llevan gluten. Si eres celíaco, revisa las trazas en las etiquetas."
+    : r.gluten === "pan" ? "Usa pan sin gluten, y comprueba que siga teniendo poca grasa: muchos llevan bastante aceite."
+    : "Usa copos de avena con la etiqueta «sin gluten»; el resto no lleva gluten.";
   const lc = r.lacteos ? "Cambia los lácteos por sus versiones «sin lactosa» (comprueba que sigan siendo 0% grasa)." : "No lleva lácteos.";
   const sheet = $("#sheet");
   sheet.className = "sheet f-" + sabor(r);
