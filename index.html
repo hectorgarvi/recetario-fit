@@ -394,7 +394,8 @@ tr.hl td { background: var(--ok-bg); }
 .usedin-d summary::-webkit-details-marker { display: none; }
 .usedin-d summary::before { content: "▸"; transition: transform .15s; }
 .usedin-d[open] summary::before { transform: rotate(90deg); }
-.usedin-d .usedin { margin-top: 6px; }
+.usedin-d .usedin, .marcas-d .prods { margin-top: 6px; }
+.marcas-d summary { color: var(--ink); font-size: .95rem; }
 .ingtools { display: grid; gap: 10px; margin-top: 6px; }
 .ingtools-row { display: flex; gap: 8px 12px; align-items: center; flex-wrap: wrap; justify-content: space-between; }
 .ingtiles { grid-template-columns: repeat(auto-fill, minmax(min(100%, 160px), 1fr)) !important; gap: 10px; }
@@ -3062,7 +3063,7 @@ function renderPrep() {
 
 /* ===================== MARCAS ===================== */
 const ingState = { q: "", pas: "", lista: false, abierto: null, view: prefs.get("ingView", "mosaico") };
-function fichaIngrediente(i, pvs) {
+function fichaIngrediente(i, pvs, marcasAbiertas) {
   const used = RECETAS.filter(r => r.usa.includes(i.id) && visible(r));
   const prods = i.productos.map(p => `<div class="prod">
       <div class="prod-top"><div><b>${p.marca}</b>${p.unv ? '<span class="unv">sin verificar</span>' : ""}<div class="name">${p.nombre}</div></div><span class="store">${p.tienda}</span></div>
@@ -3072,7 +3073,10 @@ function fichaIngrediente(i, pvs) {
   return `<div><h3>${i.nombre}</h3><p class="rol">${i.rol}</p></div>
     <div class="look"><b>En la etiqueta:</b> ${i.criterio}</div>
     ${i.aviso ? `<div class="warn">${i.aviso}</div>` : ""}
-    ${prods ? `<div class="prods">${prods}</div>` : `<p class="rol">Sin marcas concretas: vale cualquiera que cumpla lo de la etiqueta.</p>`}
+    ${prods ? (() => {
+      const conV = i.productos.filter(p => p.v && p.v[2] != null), minG = conV.length ? Math.min(...conV.map(p => p.v[2])) : null;
+      return `<details class="usedin-d marcas-d"${marcasAbiertas ? " open" : ""}><summary>${i.productos.length} ${i.productos.length === 1 ? "marca" : "marcas"}${minG != null ? `, desde ${fmt(minG)} g de grasa` : ""}</summary><div class="prods">${prods}</div></details>`;
+    })() : `<p class="rol">Sin marcas concretas: vale cualquiera que cumpla lo de la etiqueta.</p>`}
     ${i.nota ? `<p class="rol">${i.nota}</p>` : ""}
     ${used.length ? `<details class="usedin-d"><summary>Lo usan ${used.length} ${used.length === 1 ? "receta" : "recetas"}</summary><div class="usedin">${used.map(r => `<button type="button" class="dot f-${sabor(r)}" data-goto="${r.id}">${r.nombre}</button>`).join("")}</div></details>` : ""}`;
 }
@@ -3101,7 +3105,8 @@ function renderIngredientes() {
   box.innerHTML = lista.map(i => {
     if (ingState.view === "detalle" || ingState.abierto === i.id) {
       const cerrar = ingState.view === "mosaico" ? `<button type="button" class="x ing-close" data-ingcerrar aria-label="Cerrar ${esc(i.nombre)}">✕</button>` : "";
-      return `<article class="ing${ingState.view === "mosaico" ? " abierto" : ""}" id="ing-${i.id}">${cerrar}${fichaIngrediente(i, pvs)}</article>`;
+      // En el mosaico se abre para ver las marcas: salen desplegadas. En detalle, plegadas.
+      return `<article class="ing${ingState.view === "mosaico" ? " abierto" : ""}" id="ing-${i.id}">${cerrar}${fichaIngrediente(i, pvs, ingState.view === "mosaico")}</article>`;
     }
     const conV = i.productos.filter(p => p.v && p.v[2] != null);
     const minG = conV.length ? Math.min(...conV.map(p => p.v[2])) : null;
