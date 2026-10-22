@@ -158,7 +158,6 @@ Su perfil (datos, objetivos, gustos) está en `perfil.md` del repo privado. Lée
 
 Pendiente del usuario:
 - Decidir si se protege la web con login de verdad (Cloudflare Pages + Access) o se deja así. Otras personas tienen el enlace; los datos personales ya están a salvo en el repo privado.
-- Fotos de etiquetas de una tienda de suplementos de Torremolinos (junto al Carrefour) para añadir productos a la guía de marcas.
 - Recetas con un solo tiempo («35 min») cuentan todo como elaboración; se podrían partir en trabajo + cocción (arroz con pollo, crema de calabacín, pescado con pisto, caldo).
 
 
