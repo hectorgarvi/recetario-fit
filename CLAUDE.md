@@ -48,6 +48,7 @@ Recetas con mucha proteína y poca grasa que sacien, con filtros, plan semanal, 
   - Verifica los productos en Open Food Facts: `https://search.openfoodfacts.org/search?q=...`, filtrando por `countries_tags` que contenga `en:spain`.
   - Si no hay un producto verificable, deja `productos: []` y explica el criterio en el texto. Nunca inventes una marca.
 - Cocina del usuario: freidora de aire Princess de 10 L (tipo horno, con varias alturas de bandeja), sartén, cazo y microondas. Toda receta de airfryer debe incluir: precalentado (temperatura y 3 min), altura de la bandeja, temperatura y tiempo de cada fase y cómo saber si está hecho.
+- Bases de tarta sin mantequilla: avena + clara, bien apretada y horneada 5 min a 160 °C (la clara hace de pegamento). Cremas o yogur en la base solo dan sabor y la ablandan.
 - Revisa que `completa` sea `racion × raciones`. Comprueba también que kcal ≈ 4·p + 4·c + 9·g, con margen por la fibra.
 
 ## Comprobación antes de publicar
@@ -130,7 +131,20 @@ Salieron de una revisión de código con dos fallos de pérdida de datos:
 - Fuentes: Bricolage Grotesque (títulos y números) y Onest (texto).
 - Colores como tokens en `:root`, con modo oscuro en `prefers-color-scheme` y en `[data-theme]` (botón ◐/☀/☾). El fondo va también en `html` para que la app instalada no deje franjas blancas.
 - Gráficas: azul `#2a78d6` para la media semanal y naranja `#eb6834` para cada registro (paleta de referencia que pasa la comprobación de daltonismo). Nunca verde con rojo.
+- Tarjetas del mosaico: kcal en grande, macros y, al final, una línea con raciones/opción y otra aparte con el tiempo (`tiempoCorto`: «15 min + 4 h de espera»).
 - Pensada primero para el móvil (390 px). Revisa en modo oscuro y a esa anchura antes de publicar.
+
+## Skills y herramientas usadas (para replicar el estilo)
+
+Skills de Claude Code que se cargaron al construir la web; vuelve a cargarlas antes de tocar el diseño o las gráficas:
+- **`frontend-design`** (plugin oficial `frontend-design` de Anthropic): dirección estética. De ahí salieron las propuestas de estilo, el «fresco y frutal» elegido, las fuentes y las tarjetas por color de sabor. Úsala antes de cualquier pantalla o rediseño nuevo.
+- **`dataviz`** (skill integrada en Claude Code, sin plugin): gráficas de Progreso. La paleta azul/naranja se validó con su comprobador de color (contraste y daltonismo) en claro y oscuro.
+- **`artifact-capabilities`**: se consultó al principio, cuando la web era un artifact de claude.ai. Ya no aplica (ver Decisiones).
+
+Otras herramientas, sin skill:
+- Open Food Facts (`search.openfoodfacts.org`, filtrando `en:spain`) para verificar marcas y valores.
+- Chromium headless de Playwright para probar: `--dump-dom` con un script inyectado que corre la comprobación de arriba, y `--screenshot --window-size=390,844` para ver el móvil (también en modo oscuro).
+- `gh` con la cuenta `hectorgarvi` para el repo privado y `perfil.md`.
 
 ## Sobre el usuario
 
@@ -141,6 +155,12 @@ Su perfil (datos, objetivos, gustos) está en `perfil.md` del repo privado. Lée
 - Agradece que se le digan las cosas claras, aunque contradigan lo que pidió, y que se compruebe todo antes de darlo por bueno.
 
 ## Ideas posibles para más adelante
+
+Pendiente del usuario:
+- Decidir si se protege la web con login de verdad (Cloudflare Pages + Access) o se deja así. Otras personas tienen el enlace; los datos personales ya están a salvo en el repo privado.
+- Fotos de etiquetas de una tienda de suplementos de Torremolinos (junto al Carrefour) para añadir productos a la guía de marcas.
+- Recetas con un solo tiempo («35 min») cuentan todo como elaboración; se podrían partir en trabajo + cocción (arroz con pollo, crema de calabacín, pescado con pisto, caldo).
+
 
 Más recetas, sobre todo comidas y cenas de pescado azul. Rehacer la semana tipo con más variedad (bizcocho o brownie de postre, albóndigas o curry de comida) manteniendo las ~2.300 kcal.
 
