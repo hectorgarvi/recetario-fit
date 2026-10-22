@@ -2730,7 +2730,7 @@ function renderGrid() {
     const v = valores(r, state.base);
     const on = k => (state.sort === k ? ' class="on"' : "");
     const f = state.tengoOn ? faltan(r) : null;
-    const sub = f ? (f.length ? `Te falta: ${f.map(i => ingNombre(i).replace(/ \(.*\)$/, "").toLowerCase()).join(", ")}` : "✓ Tienes todo") : [r.opciones ? "Opción B" : "", state.base === "racion" && r.raciones > 1 ? `1 ración de ${r.raciones}` : "", tiempoCorto(r)].filter(Boolean).join(" · ");
+    const sub = f ? (f.length ? `Te falta: ${f.map(i => ingNombre(i).replace(/ \(.*\)$/, "").toLowerCase()).join(", ")}` : "✓ Tienes todo") : [r.opciones ? "Opción B" : "", state.base === "racion" && r.raciones > 1 ? `1 ración de ${r.raciones}` : ""].filter(Boolean).join(" · ");
     return `<button type="button" class="card f-${sabor(r)}" data-open="${r.id}" aria-label="${esc(r.nombre)}, ${fmt(v.kcal)} kcal">
       <span class="blob"></span>${favMark(r)}
       <div class="kind">${[...r.cat.slice(0, 1), ...r.met, NIVEL_TXT[nivel(r)], ...(r.pro ? ["Con proteína"] : [])].map(t => `<span>${t}</span>`).join("")}</div>
@@ -2738,7 +2738,7 @@ function renderGrid() {
       <div style="display:grid;gap:8px">
         <div class="kcal">${fmt(v.kcal)}<small>kcal</small></div>
         <div class="mac"><span${on("p")}>${fmt(v.p)} g prot.</span><span${on("g")}>${fmt(v.g)} g grasa</span><span${on("c")}>${fmt(v.c)} g carb.</span></div>
-        <div class="sub">${sub}</div>
+        ${sub ? `<div class="sub">${sub}</div>` : ""}<div class="sub">${tiempoCorto(r)}</div>
       </div>
     </button>`;
   }).join("");
