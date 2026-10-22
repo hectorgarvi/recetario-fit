@@ -17,7 +17,7 @@ Recetas con mucha proteína y poca grasa que sacien, con filtros, plan semanal, 
 ## Datos dentro de `index.html`
 
 - `RECETAS` (array): una entrada por receta.
-  - `id`, `corto`, `nombre`, `cat` (Desayuno, Tentempié, Comida, Merienda, Postre, Cena), `met` y `ext`.
+  - `id`, `corto`, `nombre`, `cat` (Desayuno, Tentempié, Comida, Merienda, Postre, Cena, Salsa; las salsas no salen en el plan), `met` y `ext`.
   - Valores: `raciones`, y `completa` / `racion` como `{kcal, p, g, c}`.
   - Contenido: `ingredientes`, `pasos`, `tabla`, `notaTabla`, `tips`, `conserva`.
   - `compra`: lista de `[ingrediente, cantidad para la receta entera, unidad]`; `null` significa «al gusto».

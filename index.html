@@ -1733,6 +1733,111 @@ const RECETAS = [
     conserva: { nevera: "4 días en un tarro cerrado.", congelar: "No." },
     compra: [["avellanas", 20, "g"], ["proteina", 25, "g"], ["cacao", 20, "g"], ["batido", 200, "g"], ["leche", 40, "ml"]],
     usa: ["avellanas", "proteina", "cacao", "batido"]
+  },
+  {
+    id: "crema-cacao-expres", corto: "crema de cacao exprés", nombre: "Crema de cacao exprés (sin frutos secos)",
+    cat: ["Desayuno", "Merienda"], met: ["Sin cocinar"], ext: ["Sin huevo", "Sin gluten"], tags: ["La más barata", "2 minutos"],
+    gluten: "natural", lacteos: true,
+    raciones: 8, racionesTxt: "Un tarro de unos 220 g (ración = 1 cucharada colmada, unos 27 g)", tiempoTxt: "2 min", min: 2,
+    completa: { kcal: 160, p: 21, g: 3.2, c: 10.4 }, racion: { kcal: 20, p: 2.6, g: 0.4, c: 1.3 },
+    ingredientes: [{"t": "Ingredientes", "items": ["Queso fresco batido 0%: {200} g", "Cacao puro desgrasado: {20} g (2 cucharadas)", "Edulcorante al gusto, una pizca de sal y unas gotas de vainilla"]}],
+    pasos: ["<b>Mezcla</b> el cacao, la sal y el edulcorante con 2–3 cucharadas del queso batido, con un tenedor, hasta tener una pasta sin grumos.", "<b>Añade el resto</b> del queso batido y mezcla. Prueba y ajusta de edulcorante.", "<b>A la nevera:</b> en frío espesa y queda más untable."],
+    tabla: {"cols": ["Tarro entero", "Por cucharada colmada (~27 g)"], "rows": [["Calorías", "~160 kcal", "~20 kcal"], ["Proteínas", "~21 g", "~2,6 g"], ["Grasas", "~3,2 g", "~0,4 g"], ["Carbohidratos", "~10,4 g", "~1,3 g"]]},
+    notaTabla: "La versión barata de la [[crema-cacao]]: sin avellanas ni batidora. Sabe a mousse de chocolate untable, no a avellana. Casi sin grasa.",
+    tips: ["<b>Para que sepa algo a avellana</b> sin comprarlas: unas gotas de aroma de avellana (repostería)."],
+    conserva: { nevera: "4 días en un tarro cerrado.", congelar: "No." },
+    compra: [["batido", 200, "g"], ["cacao", 20, "g"], ["edulcorante", null], ["vainilla", null]],
+    usa: ["batido", "cacao"]
+  },
+  {
+    id: "salsa-yogur", corto: "salsa de yogur", nombre: "Salsa de yogur, ajo y hierbas (tipo tzatziki)",
+    cat: ["Salsa"], met: ["Sin cocinar"], ext: ["Sin huevo", "Sin gluten"], tags: ["5 minutos", "Fresca"],
+    gluten: "natural", lacteos: true,
+    raciones: 4, racionesTxt: "4 raciones (unos 45 g, 3 cucharadas cada una)", tiempoTxt: "5 min", min: 5,
+    completa: { kcal: 52, p: 5.8, g: 0.1, c: 6.9 }, racion: { kcal: 13, p: 1.5, g: 0, c: 1.7 },
+    ingredientes: [{"t": "Ingredientes", "items": ["Yogur natural 0%: {1} unidad ({125} g)", "Pepino: un trozo de unos {60} g, rallado", "Ajo: {0.5} diente muy picado (o una pizca de ajo en polvo)", "Eneldo o hierbabuena, zumo de limón, sal y pimienta"]}],
+    pasos: ["<b>Ralla el pepino</b> y apriétalo con las manos para quitarle el agua: si no, la salsa queda aguada.", "<b>Mezcla</b> el yogur con el pepino, el ajo, las hierbas, unas gotas de limón, sal y pimienta.", "<b>Reposa 10 min</b> en la nevera [[t:10]] para que coja sabor."],
+    tabla: {"cols": ["Toda la salsa", "Por ración (~45 g)"], "rows": [["Calorías", "~52 kcal", "~13 kcal"], ["Proteínas", "~5,8 g", "~1,5 g"], ["Grasas", "~0,1 g", "~0 g"], ["Carbohidratos", "~6,9 g", "~1,7 g"]]},
+    notaTabla: "Prácticamente sin grasa: la puedes usar con alegría.",
+    tips: ["<b>Con qué va:</b> [[brochetas-pollo]], [[hamburguesas]], [[pollo]], [[salmon-patata]] o de dip con verdura cruda.", "<b>Más espesa:</b> con skyr o queso batido en vez de yogur."],
+    conserva: { nevera: "2–3 días tapada.", congelar: "No." },
+    compra: [["yogur", 125, "g"], ["pepino", 0.25, "ud."], ["ajo", 0.5, "diente"], ["limon", null], ["especias", null]],
+    usa: ["yogur"]
+  },
+  {
+    id: "salsa-pimienta", corto: "salsa de pimienta", nombre: "Salsa de pimienta ligera (sin nata)",
+    cat: ["Salsa"], met: ["Cazo"], ext: ["Sin huevo", "Sin gluten"], tags: ["Para carne", "Cremosa sin nata"],
+    gluten: "natural", lacteos: true,
+    raciones: 3, racionesTxt: "3 raciones (unos 60 g, un cazo pequeño cada una)", tiempoTxt: "10 min", min: 10,
+    completa: { kcal: 85, p: 7.3, g: 1, c: 11.3 }, racion: { kcal: 28, p: 2.4, g: 0.3, c: 3.8 },
+    ingredientes: [{"t": "Ingredientes", "items": ["Leche desnatada: {100} ml", "Caldo de pollo bajo en sal: {50} ml", "Harina de maíz (Maizena): {5} g (1 cucharadita colmada)", "Queso fresco batido 0%: {50} g, para el final", "Pimienta negra o verde en grano: {1} cdta., machacada", "Mostaza: {1} cdta. y sal"]}],
+    pasos: ["<b>Machaca la pimienta</b> en un mortero o con el culo de un vaso: en trozos, no en polvo, da más sabor.", "<b>Tuesta la pimienta</b> 30 segundos en un cazo sin aceite, a fuego medio, hasta que huela.", "<b>Disuelve la Maizena</b> en la leche fría y échala al cazo con el caldo y la mostaza. Remueve a fuego medio hasta que espese, 2–3 min [[t:3]].", "<b>Fuera del fuego</b>, añade el queso batido y remueve hasta que quede cremosa. Prueba de sal."],
+    tabla: {"cols": ["Toda la salsa", "Por ración (~60 g)", "Con nata (por ración)"], "rows": [["Calorías", "~85 kcal", "~28 kcal", "~200 kcal"], ["Proteínas", "~7,3 g", "~2,4 g", "~2 g"], ["Grasas", "~1 g", "~0,3 g", "~20 g"], ["Carbohidratos", "~11,3 g", "~3,8 g", "~3 g"]]},
+    notaTabla: "La de restaurante lleva nata para cocinar: unos 20 g de grasa por ración. Esta, con leche, Maizena y queso batido, menos de medio gramo.",
+    tips: ["<b>Con qué va:</b> [[pavo-verduras]], [[hamburguesas]], [[pollo]] o un filete de ternera magra.", "<b>Toque de restaurante:</b> un chorrito de coñac o brandy al tostar la pimienta, dejando que se evapore 1 min (el alcohol se va casi todo)."],
+    conserva: { nevera: "2 días; al recalentar, un chorrito de leche.", congelar: "No." },
+    compra: [["leche", 100, "ml"], ["caldo", 50, "ml"], ["maizena", 5, "g"], ["batido", 50, "g"], ["pimienta", 1, "cdta."], ["mostaza", 1, "cdta."]],
+    usa: ["leche", "maizena", "batido", "caldo"]
+  },
+  {
+    id: "salsa-queso", corto: "salsa de queso", nombre: "Salsa de queso ligera",
+    cat: ["Salsa"], met: ["Cazo"], ext: ["Sin huevo", "Sin gluten"], tags: ["Para verduras y nachos", "Se funde de verdad"],
+    gluten: "natural", lacteos: true,
+    raciones: 4, racionesTxt: "4 raciones (unos 55 g cada una)", tiempoTxt: "10 min", min: 10,
+    completa: { kcal: 172, p: 14.7, g: 6, c: 14.4 }, racion: { kcal: 43, p: 3.7, g: 1.5, c: 3.6 },
+    ingredientes: [{"t": "Ingredientes", "items": ["Leche desnatada: {150} ml", "Harina de maíz (Maizena): {5} g (1 cucharadita colmada)", "Mozzarella light rallada o en trocitos: {40} g", "Queso en lonchas light: {1} loncha (unos {20} g), para el color y el sabor", "Mostaza: {1} cdta., una pizca de nuez moscada, pimentón y sal"]}],
+    pasos: ["<b>Disuelve la Maizena</b> en la leche fría, con la mostaza, la nuez moscada y el pimentón.", "<b>Calienta</b> en un cazo a fuego medio-bajo, removiendo sin parar, hasta que espese un poco (2–3 min) [[t:3]].", "<b>Baja el fuego</b> al mínimo, añade los quesos en trocitos y remueve hasta que se fundan del todo. No dejes que hierva: el queso se separa.", "<b>Prueba de sal</b> y sirve caliente. Al enfriar espesa: un chorrito de leche la vuelve a dejar fluida."],
+    tabla: {"cols": ["Toda la salsa", "Por ración (~55 g)", "Con nata y queso normal (por ración)"], "rows": [["Calorías", "~172 kcal", "~43 kcal", "~180 kcal"], ["Proteínas", "~14,7 g", "~3,7 g", "~6 g"], ["Grasas", "~6 g", "~1,5 g", "~16 g"], ["Carbohidratos", "~14,4 g", "~3,6 g", "~2 g"]]},
+    notaTabla: "Para los que aman el queso: sabe a queso de verdad con una décima parte de la grasa. Cuentas con mozzarella light (153 kcal y 9 g de grasa por 100 g) y lonchas light (177 kcal y 8,7 g) de Hacendado.",
+    tips: ["<b>Con qué va:</b> brócoli, coliflor o patata al vapor (gratinadas 3 min en la airfryer a 200 °C), [[hamburguesas]] o pasta.", "<b>Más sabor:</b> una cucharadita de queso parmesano rallado (+1,5 g de grasa en toda la salsa)."],
+    conserva: { nevera: "2 días; recaliéntala con un chorrito de leche.", congelar: "No: se corta." },
+    compra: [["leche", 150, "ml"], ["maizena", 5, "g"], ["queso-light", 60, "g (mozzarella + 1 loncha)"], ["mostaza", 1, "cdta."], ["especias", null]],
+    usa: ["leche", "queso-light", "maizena"]
+  },
+  {
+    id: "salsa-barbacoa", corto: "salsa barbacoa", nombre: "Salsa barbacoa casera sin azúcar",
+    cat: ["Salsa"], met: ["Cazo"], ext: ["Sin huevo", "Sin lácteos"], tags: ["Ahumada", "Para hamburguesas"],
+    gluten: "soja", lacteos: false,
+    raciones: 6, racionesTxt: "6 raciones (unos 40 g cada una)", tiempoTxt: "15 min", min: 15,
+    completa: { kcal: 78, p: 2.5, g: 0.8, c: 13.2 }, racion: { kcal: 13, p: 0.4, g: 0.1, c: 2.2 },
+    ingredientes: [{"t": "Ingredientes", "items": ["Tomate triturado natural: {200} g", "Vinagre (de manzana o de vino): {1} cucharada", "Mostaza: {2} cdtas.", "Salsa de soja baja en sal: {2} cdtas.", "Pimentón ahumado (de la Vera): {1} cdta.", "Ajo en polvo, cebolla en polvo y edulcorante al gusto (el equivalente a 2 cucharadas de azúcar)"]}],
+    pasos: ["<b>Pon todo en un cazo</b> y mezcla.", "<b>Cuece</b> a fuego medio-bajo, removiendo de vez en cuando, 10–12 min [[t:11]], hasta que espese como un kétchup.", "<b>Prueba</b> y ajusta: más edulcorante si la quieres más dulce, más vinagre si la quieres más ácida.", "<b>Deja enfriar</b> y guárdala en un tarro."],
+    tabla: {"cols": ["Toda la salsa", "Por ración (~40 g)", "Barbacoa del súper (por ración)"], "rows": [["Calorías", "~78 kcal", "~13 kcal", "~60 kcal"], ["Proteínas", "~2,5 g", "~0,4 g", "~0,4 g"], ["Grasas", "~0,8 g", "~0,1 g", "~0,2 g"], ["Carbohidratos", "~13,2 g", "~2,2 g", "~14 g"]]},
+    notaTabla: "La del súper no tiene casi grasa, pero sí mucho azúcar (alrededor de un tercio). Esta sabe parecido sin azúcar.",
+    tips: ["<b>Con qué va:</b> [[hamburguesas]], [[pollo]], [[brochetas-pollo]] o las [[albondigas-pollo]].", "<b>Sin soja</b> para hacerla sin gluten: una pizca más de sal."],
+    conserva: { nevera: "1 semana en un tarro cerrado.", congelar: "Sí, en cubiteras, hasta 3 meses." },
+    compra: [["tomate-triturado", 200, "g"], ["vinagre", 1, "cda."], ["mostaza", 2, "cdtas."], ["soja", 2, "cdtas."], ["especias", null], ["edulcorante", null]],
+    usa: ["tomate-triturado"]
+  },
+  {
+    id: "alioli-yogur", corto: "alioli de yogur", nombre: "Alioli ligero de yogur",
+    cat: ["Salsa"], met: ["Sin cocinar"], ext: ["Sin huevo", "Sin gluten"], tags: ["Sabe a alioli", "Una décima parte de la grasa"],
+    gluten: "natural", lacteos: true,
+    raciones: 4, racionesTxt: "4 raciones (unos 45 g, 3 cucharadas cada una)", tiempoTxt: "5 min", min: 5,
+    completa: { kcal: 94, p: 5.6, g: 5.3, c: 6 }, racion: { kcal: 23, p: 1.4, g: 1.3, c: 1.5 },
+    ingredientes: [{"t": "Ingredientes", "items": ["Yogur natural 0%: {1} unidad ({125} g)", "Ajo: {1} diente, machacado muy fino", "Aceite de oliva virgen extra: {1} cucharadita ({5} g)", "Mostaza: {1} cdta. (le da la textura de mayonesa)", "Unas gotas de limón y sal"]}],
+    pasos: ["<b>Machaca el ajo</b> con una pizca de sal hasta hacer una pasta (en mortero o con el lado del cuchillo).", "<b>Mezcla</b> el ajo con la mostaza y el aceite, y después con el yogur y el limón.", "<b>Reposa</b> 15 min en la nevera [[t:15]]: el ajo gana fuerza."],
+    tabla: {"cols": ["Toda la salsa", "Por ración (~45 g)", "Alioli normal (por ración)"], "rows": [["Calorías", "~94 kcal", "~23 kcal", "~300 kcal"], ["Proteínas", "~5,6 g", "~1,4 g", "~0,5 g"], ["Grasas", "~5,3 g", "~1,3 g", "~33 g"], ["Carbohidratos", "~6 g", "~1,5 g", "~0,5 g"]]},
+    notaTabla: "El alioli y la mayonesa son casi todo aceite. Aquí el aceite es solo una cucharadita para el sabor.",
+    tips: ["<b>Con qué va:</b> [[merluza]], [[sepia-plancha]], patatas asadas o [[hamburguesas]].", "<b>Mayonesa ligera:</b> la misma receta sin ajo y con un poco más de mostaza."],
+    conserva: { nevera: "3 días tapada.", congelar: "No." },
+    compra: [["yogur", 125, "g"], ["ajo", 1, "diente"], ["aceite", 5, "g"], ["mostaza", 1, "cdta."], ["limon", null]],
+    usa: ["yogur", "aceite"]
+  },
+  {
+    id: "guacamole-fit", corto: "guacamole fit", nombre: "Guacamole ligero",
+    cat: ["Salsa"], met: ["Sin cocinar"], ext: ["Sin huevo", "Sin gluten"], tags: ["Grasa buena, con medida", "Cremoso"],
+    gluten: "natural", lacteos: true,
+    raciones: 4, racionesTxt: "4 raciones (unos 45 g, 3 cucharadas cada una)", tiempoTxt: "10 min", min: 10,
+    completa: { kcal: 182, p: 8.8, g: 12.3, c: 7.5 }, racion: { kcal: 45, p: 2.2, g: 3.1, c: 1.9 },
+    ingredientes: [{"t": "Ingredientes", "items": ["Aguacate maduro: {80} g (medio aguacate pequeño)", "Queso fresco batido 0%: {80} g", "Tomate: {0.5} pequeño (unos {50} g), sin semillas, en dados pequeños", "Cebolla morada: un trocito (unos {20} g), muy picada", "Zumo de {0.5} lima o limón, cilantro, sal y una pizca de comino"]}],
+    pasos: ["<b>Chafa el aguacate</b> con un tenedor, con el zumo de lima y la sal.", "<b>Mezcla</b> con el queso batido hasta que quede cremoso.", "<b>Añade</b> el tomate, la cebolla, el cilantro y el comino.", "<b>Sirve</b> enseguida o tapa con film pegado a la superficie para que no se ponga negro."],
+    tabla: {"cols": ["Todo", "Por ración (~45 g)", "Guacamole normal (por ración)"], "rows": [["Calorías", "~182 kcal", "~45 kcal", "~70 kcal"], ["Proteínas", "~8,8 g", "~2,2 g", "~1 g"], ["Grasas", "~12,3 g", "~3,1 g", "~6 g"], ["Carbohidratos", "~7,5 g", "~1,9 g", "~2 g"]]},
+    notaTabla: "Con la mitad del aguacate cambiado por queso batido: la mitad de grasa y el triple de proteína. La grasa del aguacate es de la buena, pero cuenta.",
+    tips: ["<b>Con qué va:</b> [[pollo]], [[brochetas-pollo]], tostadas integrales o bastones de zanahoria y pepino."],
+    conserva: { nevera: "1 día, con film pegado a la superficie.", congelar: "No." },
+    compra: [["aguacate", 80, "g"], ["batido", 80, "g"], ["tomate", 0.5, "ud."], ["cebolla", 0.25, "ud."], ["limon", 0.5, "ud."], ["especias", null]],
+    usa: ["aguacate", "batido"]
   }
 ];
 
@@ -1749,7 +1854,7 @@ const NUTRI = {
   "helado-frutos-rojos": [5, 1.5, []], "pollo-curry": [4.1, 2.5, []], "albondigas-pollo": [4.8, 3, []], "pescado-pisto": [7, 5, ["pescado"]], "brochetas-pollo": [5, 3.5, []],
   "sepia-plancha": [4, 2.5, ["pescado"]], "tortilla-calabacin": [2.9, 3, []],
   "cookies-avena": [3.6, 0, []], "cookies-pro": [2.8, 0, []], "tortitas-pro": [7, 1, []], "overnight-pro": [8, 1, []], "mousse-pro": [2.4, 0, []],
-  "batido-pro": [4.6, 1, []], "cheesecake-pro": [3.3, 0.5, []], "natillas-pro": [0, 0, []], "bizcocho-pro": [1.7, 0, []], "helado-pro": [5, 1.5, []], "cheesecake-blanco": [4.5, 0.5, []], "crema-cacao": [1, 0, []], "cookies-rellenas": [4.8, 0, []], "cookies-cacahuete": [4.2, 0, []], "crema-cacao-pro": [0.8, 0, []]
+  "batido-pro": [4.6, 1, []], "cheesecake-pro": [3.3, 0.5, []], "natillas-pro": [0, 0, []], "bizcocho-pro": [1.7, 0, []], "helado-pro": [5, 1.5, []], "cheesecake-blanco": [4.5, 0.5, []], "crema-cacao": [1, 0, []], "cookies-rellenas": [4.8, 0, []], "cookies-cacahuete": [4.2, 0, []], "crema-cacao-pro": [0.8, 0, []], "crema-cacao-expres": [0.8, 0, []], "salsa-yogur": [0.2, 0, []], "salsa-pimienta": [0.3, 0, []], "salsa-queso": [0.2, 0, []], "salsa-barbacoa": [0.4, 0.5, []], "alioli-yogur": [0, 0, []], "guacamole-fit": [1.5, 0.5, []]
 };
 const nutri = r => NUTRI[r.id] || [0, 0, []];
 // Recetas con bastante sal (salmón ahumado, caldo de brik)
@@ -1806,7 +1911,7 @@ const NIVEL = {
   "revuelto-claras": 2, "pavo-verduras": 2, "tortitas": 2, "caldo-pollo": 2, "pasta-atun": 2, "garbanzos-espinacas": 2, "pollo": 2, "merluza": 2, "salmon-patata": 2, "brochetas-pollo": 2, "sepia-plancha": 2,
   "crema-calabacin": 2, "merluza-coliflor": 2, "bizcocho-yogur": 2, "brownie-fit": 2, "galletas-avena": 2, "albondigas-pollo": 2, "pollo-curry": 2, "arroz-pollo": 2, "lentejas": 2, "hamburguesas": 2, "pescado-pisto": 2,
   "natillas": 3, "tortilla": 3, "tortilla-calabacin": 3, "cheesecake-nevera": 3, "cheesecake-airfryer": 3, "mousse": 3,
-  "cookies-avena": 2, "cookies-pro": 2, "tortitas-pro": 2, "overnight-pro": 1, "mousse-pro": 3, "batido-pro": 1, "cheesecake-pro": 3, "natillas-pro": 3, "bizcocho-pro": 2, "helado-pro": 1, "cheesecake-blanco": 3, "crema-cacao": 2, "cookies-rellenas": 3, "cookies-cacahuete": 2, "crema-cacao-pro": 2
+  "cookies-avena": 2, "cookies-pro": 2, "tortitas-pro": 2, "overnight-pro": 1, "mousse-pro": 3, "batido-pro": 1, "cheesecake-pro": 3, "natillas-pro": 3, "bizcocho-pro": 2, "helado-pro": 1, "cheesecake-blanco": 3, "crema-cacao": 2, "cookies-rellenas": 3, "cookies-cacahuete": 2, "crema-cacao-pro": 2, "crema-cacao-expres": 1, "salsa-yogur": 1, "salsa-pimienta": 2, "salsa-queso": 2, "salsa-barbacoa": 1, "alioli-yogur": 1, "guacamole-fit": 1
 };
 const NIVEL_TXT = { 1: "Muy fácil", 2: "Fácil", 3: "Con un poco de mano" };
 const nivel = r => NIVEL[r.id] || 2;
@@ -1866,6 +1971,13 @@ const UTENSILIOS = {
   "cookies-rellenas": [["Freidora de aire", AF_HORNO("unos 185 °C y 11–12 min")], ["Congelador (para el relleno)"], ["Papel de horno"], ["Batidora o picadora (para la harina de avena)", "Harina de avena comprada."]],
   "cookies-cacahuete": [["Freidora de aire", AF_HORNO("unos 185 °C y 12–14 min")], ["Papel de horno"], ["Tenedor (para la cuadrícula)"]],
   "crema-cacao-pro": [["Picadora o batidora potente", "20 g de crema de avellana 100% ya hecha en vez de avellanas enteras."], ["Tarro con tapa"]],
+  "crema-cacao-expres": [["Tenedor y tarro"]],
+  "salsa-yogur": [["Rallador (para el pepino)", "Pica el pepino muy fino con el cuchillo."], ["Bol"]],
+  "salsa-pimienta": [["Cazo pequeño"], ["Mortero (para la pimienta)", "Machácala dentro de una bolsa con el culo de un vaso."]],
+  "salsa-queso": [["Cazo pequeño"], ["Varillas o cuchara de madera"]],
+  "salsa-barbacoa": [["Cazo pequeño"], ["Tarro con tapa"]],
+  "alioli-yogur": [["Mortero (para el ajo)", "Rállalo con un rallador fino o aplástalo con el lado del cuchillo y una pizca de sal."], ["Bol"]],
+  "guacamole-fit": [["Tenedor y bol"], ["Cuchillo y tabla"]],
   "cheesecake-blanco": [BASCULA("300 g de queso batido son unas 20 cucharadas soperas; 30 g de proteína, un cacito."), ["Molde de 10–12 cm", "Un vaso ancho, una taza grande o un táper redondo."], ["Bol y varillas"], ["Microondas (para la leche)", "Un cazo pequeño."]],
   "helado-pro": [["Batidora potente o picadora", "Sin batidora: frutos rojos descongelados 20 min y chafados, mezclados con el queso batido y la proteína. Queda tipo yogur helado con trozos."]],
   "bol-queso-fruta": [["Bol y cuchillo"], BASCULA("200 g de queso batido son unas 13 cucharadas soperas, o 2/5 de una tarrina de 500 g.")]
@@ -2060,6 +2172,12 @@ const INGREDIENTES = [
       { marca: "HSN", nombre: "Crema hiperproteica de cacao y avellanas", tienda: "Online (HSN), a veces agotada", formato: "—", v: [null, 22, 37.4, null], src: "https://www.fankal.com/es/alimentos/4771-crema-hiperproteica-cacao-avellanas-hsn-foods.html", unv: true, nota: "Proteína de la ficha de HSN; la grasa es de una base de datos y probablemente de la fórmula anterior." },
       { marca: "Hacendado", nombre: "Crema de cacahuete", tienda: "Mercadona", formato: "500 g", v: [608, 30, 47, 12], src: OFF("8480000228369"), nota: "100% cacahuete: buena grasa, pero mucha. Si la usas, cucharadita rasa (5 g ≈ 2,4 g de grasa)." }
     ] },
+  { id: "queso-light", nombre: "Queso light para fundir", pasillo: "Lácteos y huevos", rol: "Para la salsa de queso y para gratinar.",
+    criterio: "Mozzarella o lonchas <b>light</b>: busca <b>≤ 10 g de grasa</b> por 100 g. Un queso curado normal tiene 30–35 g.",
+    productos: [
+      { marca: "Hacendado", nombre: "Mozzarella light", tienda: "Mercadona", formato: "—", v: [153, 17, 9, 1], src: OFF("8480000512352") },
+      { marca: "Hacendado", nombre: "Queso en lonchas light", tienda: "Mercadona", formato: "—", v: [177, 14.6, 8.7, 10.1], src: OFF("8480000511997") }
+    ] },
   { id: "chocolate-negro", nombre: "Chocolate negro 85%", pasillo: "Despensa", rol: "Para las cookies. Poquito: es casi la mitad grasa.",
     criterio: "<b>85% de cacao o más</b>, sin azúcares añadidos si lo encuentras. Unos 15 g por bandeja de cookies.",
     productos: [
@@ -2094,16 +2212,19 @@ const EXTRA_ING = {
   soja: ["Salsa de soja baja en sal", "Despensa"],
   "tomate-triturado": ["Tomate triturado natural", "Despensa"],
   fruta: ["Fruta de temporada", "Fruta y verdura"],
+  mostaza: ["Mostaza", "Despensa"],
+  vinagre: ["Vinagre de manzana o de vino", "Despensa"],
+  pimienta: ["Pimienta negra o verde en grano", "Despensa"],
   pepino: ["Pepino", "Fruta y verdura"],
   pimiento: ["Pimiento rojo", "Fruta y verdura"]
 };
 const PASILLOS = ["Fruta y verdura", "Carne y pescado", "Lácteos y huevos", "Congelados", "Despensa", "Otros"];
 
 /* ===================== CONFIGURACIÓN ===================== */
-const SABOR = { "tortitas": "avena", "cheesecake-nevera": "frambuesa", "cheesecake-airfryer": "melocoton", "mousse": "cacao", "natillas": "vainilla", "tortilla": "espinaca", "pollo": "melocoton", "merluza": "vainilla", "hamburguesas": "espinaca", "tostada-aguacate": "espinaca", "revuelto-claras": "melocoton", "overnight-oats": "frambuesa", "batido-platano": "vainilla", "crema-calabacin": "espinaca", "merluza-coliflor": "vainilla", "pavo-verduras": "melocoton", "caldo-pollo": "avena", "lentejas": "cacao", "salmon-patata": "melocoton", "arroz-pollo": "avena", "pasta-atun": "frambuesa", "garbanzos-espinacas": "espinaca", "fruta-frutos-secos": "avena", "bocadillo-pavo": "melocoton", "bol-queso-fruta": "frambuesa", "porridge-manzana": "avena", "tostada-salmon": "melocoton", "bizcocho-yogur": "vainilla", "brownie-fit": "cacao", "galletas-avena": "avena", "helado-frutos-rojos": "frambuesa", "pollo-curry": "vainilla", "albondigas-pollo": "melocoton", "pescado-pisto": "espinaca", "brochetas-pollo": "melocoton", "sepia-plancha": "vainilla", "tortilla-calabacin": "espinaca", "cookies-avena": "cacao", "cookies-pro": "cacao", "tortitas-pro": "avena", "overnight-pro": "frambuesa", "mousse-pro": "cacao", "batido-pro": "vainilla", "cheesecake-pro": "melocoton", "natillas-pro": "vainilla", "bizcocho-pro": "vainilla", "helado-pro": "frambuesa", "cheesecake-blanco": "frambuesa", "crema-cacao": "cacao", "cookies-rellenas": "cacao", "cookies-cacahuete": "melocoton", "crema-cacao-pro": "cacao" };
-const SABOR_MOMENTO = { Tentempié: "avena", Desayuno: "avena", Comida: "melocoton", Merienda: "frambuesa", Postre: "frambuesa", Cena: "espinaca" };
+const SABOR = { "tortitas": "avena", "cheesecake-nevera": "frambuesa", "cheesecake-airfryer": "melocoton", "mousse": "cacao", "natillas": "vainilla", "tortilla": "espinaca", "pollo": "melocoton", "merluza": "vainilla", "hamburguesas": "espinaca", "tostada-aguacate": "espinaca", "revuelto-claras": "melocoton", "overnight-oats": "frambuesa", "batido-platano": "vainilla", "crema-calabacin": "espinaca", "merluza-coliflor": "vainilla", "pavo-verduras": "melocoton", "caldo-pollo": "avena", "lentejas": "cacao", "salmon-patata": "melocoton", "arroz-pollo": "avena", "pasta-atun": "frambuesa", "garbanzos-espinacas": "espinaca", "fruta-frutos-secos": "avena", "bocadillo-pavo": "melocoton", "bol-queso-fruta": "frambuesa", "porridge-manzana": "avena", "tostada-salmon": "melocoton", "bizcocho-yogur": "vainilla", "brownie-fit": "cacao", "galletas-avena": "avena", "helado-frutos-rojos": "frambuesa", "pollo-curry": "vainilla", "albondigas-pollo": "melocoton", "pescado-pisto": "espinaca", "brochetas-pollo": "melocoton", "sepia-plancha": "vainilla", "tortilla-calabacin": "espinaca", "cookies-avena": "cacao", "cookies-pro": "cacao", "tortitas-pro": "avena", "overnight-pro": "frambuesa", "mousse-pro": "cacao", "batido-pro": "vainilla", "cheesecake-pro": "melocoton", "natillas-pro": "vainilla", "bizcocho-pro": "vainilla", "helado-pro": "frambuesa", "cheesecake-blanco": "frambuesa", "crema-cacao": "cacao", "cookies-rellenas": "cacao", "cookies-cacahuete": "melocoton", "crema-cacao-pro": "cacao", "crema-cacao-expres": "cacao", "salsa-yogur": "espinaca", "salsa-pimienta": "vainilla", "salsa-queso": "avena", "salsa-barbacoa": "melocoton", "alioli-yogur": "vainilla", "guacamole-fit": "espinaca" };
+const SABOR_MOMENTO = { Salsa: "vainilla", Tentempié: "avena", Desayuno: "avena", Comida: "melocoton", Merienda: "frambuesa", Postre: "frambuesa", Cena: "espinaca" };
 const sabor = r => r.sabor || SABOR[r.id] || SABOR_MOMENTO[r.cat[0]] || "avena";
-const CATS = ["Desayuno", "Tentempié", "Comida", "Merienda", "Postre", "Cena"];
+const CATS = ["Desayuno", "Tentempié", "Comida", "Merienda", "Postre", "Cena", "Salsa"];
 const METS = ["Sin cocinar", "Sin horno", "Airfryer", "Sartén", "Cazo", "Microondas", "Tostadora", "Batidora"];
 const EXTS = ["Para empezar", "Favoritas", "Cena ligera", "Sin huevo", "Sin gluten", "Sin lácteos", "Aprovechamiento"];
 const KEY_LABEL = { kcal: "calorías", p: "proteína", g: "grasa", c: "carbohidratos", p100: "lo que más llena", min: "tiempo", nombre: "nombre", nivel: "dificultad", estrellas: "valoración" };
