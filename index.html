@@ -2691,7 +2691,7 @@ function renderGrid() {
     const v = valores(r, state.base);
     const on = k => (state.sort === k ? ' class="on"' : "");
     const f = state.tengoOn ? faltan(r) : null;
-    const sub = f ? (f.length ? `Te falta: ${f.map(i => ingNombre(i).replace(/ \(.*\)$/, "").toLowerCase()).join(", ")}` : "✓ Tienes todo") : r.opciones ? "Valores de la opción B" : (state.base === "racion" && r.raciones > 1 ? `1 ración de ${r.raciones}` : (r.min < 60 ? r.min + " min" : ""));
+    const sub = f ? (f.length ? `Te falta: ${f.map(i => ingNombre(i).replace(/ \(.*\)$/, "").toLowerCase()).join(", ")}` : "✓ Tienes todo") : [r.opciones ? "Opción B" : "", state.base === "racion" && r.raciones > 1 ? `1 ración de ${r.raciones}` : "", durTxt(r.min)].filter(Boolean).join(" · ");
     return `<button type="button" class="card f-${sabor(r)}" data-open="${r.id}" aria-label="${esc(r.nombre)}, ${fmt(v.kcal)} kcal">
       <span class="blob"></span>${favMark(r)}
       <div class="kind">${[...r.cat.slice(0, 1), ...r.met, NIVEL_TXT[nivel(r)], ...(r.pro ? ["Con proteína"] : [])].map(t => `<span>${t}</span>`).join("")}</div>
@@ -2705,6 +2705,11 @@ function renderGrid() {
   }).join("");
   grid.classList.toggle("tall", list.length >= 4);
   fitLast();
+}
+function durTxt(m) {
+  if (m < 60) return m + " min";
+  const h = Math.floor(m / 60), r = Math.round((m % 60) / 5) * 5;
+  return r ? `${h} h ${r} min` : `${h} h`;
 }
 function listRow(r) {
   const v = valores(r, state.base);
