@@ -390,6 +390,18 @@ tr.hl td { background: var(--ok-bg); }
   #panel-compra .panelcard { box-shadow: none; padding: 0; }
   .checklist li label { padding: 3px 0; }
 }
+.ingtools { display: grid; gap: 10px; margin-top: 6px; }
+.ingtools-row { display: flex; gap: 8px 12px; align-items: center; flex-wrap: wrap; justify-content: space-between; }
+.ingtiles { grid-template-columns: repeat(auto-fill, minmax(min(100%, 160px), 1fr)) !important; gap: 10px; }
+.ingtile { position: relative; display: grid; gap: 4px; align-content: start; text-align: left; border: 0; border-radius: 18px; padding: 14px; background: var(--paper); color: var(--ink); cursor: pointer; box-shadow: inset 0 0 0 1.5px var(--line); min-height: 96px; scroll-margin-top: 150px; }
+.ingtile:hover { box-shadow: inset 0 0 0 2px var(--accent); }
+.ingtile b { font-size: 1rem; line-height: 1.25; }
+.ingtile small { font-size: .78rem; color: var(--ink-soft); }
+.ingtile .m { color: var(--ink); font-weight: 600; }
+.ingtile.enlista { box-shadow: inset 0 0 0 2px var(--prot); }
+.ingtile .badge { justify-self: start; font-size: .7rem; font-weight: 700; background: var(--ok-bg); color: var(--ok-ink); border-radius: 999px; padding: 2px 8px; }
+.ing.abierto { grid-column: 1 / -1; position: relative; box-shadow: inset 0 0 0 2px var(--accent); }
+.ing-close { position: absolute; right: 12px; top: 10px; font-size: 1.1rem; }
 .tools { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
 .tools li { display: grid; gap: 2px; padding: 10px 14px; border-radius: 14px; background: var(--pill); }
 .tools li span { font-size: .9rem; color: var(--ink-soft); }
@@ -594,6 +606,7 @@ tr.hl td { background: var(--ok-bg); }
   <section class="panel" id="panel-compra" aria-label="Lista de la compra" hidden>
     <div class="intro">
       <h2>Lista de la compra</h2>
+      <p><a href="#marcas" data-gomarcas>¿Qué marca compro? Ir a la guía de marcas ↓</a></p>
       <p>Añade recetas desde su ficha o desde el plan. Los ingredientes se suman y se ordenan por zona del súper.</p>
       <p class="savebar" id="save-shop"><i></i><span></span></p>
     </div>
@@ -615,6 +628,18 @@ tr.hl td { background: var(--ok-bg); }
       <h2>Qué marca comprar</h2>
       <p>Qué mirar en la etiqueta y productos concretos con su tienda y sus valores por 100 g.</p>
       <p class="note">Datos de <a href="https://es.openfoodfacts.org" target="_blank" rel="noopener">Open Food Facts</a> y fichas de tiendas, consultados el 19/10/2026. Open Food Facts es colaborativo y puede tener erratas: si tu envase dice otra cosa, manda la etiqueta. La tienda es la de la ficha; puede haberlo en más sitios.</p>
+      <div class="ingtools">
+        <input class="search" id="ing-q" type="search" placeholder="Busca un ingrediente, marca o tienda (p. ej. avena, Mercadona)" aria-label="Buscar en la guía de marcas">
+        <div class="chips" id="ing-pas" role="group" aria-label="Zona del súper"></div>
+        <div class="ingtools-row">
+          <button type="button" class="chip" id="ing-lista" aria-pressed="false">Solo lo de mi lista</button>
+          <div class="views" role="group" aria-label="Vista de la guía">
+            <button type="button" data-ingview="mosaico">Mosaico</button>
+            <button type="button" data-ingview="detalle">Detalle</button>
+          </div>
+        </div>
+        <p class="muted" id="ing-count"></p>
+      </div>
     </div>
     <div class="ing-list" id="ing-list"></div>
   </section>
@@ -2869,6 +2894,7 @@ function agregarCompra() {
   return Object.values(items);
 }
 function renderCompra() {
+  if (ingState.lista || ingState.view === "mosaico") setTimeout(renderIngredientes, 0);
   const recs = Object.entries(Saved.compra.recetas);
   $("#shop-recipes").innerHTML = recs.length ? recs.map(([k, e]) => {
     const r = byId(e.id); if (!r) return "";
@@ -3030,25 +3056,65 @@ function renderPrep() {
 }
 
 /* ===================== MARCAS ===================== */
+const ingState = { q: "", pas: "", lista: false, abierto: null, view: prefs.get("ingView", "mosaico") };
+function fichaIngrediente(i, pvs) {
+  const used = RECETAS.filter(r => r.usa.includes(i.id) && visible(r));
+  const prods = i.productos.map(p => `<div class="prod">
+      <div class="prod-top"><div><b>${p.marca}</b>${p.unv ? '<span class="unv">sin verificar</span>' : ""}<div class="name">${p.nombre}</div></div><span class="store">${p.tienda}</span></div>
+      ${p.v ? pvs(p.v) : ""}
+      <div class="prod-foot"><span>${p.formato !== "—" ? p.formato : ""}${p.nota ? (p.formato !== "—" ? ". " : "") + p.nota : ""}</span><a href="${p.src}" target="_blank" rel="noopener">Ver ficha</a></div>
+    </div>`).join("");
+  return `<div><h3>${i.nombre}</h3><p class="rol">${i.rol}</p></div>
+    <div class="look"><b>En la etiqueta:</b> ${i.criterio}</div>
+    ${i.aviso ? `<div class="warn">${i.aviso}</div>` : ""}
+    ${prods ? `<div class="prods">${prods}</div>` : `<p class="rol">Sin marcas concretas: vale cualquiera que cumpla lo de la etiqueta.</p>`}
+    ${i.nota ? `<p class="rol">${i.nota}</p>` : ""}
+    ${used.length ? `<div class="usedin"><span>Lo usan:</span>${used.map(r => `<button type="button" class="dot f-${sabor(r)}" data-goto="${r.id}">${r.nombre}</button>`).join("")}</div>` : ""}`;
+}
 function renderIngredientes() {
   const pvs = v => `<div class="pv"><div><b>${fmt(v[0])}</b><span>kcal</span></div><div class="p"><b>${fmt(v[1])}</b><span>prot.</span></div><div class="g"><b>${fmt(v[2])}</b><span>grasa</span></div><div class="c"><b>${fmt(v[3])}</b><span>carb.</span></div></div>`;
-  $("#ing-list").innerHTML = INGREDIENTES.map(i => {
-    const used = RECETAS.filter(r => r.usa.includes(i.id));
-    const prods = i.productos.map(p => `<div class="prod">
-        <div class="prod-top"><div><b>${p.marca}</b>${p.unv ? '<span class="unv">sin verificar</span>' : ""}<div class="name">${p.nombre}</div></div><span class="store">${p.tienda}</span></div>
-        ${p.v ? pvs(p.v) : ""}
-        <div class="prod-foot"><span>${p.formato !== "—" ? p.formato : ""}${p.nota ? (p.formato !== "—" ? ". " : "") + p.nota : ""}</span><a href="${p.src}" target="_blank" rel="noopener">Ver ficha</a></div>
-      </div>`).join("");
-    return `<article class="ing" id="ing-${i.id}">
-      <div><h3>${i.nombre}</h3><p class="rol">${i.rol}</p></div>
-      <div class="look"><b>En la etiqueta:</b> ${i.criterio}</div>
-      ${i.aviso ? `<div class="warn">${i.aviso}</div>` : ""}
-      ${prods ? `<div class="prods">${prods}</div>` : ""}
-      ${i.nota ? `<p class="rol">${i.nota}</p>` : ""}
-      ${used.length ? `<div class="usedin"><span>Lo usan:</span>${used.map(r => `<button type="button" class="dot f-${sabor(r)}" data-goto="${r.id}">${r.nombre}</button>`).join("")}</div>` : ""}
-    </article>`;
+  // Filtros
+  const zonas = PASILLOS.filter(p => INGREDIENTES.some(i => i.pasillo === p));
+  $("#ing-pas").innerHTML = [["", "Todas"], ...zonas.map(z => [z, z])].map(([v, t]) => `<button type="button" class="chip" data-ingpas="${v}" aria-pressed="${ingState.pas === v}">${t}</button>`).join("");
+  $("#ing-lista").setAttribute("aria-pressed", ingState.lista);
+  document.querySelectorAll("[data-ingview]").forEach(b => b.setAttribute("aria-pressed", b.dataset.ingview === ingState.view));
+  const enLista = new Set(agregarCompra().map(it => it.ing));
+  const q = norm(ingState.q).split(/\s+/).filter(Boolean);
+  const lista = INGREDIENTES.filter(i => {
+    if (ingState.pas && i.pasillo !== ingState.pas) return false;
+    if (ingState.lista && !enLista.has(i.id)) return false;
+    if (q.length) {
+      const hay = norm([i.nombre, i.rol, i.criterio.replace(/<[^>]+>/g, ""), i.pasillo, ...i.productos.flatMap(p => [p.marca, p.nombre, p.tienda])].join(" "));
+      if (!q.every(w => hay.includes(w))) return false;
+    }
+    return true;
+  });
+  $("#ing-count").textContent = `${lista.length} de ${INGREDIENTES.length} ingredientes` + (ingState.lista && !enLista.size ? ". Tu lista de la compra está vacía." : "");
+  const box = $("#ing-list");
+  box.className = ingState.view === "mosaico" ? "ing-list ingtiles" : "ing-list";
+  if (!lista.length) { box.innerHTML = `<div class="empty">No hay nada con esos filtros.<br><button type="button" class="btn-text" data-ingclear>Quitar filtros</button></div>`; return; }
+  box.innerHTML = lista.map(i => {
+    if (ingState.view === "detalle" || ingState.abierto === i.id) {
+      const cerrar = ingState.view === "mosaico" ? `<button type="button" class="x ing-close" data-ingcerrar aria-label="Cerrar ${esc(i.nombre)}">✕</button>` : "";
+      return `<article class="ing${ingState.view === "mosaico" ? " abierto" : ""}" id="ing-${i.id}">${cerrar}${fichaIngrediente(i, pvs)}</article>`;
+    }
+    const conV = i.productos.filter(p => p.v && p.v[2] != null);
+    const minG = conV.length ? Math.min(...conV.map(p => p.v[2])) : null;
+    const meta = i.productos.length ? `${i.productos.length} ${i.productos.length === 1 ? "marca" : "marcas"}${minG != null ? ` · desde ${fmt(minG)} g de grasa` : ""}` : "Qué mirar en la etiqueta";
+    return `<button type="button" class="ingtile${enLista.has(i.id) ? " enlista" : ""}" id="ing-${i.id}" data-ingabrir="${i.id}"><b>${i.nombre}</b><small>${i.pasillo}</small><small class="m">${meta}</small>${enLista.has(i.id) ? '<span class="badge">En tu lista</span>' : ""}</button>`;
   }).join("");
 }
+document.addEventListener("click", e => {
+  let b;
+  if ((b = e.target.closest("[data-ingabrir]"))) { ingState.abierto = b.dataset.ingabrir; renderIngredientes(); const el = document.getElementById("ing-" + ingState.abierto); if (el) el.scrollIntoView({ block: "nearest" }); return; }
+  if (e.target.closest("[data-ingcerrar]")) { const id = ingState.abierto; ingState.abierto = null; renderIngredientes(); const el = document.getElementById("ing-" + id); if (el) el.focus(); return; }
+  if ((b = e.target.closest("[data-ingpas]"))) { ingState.pas = b.dataset.ingpas; renderIngredientes(); return; }
+  if ((b = e.target.closest("[data-ingview]"))) { ingState.view = b.dataset.ingview; prefs.set("ingView", ingState.view); renderIngredientes(); return; }
+  if (e.target.closest("#ing-lista")) { ingState.lista = !ingState.lista; renderIngredientes(); return; }
+  if (e.target.closest("[data-ingclear]")) { Object.assign(ingState, { q: "", pas: "", lista: false }); $("#ing-q").value = ""; renderIngredientes(); return; }
+  if (e.target.closest("[data-gomarcas]")) { e.preventDefault(); $("#marcas").scrollIntoView({ block: "start" }); }
+});
+document.addEventListener("input", e => { if (e.target.id === "ing-q") { ingState.q = e.target.value.trim(); renderIngredientes(); } });
 
 /* ===================== TRUCOS ===================== */
 function renderGuide() {
@@ -3252,11 +3318,15 @@ function route() {
   const h = location.hash.slice(1);
   if (byId(h)) { showTab("recetas"); openRecipe(h, false); return; }
   closeRecipe();
-  if (h.startsWith("ing-") || h === "marcas") { showTab("compra", h); return; }
+  if (h.startsWith("ing-")) { irAMarca(h.slice(4)); return; }
+  if (h === "marcas") { showTab("compra", h); return; }
   if (h === "sync") { showTab("trucos", "sync"); return; }
   showTab(TABS.includes(h) ? h : prefs.get("tab", "recetas"));
 }
-function irAMarca(id) { closeRecipe(); history.replaceState(null, "", "#ing-" + id); showTab("compra", "ing-" + id); }
+function irAMarca(id) {
+  closeRecipe(); Object.assign(ingState, { q: "", pas: "", lista: false, abierto: id }); const qi = $("#ing-q"); if (qi) qi.value = "";
+  renderIngredientes(); history.replaceState(null, "", "#ing-" + id); showTab("compra", "ing-" + id);
+}
 
 document.addEventListener("click", e => {
   const g = e.target.closest("[data-gl]");
