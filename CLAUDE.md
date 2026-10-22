@@ -19,6 +19,7 @@ Recetas con mucha proteína y poca grasa que sacien, con filtros, plan semanal, 
 - `RECETAS` (array): una entrada por receta.
   - `id`, `corto`, `nombre`, `cat` (Desayuno, Tentempié, Comida, Merienda, Postre, Cena, Salsa; las salsas no salen en el plan), `met` y `ext`.
   - Valores: `raciones`, y `completa` / `racion` como `{kcal, p, g, c}`.
+  - Tiempo: `tiempoTxt` es la fuente de verdad. Al cargar se calculan `act` (elaboración), `esp` (espera) y `tot`. Escribe el texto como `"10 min + 12–15 min de airfryer + 2 h en la nevera"`: el primer tramo es trabajo; los tramos con nevera, congelador, horno, airfryer, cocción, enfriar o noche cuentan como espera (en un rango cuenta lo más largo). Si una cocción exige estar encima (remover), añade la receta a `TRABAJO`. El campo `min` ya no se usa para ordenar ni filtrar.
   - Contenido: `ingredientes`, `pasos`, `tabla`, `notaTabla`, `tips`, `conserva`.
   - `compra`: lista de `[ingrediente, cantidad para la receta entera, unidad]`; `null` significa «al gusto».
   - `usa`: los ids de `INGREDIENTES` que se enlazan a la guía de marcas.

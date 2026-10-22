@@ -109,6 +109,8 @@ main { padding-block: 6px 64px; }
 .sheet-filters[hidden] { display: none; }
 .fgroup { display: grid; gap: 8px; }
 .fgroup > span { font-weight: 700; font-size: .95rem; }
+#f-tiempo { display: grid; gap: 10px; }
+.tfil { display: grid; gap: 6px; }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .chip { border: 0; background: var(--pill); border-radius: 999px; padding: 7px 14px; font-size: .92rem; cursor: pointer; }
 .chip[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); font-weight: 600; }
@@ -544,6 +546,7 @@ tr.hl td { background: var(--ok-bg); }
         <div class="range"><label for="r-p">Mínimo de proteína <b id="r-p-v"></b></label><input type="range" id="r-p" min="0" max="45" step="1"></div>
         <div class="range"><label for="r-g">Máximo de grasa <b id="r-g-v"></b></label><input type="range" id="r-g" min="1" max="20" step="1"></div>
       </div>
+      <div class="fgroup"><span>Tiempo</span><div id="f-tiempo"></div></div>
       <div class="fgroup"><span>Proteína en polvo</span><div class="chips"><button type="button" class="chip" id="ver-pro" aria-pressed="false">Mostrar recetas con proteína en polvo</button></div><small class="muted">Variantes de algunas recetas con un cacito de proteína (whey). Ocúltalas si no tienes.</small></div>
       <div class="fgroup"><span>Valores en las fichas</span><div class="chips" id="f-base">
         <button type="button" class="chip" data-base="racion">Por ración</button>
@@ -573,7 +576,8 @@ tr.hl td { background: var(--ok-bg); }
             <option value="c">carbohidratos</option>
             <option value="p100">lo que más llena</option>
             <option value="nivel">dificultad</option>
-            <option value="min">tiempo</option>
+            <option value="min">tiempo total</option>
+            <option value="act">tiempo de elaboración</option>
             <option value="estrellas">mejor valoradas</option>
             <option value="nombre">nombre</option>
           </select>
@@ -2341,8 +2345,39 @@ const SABOR_MOMENTO = { Salsa: "vainilla", Tentempié: "avena", Desayuno: "avena
 const sabor = r => r.sabor || SABOR[r.id] || SABOR_MOMENTO[r.cat[0]] || "avena";
 const CATS = ["Desayuno", "Tentempié", "Comida", "Merienda", "Postre", "Cena", "Salsa"];
 const METS = ["Sin cocinar", "Sin horno", "Airfryer", "Sartén", "Cazo", "Microondas", "Tostadora", "Batidora"];
+/* Tiempo: «elaboración» es lo que estás trabajando; «espera», lo que hace sola (nevera, horno, airfryer, cocción). Sale de tiempoTxt. */
+const TRABAJO = { "arroz-con-leche": /cocción/ }; // tramos que parecen espera pero hay que estar encima
+function tiempos(r) {
+  const minDe = t => {
+    if (/toda la noche/.test(t)) return 480;
+    if (/^enfriar/.test(t.trim())) return 30;
+    const m = t.match(/(\d+)(?:–(\d+))?\s*(h|min)/); if (!m) return 0;
+    const n = +(m[2] || m[1]); // en un rango («3–4 h») cuenta lo más largo
+    return Math.round(m[3] === "h" ? n * 60 : n);
+  };
+  const [primero, ...resto] = r.tiempoTxt.split(" + ");
+  let act = minDe(primero), esp = 0;
+  for (const t of resto) {
+    if (/nevera|congelador|horno|airfryer|cocción|enfriar|noche/.test(t) && !(TRABAJO[r.id] && TRABAJO[r.id].test(t))) esp += minDe(t);
+    else act += minDe(t);
+  }
+  return { act, esp, tot: act + esp };
+}
+RECETAS.forEach(r => Object.assign(r, tiempos(r)));
+function durTxt(m) {
+  if (m < 60) return m + " min";
+  const h = Math.floor(m / 60), r = Math.round((m % 60) / 5) * 5;
+  return r ? `${h} h ${r} min` : `${h} h`;
+}
+const tiempoCorto = r => (r.esp ? `${durTxt(r.act)} + ${durTxt(r.esp)} de espera` : durTxt(r.act));
+// Filtros de tiempo: [clave del estado, título, opciones [valor, texto]]; null = sin límite
+const TFILTROS = [
+  ["tAct", "Elaboración (lo que trabajas tú)", [[5, "≤ 5 min"], [10, "≤ 10 min"], [15, "≤ 15 min"], [20, "≤ 20 min"]]],
+  ["tEsp", "Espera (nevera, horno, airfryer…)", [[0, "Sin espera"], [30, "≤ 30 min"], [120, "≤ 2 h"]]],
+  ["tTot", "Tiempo total", [[10, "≤ 10 min"], [20, "≤ 20 min"], [30, "≤ 30 min"], [60, "≤ 1 h"]]]
+];
 const EXTS = ["Para empezar", "Favoritas", "Cena ligera", "Sin huevo", "Sin gluten", "Sin lácteos", "Aprovechamiento"];
-const KEY_LABEL = { kcal: "calorías", p: "proteína", g: "grasa", c: "carbohidratos", p100: "lo que más llena", min: "tiempo", nombre: "nombre", nivel: "dificultad", estrellas: "valoración" };
+const KEY_LABEL = { kcal: "calorías", p: "proteína", g: "grasa", c: "carbohidratos", p100: "lo que más llena", min: "tiempo total", act: "tiempo de elaboración", nombre: "nombre", nivel: "dificultad", estrellas: "valoración" };
 const LIM = { kcal: 500, p: 0, g: 20 }; // valores de "sin límite" de los deslizadores
 const DIAS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
 const HUECOS = [["desayuno", "Desayuno", ["Desayuno"]], ["media", "Media mañana", ["Tentempié"]], ["comida", "Comida", ["Comida"]], ["merienda", "Merienda", ["Merienda", "Tentempié"]], ["cena", "Cena", ["Cena"]], ["postre", "Postre", ["Postre"]]];
@@ -2365,7 +2400,7 @@ const prefs = {
 };
 const state = {
   q: "", cat: new Set(), met: new Set(), ext: new Set(),
-  maxK: LIM.kcal, minP: LIM.p, maxG: LIM.g,
+  maxK: LIM.kcal, minP: LIM.p, maxG: LIM.g, tAct: null, tEsp: null, tTot: null,
   sort: prefs.get("sort", "kcal"), dir: prefs.get("dir", "asc"), base: prefs.get("base", "racion"),
   view: prefs.get("view", "mosaico"), verPro: prefs.get("verPro", false), opcion: "B", mult: 1, abierta: null, cookIdx: 0, semana: null, tengoOn: false
 };
@@ -2648,6 +2683,9 @@ function matches(r) {
   if (state.maxK < LIM.kcal && v.kcal > state.maxK) return false;
   if (state.minP > LIM.p && v.p < state.minP) return false;
   if (state.maxG < LIM.g && v.g > state.maxG) return false;
+  if (state.tAct != null && r.act > state.tAct) return false;
+  if (state.tEsp != null && r.esp > state.tEsp) return false;
+  if (state.tTot != null && r.tot > state.tTot) return false;
   if (state.q) {
     const hay = norm([r.nombre, ...r.cat, ...r.met, ...r.tags, ...r.ingredientes.flatMap(g => g.items).map(plainTxt)].join(" "));
     if (!norm(state.q).split(/\s+/).filter(Boolean).every(w => hay.includes(w))) return false;
@@ -2656,10 +2694,11 @@ function matches(r) {
 }
 function sortVal(r) {
   const v = valores(r, state.base);
-  if (state.sort === "estrellas") return (Saved.receta(r.id).estrellas || 0) * 1000 - r.min;
+  if (state.sort === "estrellas") return (Saved.receta(r.id).estrellas || 0) * 1000 - r.tot;
   if (state.sort === "p100") return p100(v);
-  if (state.sort === "min") return r.min;
-  if (state.sort === "nivel") return nivel(r) * 1000 + r.min; // a igual dificultad, la más rápida primero
+  if (state.sort === "min") return r.tot;
+  if (state.sort === "act") return r.act * 10000 + r.tot; // a igual trabajo, la que antes está lista
+  if (state.sort === "nivel") return nivel(r) * 1000 + r.tot; // a igual dificultad, la más rápida primero
   if (state.sort === "nombre") return norm(r.nombre);
   return v[state.sort];
 }
@@ -2671,7 +2710,7 @@ function renderGrid() {
     const d = typeof x === "string" ? x.localeCompare(y) : x - y;
     return state.dir === "asc" ? d : -d;
   });
-  const n = state.met.size + state.ext.size + (state.base === "completa" ? 1 : 0) + (state.maxK < LIM.kcal) + (state.minP > LIM.p) + (state.maxG < LIM.g);
+  const n = state.met.size + state.ext.size + (state.base === "completa" ? 1 : 0) + (state.maxK < LIM.kcal) + (state.minP > LIM.p) + (state.maxG < LIM.g) + TFILTROS.filter(([k]) => state[k] != null).length;
   $("#nfilters").hidden = !n; $("#nfilters").textContent = n;
   const nPro = RECETAS.filter(r => r.pro).length, total = RECETAS.filter(visible).length;
   const ocultas = !state.verPro && nPro ? ` (+${nPro} con proteína en polvo, ocultas)` : "";
@@ -2691,7 +2730,7 @@ function renderGrid() {
     const v = valores(r, state.base);
     const on = k => (state.sort === k ? ' class="on"' : "");
     const f = state.tengoOn ? faltan(r) : null;
-    const sub = f ? (f.length ? `Te falta: ${f.map(i => ingNombre(i).replace(/ \(.*\)$/, "").toLowerCase()).join(", ")}` : "✓ Tienes todo") : [r.opciones ? "Opción B" : "", state.base === "racion" && r.raciones > 1 ? `1 ración de ${r.raciones}` : "", durTxt(r.min)].filter(Boolean).join(" · ");
+    const sub = f ? (f.length ? `Te falta: ${f.map(i => ingNombre(i).replace(/ \(.*\)$/, "").toLowerCase()).join(", ")}` : "✓ Tienes todo") : [r.opciones ? "Opción B" : "", state.base === "racion" && r.raciones > 1 ? `1 ración de ${r.raciones}` : "", tiempoCorto(r)].filter(Boolean).join(" · ");
     return `<button type="button" class="card f-${sabor(r)}" data-open="${r.id}" aria-label="${esc(r.nombre)}, ${fmt(v.kcal)} kcal">
       <span class="blob"></span>${favMark(r)}
       <div class="kind">${[...r.cat.slice(0, 1), ...r.met, NIVEL_TXT[nivel(r)], ...(r.pro ? ["Con proteína"] : [])].map(t => `<span>${t}</span>`).join("")}</div>
@@ -2706,11 +2745,6 @@ function renderGrid() {
   grid.classList.toggle("tall", list.length >= 4);
   fitLast();
 }
-function durTxt(m) {
-  if (m < 60) return m + " min";
-  const h = Math.floor(m / 60), r = Math.round((m % 60) / 5) * 5;
-  return r ? `${h} h ${r} min` : `${h} h`;
-}
 function listRow(r) {
   const v = valores(r, state.base);
   const on = k => (state.sort === k ? " on" : "");
@@ -2724,14 +2758,14 @@ function listRow(r) {
   </button>`;
 }
 function cmpTable(list) {
-  const cols = [["nombre", "Receta"], ["kcal", "kcal"], ["p", "Proteína"], ["g", "Grasa"], ["c", "Carb."], ["p100", "Prot./100 kcal"], ["nivel", "Dificultad"], ["min", "Tiempo"]];
+  const cols = [["nombre", "Receta"], ["kcal", "kcal"], ["p", "Proteína"], ["g", "Grasa"], ["c", "Carb."], ["p100", "Prot./100 kcal"], ["nivel", "Dificultad"], ["act", "Elaboración"], ["min", "Total"]];
   const arrow = state.dir === "asc" ? " ↑" : " ↓";
   const head = cols.map(([k, t], i) => `<th class="${i ? "n" : ""}"${state.sort === k ? ` aria-sort="${state.dir === "asc" ? "ascending" : "descending"}"` : ""}><button type="button" data-sortkey="${k}">${t}${state.sort === k ? arrow : ""}</button></th>`).join("");
   const mins = m => (m < 60 ? m + " min" : fmt(Math.round(m / 30) / 2) + " h");
   const rows = list.map(r => {
     const v = valores(r, state.base);
     return `<tr class="f-${sabor(r)}"><td class="name"><button type="button" data-open="${r.id}"><i></i>${r.nombre}${r.opciones ? " (B)" : ""}${Saved.receta(r.id).fav ? " ♥" : ""}</button></td>
-      <td class="n">${fmt(v.kcal)}</td><td class="n p">${fmt(v.p)} g</td><td class="n g">${fmt(v.g)} g</td><td class="n c">${fmt(v.c)} g</td><td class="n">${fmt(p100(v))} g</td><td class="n">${NIVEL_TXT[nivel(r)]}</td><td class="n">${mins(r.min)}</td></tr>`;
+      <td class="n">${fmt(v.kcal)}</td><td class="n p">${fmt(v.p)} g</td><td class="n g">${fmt(v.g)} g</td><td class="n c">${fmt(v.c)} g</td><td class="n">${fmt(p100(v))} g</td><td class="n">${NIVEL_TXT[nivel(r)]}</td><td class="n">${mins(r.act)}</td><td class="n">${mins(r.tot)}</td></tr>`;
   }).join("");
   return `<div class="cmp-wrap"><table class="cmp"><thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table></div>`;
 }
@@ -2791,7 +2825,7 @@ function renderDetail(r) {
         <div class="hero-actions"><button type="button" class="hbtn" id="fav-btn" aria-pressed="false">♡ Favorita</button></div></div>
       <div class="facts">${[...r.cat, ...r.met, NIVEL_TXT[nivel(r)]].map(x => `<span>${x}</span>`).join("")}</div>
       <h2 id="d-title">${r.nombre}</h2>
-      <div class="facts"><span>${r.tiempoTxt}</span><span>Raciones: ${r.racionesTxt}</span>${r.molde ? `<span>${r.molde}</span>` : ""}</div>
+      <div class="facts"><span>${r.tiempoTxt}</span><span>Elaboración: ${durTxt(r.act)}${r.esp ? ` · espera: ${durTxt(r.esp)}` : " · sin espera"}</span><span>Raciones: ${r.racionesTxt}</span>${r.molde ? `<span>${r.molde}</span>` : ""}</div>
       ${optSel}
       <div class="hero-num"><div class="big">${fmt(v1.kcal)}<small>kcal</small></div><div class="per">${r.raciones > 1 ? `por ración<br>${fmt(vc.kcal)} kcal la receta entera` : "la ración"}</div></div>
       ${splitHTML(v1)}
@@ -3549,10 +3583,19 @@ function syncRanges() {
 $("#r-kcal").addEventListener("input", e => { state.maxK = +e.target.value; syncRanges(); renderGrid(); });
 $("#r-p").addEventListener("input", e => { state.minP = +e.target.value; syncRanges(); renderGrid(); });
 $("#r-g").addEventListener("input", e => { state.maxG = +e.target.value; syncRanges(); renderGrid(); });
+$("#f-tiempo").innerHTML = TFILTROS.map(([k, t, ops]) => `<div class="tfil"><small class="muted">${t}</small><div class="chips">${ops.map(([v, l]) => `<button type="button" class="chip" aria-pressed="false" data-tf="${k}|${v}">${l}</button>`).join("")}</div></div>`).join("");
+function syncTiempo() { document.querySelectorAll("[data-tf]").forEach(b => { const [k, v] = b.dataset.tf.split("|"); b.setAttribute("aria-pressed", state[k] === +v); }); }
+$("#f-tiempo").addEventListener("click", e => {
+  const b = e.target.closest("[data-tf]"); if (!b) return;
+  const [k, v] = b.dataset.tf.split("|");
+  state[k] = state[k] === +v ? null : +v; // pulsar otra vez la opción marcada la quita
+  syncTiempo(); renderGrid();
+});
 function clearFilters() {
   state.q = ""; $("#q").value = "";
   [state.cat, state.met, state.ext].forEach(s => s.clear());
   state.maxK = LIM.kcal; state.minP = LIM.p; state.maxG = LIM.g; syncRanges();
+  TFILTROS.forEach(([k]) => (state[k] = null)); syncTiempo();
   state.base = "racion"; prefs.set("base", state.base); syncBase();
   document.querySelectorAll("[data-v]").forEach(c => c.setAttribute("aria-pressed", "false"));
   renderGrid();
