@@ -390,6 +390,11 @@ tr.hl td { background: var(--ok-bg); }
   #panel-compra .panelcard { box-shadow: none; padding: 0; }
   .checklist li label { padding: 3px 0; }
 }
+.usedin-d summary { cursor: pointer; font-size: .9rem; font-weight: 600; color: var(--ink-soft); padding: 4px 0; list-style: none; display: flex; align-items: center; gap: 6px; }
+.usedin-d summary::-webkit-details-marker { display: none; }
+.usedin-d summary::before { content: "▸"; transition: transform .15s; }
+.usedin-d[open] summary::before { transform: rotate(90deg); }
+.usedin-d .usedin { margin-top: 6px; }
 .ingtools { display: grid; gap: 10px; margin-top: 6px; }
 .ingtools-row { display: flex; gap: 8px 12px; align-items: center; flex-wrap: wrap; justify-content: space-between; }
 .ingtiles { grid-template-columns: repeat(auto-fill, minmax(min(100%, 160px), 1fr)) !important; gap: 10px; }
@@ -3069,7 +3074,7 @@ function fichaIngrediente(i, pvs) {
     ${i.aviso ? `<div class="warn">${i.aviso}</div>` : ""}
     ${prods ? `<div class="prods">${prods}</div>` : `<p class="rol">Sin marcas concretas: vale cualquiera que cumpla lo de la etiqueta.</p>`}
     ${i.nota ? `<p class="rol">${i.nota}</p>` : ""}
-    ${used.length ? `<div class="usedin"><span>Lo usan:</span>${used.map(r => `<button type="button" class="dot f-${sabor(r)}" data-goto="${r.id}">${r.nombre}</button>`).join("")}</div>` : ""}`;
+    ${used.length ? `<details class="usedin-d"><summary>Lo usan ${used.length} ${used.length === 1 ? "receta" : "recetas"}</summary><div class="usedin">${used.map(r => `<button type="button" class="dot f-${sabor(r)}" data-goto="${r.id}">${r.nombre}</button>`).join("")}</div></details>` : ""}`;
 }
 function renderIngredientes() {
   const pvs = v => `<div class="pv"><div><b>${fmt(v[0])}</b><span>kcal</span></div><div class="p"><b>${fmt(v[1])}</b><span>prot.</span></div><div class="g"><b>${fmt(v[2])}</b><span>grasa</span></div><div class="c"><b>${fmt(v[3])}</b><span>carb.</span></div></div>`;
