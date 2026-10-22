@@ -1827,6 +1827,7 @@ const INGREDIENTES = [
     productos: [
       { marca: "Brüggen (para Mercadona)", nombre: "Copos de avena", tienda: "Mercadona", formato: "500 g", v: [375, 14, 7, 59], src: OFF("4008713756661") },
       { marca: "Aldi", nombre: "Copos de avena XXL", tienda: "Aldi", formato: "—", v: [363, 12, 6.9, 59.6], src: OFF("2004060087153") },
+      { marca: "HSN", nombre: "Harina de avena", tienda: "Tienda online HSN", formato: "1 kg", v: [395, 13, 7, 68], src: OFF("5060326271688"), nota: "Ya triturada: te ahorra la picadora en tortitas, bizcocho, brownie y cookies." },
       { marca: "Ecocesta", nombre: "Copos gruesos de avena integral (ecológico)", tienda: "Carrefour, Alcampo, Consum", formato: "500 g", v: [347, 10.9, 5.7, 57.6], src: OFF("8422584013122") }
     ] },
   { id: "galletas", nombre: "Galletas para la base (alternativa)", pasillo: "Despensa", rol: "Si prefieres la base de galleta clásica en vez de avena.",
@@ -1871,11 +1872,12 @@ const INGREDIENTES = [
       { marca: "Pescanova", nombre: "Medallones de merluza (al natural)", tienda: "Sin dato de tienda", formato: "475 g", v: [77, 15.8, 1.5, null], src: OFF("8410063093123") }
     ] },
   { id: "cacao", nombre: "Cacao puro desgrasado", pasillo: "Despensa", rol: "Para la mousse y las variantes de chocolate.",
-    criterio: "Que ponga <b>«cacao puro»</b> y no lleve azúcar. Si dice «desgrasado», mejor.",
+    criterio: "Que ponga <b>«cacao puro»</b> y no lleve azúcar. Mejor <b>desgrasado</b>: busca <b>10–12% de grasa</b> (o de «manteca de cacao»).",
     aviso: "No lo confundas con el cacao soluble de desayuno (tipo Cola Cao o Nesquik): ese es casi todo azúcar.",
     productos: [
       { marca: "Valor", nombre: "Cacao puro desgrasado en polvo", tienda: "Mercadona", formato: "265 g", v: [375, 25.5, 16, 16.3], src: OFF("8410109121551"), nota: "La ficha da 16 g de grasa por 100 g: en la mousse (15 g) son unos 2 g." },
-      { marca: "Valor", nombre: "100% cacao puro natural", tienda: "Alcampo, Consum", formato: "250 g", v: [339, 25, 11, 17], src: OFF("8410109115543"), nota: "Menos grasa por 100 g según su ficha." }
+      { marca: "Valor", nombre: "100% cacao puro natural", tienda: "Alcampo, Consum", formato: "250 g", v: [339, 25, 11, 17], src: OFF("8410109115543"), nota: "Menos grasa por 100 g según su ficha." },
+      { marca: "HSN", nombre: "Cacao desgrasado en polvo (FoodSeries)", tienda: "Tienda online HSN", formato: "—", v: null, src: "https://www.hsnstore.com/marcas/food-series/cacao-desgrasado-en-polvo", unv: true, nota: "HSN indica 10–12% de manteca de cacao (unos 11 g de grasa por 100 g). No he podido leer su tabla nutricional completa: comprueba el envase." }
     ] },
   { id: "gelatina", nombre: "Gelatina neutra en láminas", pasillo: "Despensa", rol: "Para que cuajen la cheesecake de nevera y la mousse.",
     criterio: "<b>Neutra</b> (sin sabor) y <b>en láminas</b>. Cada lámina pesa unos 2 g.",
@@ -1962,6 +1964,7 @@ const INGREDIENTES = [
     aviso: "Sí tiene calorías: la proteína aporta 4 kcal por gramo. Lo que no tiene calorías son los «saborizantes en polvo» (tipo FlavDrops), que solo dan sabor y no son proteína. Las de sabores ya vienen endulzadas: prueba antes de añadir edulcorante.",
     productos: [
       { marca: "HSN", nombre: "Evowhey 2.0", tienda: "Tienda online HSN", formato: "Cacito de 30 g", v: [362, 74, 3.8, 6.5], src: OFF("5060326270001"), nota: "La de referencia para los cálculos del libro." },
+      { marca: "HSN", nombre: "Evolate 2.0 (whey isolate)", tienda: "Tienda online HSN", formato: "Cacito de 30 g", v: [380, 90, 1, 2.4], src: OFF("5060326271510"), nota: "Isolate: más proteína y casi sin grasa ni lactosa. Algo más cara." },
       { marca: "Myprotein", nombre: "Proteína whey (Impact Whey)", tienda: "Tienda online Myprotein", formato: "—", v: [395, 77, 6.2, 7.1], src: OFF("5056307356451") },
       { marca: "Masmusculo", nombre: "Whey chocolate blanco con fresa", tienda: "Tienda online Masmusculo", formato: "—", v: [388, 72.8, 4.6, 13.4], src: OFF("8436619590878"), nota: "Para la tarta de chocolate blanco. Sabores como este existen en varias marcas." },
       { marca: "Sin marca en la ficha", nombre: "Whey protein vainilla", tienda: "Sin dato de tienda", formato: "—", v: [390, 80, 4.9, 6.8], src: OFF("8414192347621") }
