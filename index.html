@@ -1877,6 +1877,7 @@ const INGREDIENTES = [
     productos: [
       { marca: "Valor", nombre: "Cacao puro desgrasado en polvo", tienda: "Mercadona", formato: "265 g", v: [375, 25.5, 16, 16.3], src: OFF("8410109121551"), nota: "La ficha da 16 g de grasa por 100 g: en la mousse (15 g) son unos 2 g." },
       { marca: "Valor", nombre: "100% cacao puro natural", tienda: "Alcampo, Consum", formato: "250 g", v: [339, 25, 11, 17], src: OFF("8410109115543"), nota: "Menos grasa por 100 g según su ficha." },
+      { marca: "Prozis", nombre: "Cacao desgrasado (ecológico)", tienda: "Online (Prozis)", formato: "250 g", v: null, src: "https://www.prozis.com/es/es/prozis/cacao-desgrasado-250-g", unv: true, nota: "Descrito como desgrasado y sin azúcares añadidos. No he podido leer su tabla nutricional: comprueba que tenga 10–12% de grasa." },
       { marca: "HSN", nombre: "Cacao desgrasado en polvo (FoodSeries)", tienda: "Tienda online HSN", formato: "—", v: null, src: "https://www.hsnstore.com/marcas/food-series/cacao-desgrasado-en-polvo", unv: true, nota: "HSN indica 10–12% de manteca de cacao (unos 11 g de grasa por 100 g). No he podido leer su tabla nutricional completa: comprueba el envase." }
     ] },
   { id: "gelatina", nombre: "Gelatina neutra en láminas", pasillo: "Despensa", rol: "Para que cuajen la cheesecake de nevera y la mousse.",
@@ -1960,14 +1961,16 @@ const INGREDIENTES = [
     aviso: "Aunque sea «light», tiene unos 11–12 g de grasa por 100 g. Por eso el libro no lo usa por defecto.",
     productos: [{ marca: "Philadelphia", nombre: "Philadelphia Light", tienda: "Lidl, Alcampo, Ahorramás", formato: "200 g", v: [154, 5.9, 12, 4.1], src: OFF("7622210103338") }] },
   { id: "proteina", nombre: "Proteína en polvo (whey)", pasillo: "Despensa", rol: "Para las recetas «con proteína en polvo» (se activan en Filtros).",
-    criterio: "Whey o isolate de <b>vainilla o chocolate</b> con <b>≥ 70 g de proteína</b> por 100 g y <b>≤ 7 g de grasa</b>. Un cacito (25–30 g) son unas 90–120 kcal, casi todas de proteína.",
-    aviso: "Sí tiene calorías: la proteína aporta 4 kcal por gramo. Lo que no tiene calorías son los «saborizantes en polvo» (tipo FlavDrops), que solo dan sabor y no son proteína. Las de sabores ya vienen endulzadas: prueba antes de añadir edulcorante.",
+    criterio: "Whey de <b>vainilla, chocolate u otro sabor</b> con <b>≥ 70 g de proteína</b> por 100 g y <b>≤ 7 g de grasa</b>. Un cacito (25–30 g) son unas 90–120 kcal, casi todas de proteína. Evita los «gainer» o «volumen»: llevan muchos hidratos.",
+    aviso: "<b>Concentrado o isolate:</b> el concentrado (Evowhey, Real Whey, Impact Whey) tiene 3–6 g de grasa por 100 g, es decir, 1–2 g por cacito. El isolate (Evolate, Hydro Isolate, Impact Isolate) baja a menos de 1 g y casi no tiene lactosa, pero es más caro. Para estas recetas, la diferencia es de 1–1,5 g de grasa por cacito: cualquiera vale. Sí tiene calorías: lo que no tiene son los «saborizantes en polvo» (tipo FlavDrops), que no son proteína.",
     productos: [
-      { marca: "HSN", nombre: "Evowhey 2.0", tienda: "Tienda online HSN", formato: "Cacito de 30 g", v: [362, 74, 3.8, 6.5], src: OFF("5060326270001"), nota: "La de referencia para los cálculos del libro." },
-      { marca: "HSN", nombre: "Evolate 2.0 (whey isolate)", tienda: "Tienda online HSN", formato: "Cacito de 30 g", v: [380, 90, 1, 2.4], src: OFF("5060326271510"), nota: "Isolate: más proteína y casi sin grasa ni lactosa. Algo más cara." },
-      { marca: "Myprotein", nombre: "Proteína whey (Impact Whey)", tienda: "Tienda online Myprotein", formato: "—", v: [395, 77, 6.2, 7.1], src: OFF("5056307356451") },
-      { marca: "Masmusculo", nombre: "Whey chocolate blanco con fresa", tienda: "Tienda online Masmusculo", formato: "—", v: [388, 72.8, 4.6, 13.4], src: OFF("8436619590878"), nota: "Para la tarta de chocolate blanco. Sabores como este existen en varias marcas." },
-      { marca: "Sin marca en la ficha", nombre: "Whey protein vainilla", tienda: "Sin dato de tienda", formato: "—", v: [390, 80, 4.9, 6.8], src: OFF("8414192347621") }
+      { marca: "HSN", nombre: "Evowhey 2.0 (concentrado)", tienda: "Online (HSN)", formato: "Cacito de 30 g", v: [362, 74, 3.8, 6.5], src: OFF("5060326270001"), nota: "La de referencia para los cálculos del libro." },
+      { marca: "HSN", nombre: "Evolate 2.0 (isolate)", tienda: "Online (HSN)", formato: "Cacito de 30 g", v: [380, 90, 1, 2.4], src: OFF("5060326271510") },
+      { marca: "Prozis", nombre: "Real Whey 100% (concentrado)", tienda: "Online (Prozis)", formato: "—", v: [382, 76, 6.3, 5.4], src: OFF("5600380896375") },
+      { marca: "Prozis", nombre: "100% Whey Hydro Isolate Zero (isolate)", tienda: "Online (Prozis)", formato: "—", v: [365, 90, 0.6, 0], src: OFF("5600380895835"), nota: "La que menos grasa tiene de la lista." },
+      { marca: "Myprotein", nombre: "Impact Whey (concentrado)", tienda: "Online (Myprotein)", formato: "—", v: [395, 77, 6.2, 7.1], src: OFF("5056307356451") },
+      { marca: "Myprotein", nombre: "Impact Whey Isolate, vainilla", tienda: "Online (Myprotein)", formato: "—", v: [361, 82, 0.9, 6.1], src: "https://www.fatsecret.es/calor%C3%ADas-nutrici%C3%B3n/myprotein/impact-whey-isolate-vainilla/100g", unv: true, nota: "Dato de FatSecret (colaborativo), no de la etiqueta oficial." },
+      { marca: "Masmusculo", nombre: "Whey chocolate blanco con fresa", tienda: "Online (Masmusculo)", formato: "—", v: [388, 72.8, 4.6, 13.4], src: OFF("8436619590878"), nota: "Para la tarta de chocolate blanco. Myprotein y Prozis también tienen sabor chocolate blanco." }
     ] },
   { id: "chocolate-negro", nombre: "Chocolate negro 85%", pasillo: "Despensa", rol: "Para las cookies. Poquito: es casi la mitad grasa.",
     criterio: "<b>85% de cacao o más</b>, sin azúcares añadidos si lo encuentras. Unos 15 g por bandeja de cookies.",
