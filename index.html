@@ -526,6 +526,7 @@ tr.hl td { background: var(--ok-bg); }
         <div class="range"><label for="r-p">Mínimo de proteína <b id="r-p-v"></b></label><input type="range" id="r-p" min="0" max="45" step="1"></div>
         <div class="range"><label for="r-g">Máximo de grasa <b id="r-g-v"></b></label><input type="range" id="r-g" min="1" max="20" step="1"></div>
       </div>
+      <div class="fgroup"><span>Proteína en polvo</span><div class="chips"><button type="button" class="chip" id="ver-pro" aria-pressed="false">Mostrar recetas con proteína en polvo</button></div><small class="muted">Variantes de algunas recetas con un cacito de proteína (whey). Ocúltalas si no tienes.</small></div>
       <div class="fgroup"><span>Valores en las fichas</span><div class="chips" id="f-base">
         <button type="button" class="chip" data-base="racion">Por ración</button>
         <button type="button" class="chip" data-base="completa">Receta completa</button>
@@ -1490,6 +1491,185 @@ const RECETAS = [
     conserva: { nevera: "1–2 días. Fría también está buena.", congelar: "No." },
     compra: [["calabacin", 1, "ud."], ["cebolla", 0.5, "ud."], ["huevos", 1, "ud."], ["claras", 100, "ml"], ["spray", null]],
     usa: ["huevos", "claras", "spray"]
+  },
+  {
+    id: "cookies-avena", corto: "cookies de avena", nombre: "Cookies de avena y chocolate negro",
+    cat: ["Merienda", "Tentempié"], met: ["Airfryer"], ext: [], tags: ["Chocolate", "Hidratos para entrenar"],
+    gluten: "avena", lacteos: true,
+    raciones: 4, racionesTxt: "12 cookies (ración = 3)", tiempoTxt: "10 min + 10–12 min de airfryer", min: 25,
+    molde: "Papel de horno. Freidora Princess 10 L",
+    completa: { kcal: 590, p: 23, g: 15, c: 84 }, racion: { kcal: 148, p: 5.8, g: 3.8, c: 21 },
+    ingredientes: [{"t": "Ingredientes", "items": ["Copos de avena: {100} g (la mitad triturada como harina)", "Plátano muy maduro: {1} (unos {100} g sin piel)", "Claras de huevo: {1} (unos {35} ml)", "Yogur natural 0%: {50} g", "Chocolate negro 85%: {15} g, picado en trocitos", "Levadura química: {0.5} cdta., una pizca de sal, canela, vainilla y edulcorante al gusto"]}],
+    pasos: ["<b>Tritura la mitad de la avena</b> hasta que quede como harina; la otra mitad, entera (da la textura de cookie).", "<b>Chafa el plátano</b> con un tenedor y mézclalo con la clara, el yogur, la vainilla y el edulcorante.", "<b>Añade</b> la avena (las dos), la levadura, la sal y la canela, y por último el chocolate. Deja reposar 5 min [[t:5]]: la masa espesa.", "<b>Precalienta</b> la freidora a 170 °C durante 3 minutos [[t:3]].", "<b>Forma 12 bolitas</b> sobre papel de horno y aplástalas con la cuchara a 1 cm de grosor: no se extienden solas.", "<b>Hornea</b> con la bandeja en la posición media, a <b>170 °C durante 10–12 min</b> [[t:10]], hasta que los bordes estén dorados. Si no caben sin tocarse, en dos tandas.", "<b>Deja enfriar</b> 10 min antes de moverlas: al salir están blandas y se asientan al enfriar."],
+    tabla: {"cols": ["Las 12", "Ración (3 cookies)"], "rows": [["Calorías", "~590 kcal", "~148 kcal"], ["Proteínas", "~23 g", "~5,8 g"], ["Grasas", "~15 g", "~3,8 g"], ["Carbohidratos", "~84 g", "~21 g"]]},
+    notaTabla: "Sí, son sobre todo hidratos (la avena), y eso está bien 1–2 horas antes del gimnasio. La mitad de la grasa viene del chocolate: por eso solo 15 g. Cuentas con chocolate 85% de unos 568 kcal y 49 g de grasa por 100 g (Valor 0% azúcares añadidos).",
+    tips: ["<b>Para merendar con proteína:</b> 3 cookies con un vaso de leche desnatada o un yogur 0% (+15 g de proteína). O la versión con proteína en polvo, si la tienes activada.", "<b>Una cookie de pastelería</b> ronda las 200–250 kcal cada una; aquí son unas 50."],
+    conserva: { nevera: "4 días en un táper (se ablandan un poco).", congelar: "Sí, hasta 2 meses. Se descongelan en 15 min o 1 min en la airfryer a 160 °C." },
+    compra: [["avena", 100, "g"], ["platano", 1, "ud. maduro"], ["claras", 35, "ml"], ["yogur", 50, "g"], ["chocolate-negro", 15, "g"], ["levadura", 0.5, "cdta."], ["canela", null], ["vainilla", null], ["edulcorante", null]],
+    usa: ["avena", "chocolate-negro", "yogur", "claras"]
+  },
+  {
+    id: "cookies-pro", corto: "cookies proteicas", nombre: "Cookies proteicas de avena y chocolate",
+    pro: true, base: "cookies-avena",
+    cat: ["Merienda", "Tentempié"], met: ["Airfryer"], ext: [], tags: ["Con proteína en polvo", "Chocolate"],
+    gluten: "avena", lacteos: true,
+    raciones: 4, racionesTxt: "12 cookies (ración = 3)", tiempoTxt: "10 min + 10–12 min de airfryer", min: 25,
+    molde: "Papel de horno. Freidora Princess 10 L",
+    completa: { kcal: 586, p: 41, g: 14, c: 68.5 }, racion: { kcal: 146.5, p: 10.2, g: 3.5, c: 17.1 },
+    ingredientes: [{"t": "Ingredientes", "items": ["Copos de avena: {70} g (la mitad triturada)", "Proteína en polvo de vainilla o chocolate: {30} g (un cacito)", "Plátano muy maduro: {1} (unos {100} g sin piel)", "Claras de huevo: {1} (unos {35} ml)", "Yogur natural 0%: {50} g", "Chocolate negro 85%: {15} g, picado", "Levadura química: {0.5} cdta., una pizca de sal y canela"]}],
+    pasos: ["<b>Tritura la mitad de la avena</b>; la otra mitad, entera.", "<b>Chafa el plátano</b> y mézclalo con la clara y el yogur.", "<b>Añade</b> la avena, la proteína, la levadura, la sal y la canela, y por último el chocolate. Si la masa queda muy seca (la proteína absorbe mucho), una cucharada más de yogur. Reposa 5 min [[t:5]].", "<b>Precalienta</b> la freidora a 170 °C durante 3 minutos [[t:3]].", "<b>Forma 12 bolitas</b> sobre papel de horno y aplástalas a 1 cm.", "<b>Hornea</b> con la bandeja en la posición media, a <b>170 °C durante 9–11 min</b> [[t:9]]. Con proteína se secan antes: sácalas cuando los bordes empiecen a dorarse.", "<b>Deja enfriar</b> 10 min antes de moverlas."],
+    tabla: {"cols": ["Las 12", "Ración (3 cookies)"], "rows": [["Calorías", "~586 kcal", "~147 kcal"], ["Proteínas", "~41 g", "~10 g"], ["Grasas", "~14 g", "~3,5 g"], ["Carbohidratos", "~68,5 g", "~17 g"]]},
+    notaTabla: "Mismas calorías que las normales, pero casi el doble de proteína y menos hidratos: la proteína sustituye a parte de la avena. Cuentas con proteína whey de unos 362 kcal, 74 g de proteína y 3,8 g de grasa por 100 g (HSN Evowhey 2.0). Con otra marca cambia un poco: mira su etiqueta.",
+    tips: ["<b>No te pases de horno:</b> la proteína en polvo hace que se sequen y queden duras si se hornean de más."],
+    conserva: { nevera: "4 días en un táper.", congelar: "Sí, hasta 2 meses." },
+    compra: [["avena", 70, "g"], ["proteina", 30, "g"], ["platano", 1, "ud. maduro"], ["claras", 35, "ml"], ["yogur", 50, "g"], ["chocolate-negro", 15, "g"], ["levadura", 0.5, "cdta."], ["canela", null]],
+    usa: ["avena", "proteina", "chocolate-negro", "yogur"]
+  },
+  {
+    id: "tortitas-pro", corto: "tortitas proteicas", nombre: "Tortitas proteicas de avena",
+    pro: true, base: "tortitas",
+    cat: ["Desayuno"], met: ["Sartén"], ext: ["Genera yemas"], tags: ["Con proteína en polvo", "Alta proteína"],
+    gluten: "avena", lacteos: true,
+    raciones: 1, racionesTxt: "1 (unas 4–5 tortitas pequeñas)", tiempoTxt: "20 min", min: 20,
+    completa: { kcal: 245, p: 30, g: 4, c: 21 }, racion: { kcal: 245, p: 30, g: 4, c: 21 },
+    ingredientes: [{"t": "Masa", "items": ["Copos de avena: {30} g", "Proteína en polvo de vainilla: {15} g (medio cacito)", "Claras de huevo: {3} (unos {100} ml)", "Queso fresco batido 0%: {50} g", "Levadura química: {0.5} cdta. y canela", "Spray de aceite para la sartén"]}, {"t": "Toppings (recomendados)", "items": ["Frutos rojos: {100} g", "Skyr o queso batido 0%: {50} g"]}],
+    pasos: ["<b>Tritura la avena</b> hasta que quede como harina.", "<b>Mezcla</b> la harina de avena, la proteína, las claras, el queso batido, la levadura y la canela hasta tener una masa lisa, sin grumos de proteína.", "<b>Reposa 5 min</b> [[t:5]]. Si queda muy espesa, una cucharada de agua o leche.", "<b>Calienta</b> una sartén antiadherente a fuego medio con 1–2 pulverizaciones de spray. Con proteína se doran antes: mejor fuego medio-bajo.", "<b>Cocina</b> un cucharón pequeño por tortita. Cuando salgan burbujas (1–2 min) [[t:2]], dales la vuelta y 1 min más.", "<b>Sirve</b> con los toppings."],
+    tabla: {"cols": ["Sin toppings", "Con frutos rojos + skyr"], "rows": [["Calorías", "~245 kcal", "~325 kcal"], ["Proteínas", "~30 g", "~35 g"], ["Grasas", "~4 g", "~4,5 g"], ["Carbohidratos", "~21 g", "~31 g"]]},
+    notaTabla: "Como las [[tortitas]] normales, con 10 g menos de avena y medio cacito de proteína: +10 g de proteína. Cuentas con proteína whey de unos 362 kcal, 74 g de proteína y 3,8 g de grasa por 100 g (HSN Evowhey 2.0). Con otra marca cambia un poco: mira su etiqueta.",
+    tips: ["<b>Con proteína de chocolate</b> salen tortitas de chocolate sin añadir cacao."],
+    conserva: { nevera: "2 días en un táper.", congelar: "Sí, hasta 1 mes, separadas con papel de horno." },
+    compra: [["avena", 30, "g"], ["proteina", 15, "g"], ["claras", 100, "ml"], ["batido", 100, "g"], ["levadura", 0.5, "cdta."], ["frutos", 100, "g"], ["canela", null], ["spray", null]],
+    usa: ["avena", "proteina", "claras", "batido"]
+  },
+  {
+    id: "overnight-pro", corto: "overnight oats proteicos", nombre: "Avena de la noche anterior con proteína",
+    pro: true, base: "overnight-oats",
+    cat: ["Desayuno"], met: ["Sin horno"], ext: ["Sin huevo"], tags: ["Con proteína en polvo", "Se prepara la noche antes"],
+    gluten: "avena", lacteos: true,
+    raciones: 1, racionesTxt: "1 tarro", tiempoTxt: "5 min + toda la noche en la nevera", min: 5,
+    completa: { kcal: 405, p: 42, g: 5, c: 43 }, racion: { kcal: 405, p: 42, g: 5, c: 43 },
+    ingredientes: [{"t": "Ingredientes", "items": ["Copos de avena: {40} g", "Proteína en polvo de vainilla: {25} g (un cacito pequeño)", "Queso fresco batido 0%: {150} g", "Leche desnatada: {150} ml (algo más que la normal: la proteína absorbe)", "Frutos rojos congelados: {100} g", "Canela al gusto"]}],
+    pasos: ["<b>Mezcla bien la proteína con la leche</b> primero, en el tarro, hasta que no queden grumos.", "<b>Añade</b> la avena, el queso batido y la canela y remueve.", "<b>Pon los frutos rojos</b> por encima, congelados tal cual.", "<b>Tapa y a la nevera</b> toda la noche, o mínimo 4 horas [[t:240]]. Por la mañana remueve; si está muy espeso, un chorrito de leche."],
+    tabla: {"cols": ["Tarro"], "rows": [["Calorías", "~405 kcal"], ["Proteínas", "~42 g"], ["Grasas", "~5 g"], ["Carbohidratos", "~43 g"]]},
+    notaTabla: "El desayuno con más proteína del libro: 42 g. Como la [[overnight-oats]] normal más un cacito de proteína. Cuentas con proteína whey de unos 362 kcal, 74 g de proteína y 3,8 g de grasa por 100 g (HSN Evowhey 2.0). Con otra marca cambia un poco: mira su etiqueta.",
+    tips: ["<b>Con proteína de vainilla no hace falta edulcorante</b>: la mayoría ya vienen endulzadas."],
+    conserva: { nevera: "Hasta 3 días en tarros cerrados.", congelar: "No." },
+    compra: [["avena", 40, "g"], ["proteina", 25, "g"], ["batido", 150, "g"], ["leche", 150, "ml"], ["frutos", 100, "g"], ["canela", null]],
+    usa: ["avena", "proteina", "batido", "leche", "frutos"]
+  },
+  {
+    id: "mousse-pro", corto: "mousse con proteína", nombre: "Mousse de chocolate con proteína en polvo",
+    pro: true, base: "mousse",
+    cat: ["Merienda", "Postre"], met: ["Sin horno"], ext: ["Sin huevo", "Sin gluten"], tags: ["Con proteína en polvo", "La que menos grasa tiene"],
+    gluten: "natural", lacteos: true,
+    raciones: 2, racionesTxt: "2 vasitos", tiempoTxt: "10 min + 2 h en la nevera", min: 130,
+    completa: { kcal: 311, p: 51.5, g: 3.3, c: 17 }, racion: { kcal: 155, p: 26, g: 1.7, c: 8.5 },
+    ingredientes: [{"t": "Ingredientes", "items": ["Queso fresco batido 0% M.G.: {300} g", "Proteína en polvo de chocolate: {25} g", "Cacao puro desgrasado: {10} g (1 cucharada)", "Gelatina neutra: {2} láminas (unos {4} g)", "Leche desnatada: {60} ml", "Una pizca de sal y edulcorante solo si hace falta"]}],
+    pasos: ["<b>Hidrata la gelatina</b> en agua fría 5 minutos [[t:5]].", "<b>Mezcla</b> la proteína y el cacao con 3–4 cucharadas del queso batido hasta tener una pasta lisa. Después añade el resto del queso y bate.", "<b>Disuelve la gelatina</b> en la leche muy caliente (sin hervir).", "<b>Atempera:</b> 2 cucharadas de la crema a la leche con gelatina, mezcla, y vierte todo sobre la crema batiendo con varillas.", "<b>Bate con energía</b> 1 minuto y reparte en 2 vasitos.", "<b>A la nevera</b> al menos 2 horas [[t:120]]."],
+    tabla: {"cols": ["Receta completa", "Por vasito"], "rows": [["Calorías", "~311 kcal", "~155 kcal"], ["Proteínas", "~51,5 g", "~26 g"], ["Grasas", "~3,3 g", "~1,7 g"], ["Carbohidratos", "~17 g", "~8,5 g"]]},
+    notaTabla: "26 g de proteína por vasito, con 155 kcal. Como la [[mousse]] normal con un cacito de proteína de chocolate. Cuentas con proteína whey de unos 362 kcal, 74 g de proteína y 3,8 g de grasa por 100 g (HSN Evowhey 2.0). Con otra marca cambia un poco: mira su etiqueta.",
+    tips: ["<b>La proteína de chocolate ya está endulzada:</b> prueba antes de añadir edulcorante."],
+    conserva: { nevera: "3 días, tapada con film.", congelar: "No." },
+    compra: [["batido", 300, "g"], ["proteina", 25, "g"], ["cacao", 10, "g"], ["gelatina", 2, "láminas"], ["leche", 60, "ml"], ["edulcorante", null]],
+    usa: ["batido", "proteina", "cacao", "gelatina", "leche"]
+  },
+  {
+    id: "batido-pro", corto: "batido proteico de plátano", nombre: "Batido de plátano, avena y proteína",
+    pro: true, base: "batido-platano",
+    cat: ["Desayuno", "Merienda"], met: ["Batidora"], ext: ["Sin huevo"], tags: ["Con proteína en polvo", "Para después del gym"],
+    gluten: "avena", lacteos: true,
+    raciones: 1, racionesTxt: "1 vaso grande", tiempoTxt: "3 min", min: 3,
+    completa: { kcal: 390, p: 38.5, g: 4, c: 49.6 }, racion: { kcal: 390, p: 38.5, g: 4, c: 49.6 },
+    ingredientes: [{"t": "Ingredientes", "items": ["Leche desnatada: {250} ml", "Proteína en polvo de vainilla: {25} g", "Queso fresco batido 0%: {100} g", "Plátano: {1} pequeño (unos {100} g)", "Copos de avena: {20} g", "Canela y hielo"]}],
+    pasos: ["<b>Pon la leche primero</b> en el vaso de la batidora y luego la proteína: así no se pega al fondo.", "<b>Añade</b> el resto y bate 30–40 segundos.", "<b>Sirve</b> al momento o llévatelo."],
+    tabla: {"cols": ["Vaso"], "rows": [["Calorías", "~390 kcal"], ["Proteínas", "~38.5 g"], ["Grasas", "~4 g"], ["Carbohidratos", "~49.6 g"]]},
+    notaTabla: "Hidratos y casi 40 g de proteína: ideal después de entrenar. Como el [[batido-platano]] normal con un cacito de proteína. Cuentas con proteína whey de unos 362 kcal, 74 g de proteína y 3,8 g de grasa por 100 g (HSN Evowhey 2.0). Con otra marca cambia un poco: mira su etiqueta.",
+    tips: ["<b>Sin el queso batido</b> sigue teniendo unos 30 g de proteína y queda más líquido."],
+    conserva: { nevera: "Mejor al momento.", congelar: "No." },
+    compra: [["leche", 250, "ml"], ["proteina", 25, "g"], ["batido", 100, "g"], ["platano", 1, "ud."], ["avena", 20, "g"], ["canela", null]],
+    usa: ["leche", "proteina", "batido", "avena"]
+  },
+  {
+    id: "cheesecake-pro", corto: "cheesecake proteica", nombre: "Cheesecake proteica en freidora de aire",
+    pro: true, base: "cheesecake-airfryer",
+    cat: ["Merienda", "Postre"], met: ["Airfryer"], ext: ["Genera yemas"], tags: ["Con proteína en polvo", "Alta proteína"],
+    gluten: "avena", lacteos: true,
+    raciones: 2, racionesTxt: "1 grande o 2 pequeñas (ración = ½)", tiempoTxt: "10 min + 25–30 min de horno + 4 h en la nevera", min: 280,
+    molde: "Molde de 12 cm (metálico forrado con papel de horno, o de silicona). Freidora Princess 10 L",
+    completa: { kcal: 400, p: 54, g: 7.5, c: 27 }, racion: { kcal: 200, p: 27, g: 3.8, c: 13.5 },
+    ingredientes: [{"t": "Base", "items": ["Copos de avena finos: {25} g", "Claras de huevo: {15} g (1 cucharada), sacada de las de la crema"]}, {"t": "Crema", "items": ["Queso fresco batido 0% M.G.: {300} g", "Huevos L: {1} entero + {2} claras", "Proteína en polvo de vainilla: {15} g (en vez de la Maizena)", "Aroma de vainilla: {1} cdta. y edulcorante solo si hace falta"]}, {"t": "Cobertura (recomendada)", "items": ["Frutos rojos: {100} g"]}],
+    pasos: ["<b>Precalienta</b> la freidora Princess a 160 °C durante 3 minutos [[t:3]].", "<b>Base:</b> molde de 12 cm con papel de horno; avena un poco triturada con la clara, apretada contra el fondo. Hornea sola <b>5 min a 160 °C</b> [[t:5]].", "<b>Crema:</b> bate el queso batido con el huevo, las claras, la proteína y la vainilla hasta que no queden grumos. Suave, sin montar.", "<b>Hornea</b> con la bandeja en la posición media o baja, a <b>150 °C durante 25–30 min</b> [[t:25]].", "<b>Comprueba:</b> bordes cuajados y el centro tiembla un poco, como un flan. Si está líquido, 5 min más [[t:5]].", "<b>Enfría</b> 10 min dentro con la puerta entreabierta [[t:10]] y luego al menos <b>4 horas</b> en la nevera [[t:240]]."],
+    tabla: {"cols": ["Receta completa", "Por ración (½)"], "rows": [["Calorías", "~400 kcal", "~200 kcal"], ["Proteínas", "~54 g", "~27 g"], ["Grasas", "~7,5 g", "~3,8 g"], ["Carbohidratos", "~27 g", "~13,5 g"]]},
+    notaTabla: "La [[cheesecake-airfryer]] opción B con proteína en vez de Maizena: +11 g de proteína y −8 g de hidratos. Cuentas con proteína whey de unos 362 kcal, 74 g de proteína y 3,8 g de grasa por 100 g (HSN Evowhey 2.0). Con otra marca cambia un poco: mira su etiqueta.",
+    tips: ["<b>Queda algo más firme</b> que la normal: la proteína también ayuda a cuajar."],
+    conserva: { nevera: "4 días, tapada.", congelar: "Sí, en porciones, hasta 2 meses." },
+    compra: [["avena", 25, "g"], ["batido", 300, "g"], ["huevos", 3, "ud."], ["proteina", 15, "g"], ["vainilla", 1, "cdta."], ["frutos", 100, "g"]],
+    usa: ["batido", "proteina", "avena", "huevos"]
+  },
+  {
+    id: "natillas-pro", corto: "natillas proteicas", nombre: "Natillas proteicas",
+    pro: true, base: "natillas",
+    cat: ["Merienda", "Postre"], met: ["Cazo"], ext: ["Aprovechamiento", "Sin gluten"], tags: ["Con proteína en polvo", "Aprovecha 2 yemas"],
+    gluten: "natural", lacteos: true,
+    raciones: 2, racionesTxt: "2 vasitos", tiempoTxt: "15 min + 2 h en la nevera", min: 135,
+    completa: { kcal: 285, p: 25, g: 10.6, c: 23.6 }, racion: { kcal: 143, p: 12.5, g: 5.3, c: 11.8 },
+    ingredientes: [{"t": "Ingredientes", "items": ["<b>Yemas de huevo: {2}</b>", "Leche desnatada: {250} ml", "Harina de maíz (Maizena): {10} g", "Proteína en polvo de vainilla: {15} g, para el final", "Canela en rama: {1}. Piel de limón: {0.5}", "Canela en polvo"]}],
+    pasos: ["<b>Reserva</b> un chorrito de leche fría.", "<b>Infusiona</b> el resto de la leche con la canela y el limón hasta que casi hierva; reposa 5–10 min [[t:8]] y retíralos.", "<b>Mezcla</b> las yemas con la Maizena y la leche fría.", "<b>Atempera</b> con un par de cucharadas de leche caliente, vuelve todo al cazo y cuece a fuego medio-bajo sin parar de remover hasta que espese (3–5 min) [[t:4]]. Que no hierva fuerte.", "<b>Fuera del fuego</b>, añade la proteína tamizada y bate con varillas hasta que no queden grumos. Con calor fuerte la proteína se agruma: por eso al final.", "<b>Reparte</b> en vasitos con film pegado y a la nevera 2 horas [[t:120]]."],
+    tabla: {"cols": ["Receta completa", "Por vasito"], "rows": [["Calorías", "~285 kcal", "~143 kcal"], ["Proteínas", "~25 g", "~12,5 g"], ["Grasas", "~10,6 g", "~5,3 g"], ["Carbohidratos", "~23,6 g", "~11,8 g"]]},
+    notaTabla: "Las [[natillas]] con 5 g menos de Maizena y medio cacito de proteína: casi el doble de proteína. Cuentas con proteína whey de unos 362 kcal, 74 g de proteína y 3,8 g de grasa por 100 g (HSN Evowhey 2.0). Con otra marca cambia un poco: mira su etiqueta.",
+    tips: ["<b>Sin edulcorante:</b> la proteína de vainilla ya endulza."],
+    conserva: { nevera: "2–3 días con film.", congelar: "No." },
+    compra: [["huevos", 2, "ud. (solo yemas)"], ["leche", 250, "ml"], ["maizena", 10, "g"], ["proteina", 15, "g"], ["canela", 1, "rama"], ["limon", 0.5, "ud."]],
+    usa: ["huevos", "leche", "proteina", "maizena"]
+  },
+  {
+    id: "bizcocho-pro", corto: "bizcocho proteico", nombre: "Bizcocho proteico de yogur y avena",
+    pro: true, base: "bizcocho-yogur",
+    cat: ["Merienda", "Desayuno", "Postre"], met: ["Airfryer"], ext: [], tags: ["Con proteína en polvo", "Para toda la semana"],
+    gluten: "avena", lacteos: true,
+    raciones: 6, racionesTxt: "6 porciones", tiempoTxt: "10 min + 28–32 min de airfryer", min: 42,
+    molde: "Molde de 16–18 cm (de silicona o metálico; mejor no de cristal). Freidora Princess 10 L",
+    completa: { kcal: 915, p: 90, g: 20.5, c: 84 }, racion: { kcal: 152, p: 15, g: 3.4, c: 14 },
+    ingredientes: [{"t": "Ingredientes", "items": ["Yogur natural 0%: {3} unidades ({375} g)", "Huevos L: {2}, y claras de huevo: {2} (unos {70} ml)", "Harina de avena (copos triturados): {100} g", "Proteína en polvo de vainilla: {50} g", "Levadura química: {1} sobre ({16} g)", "Ralladura de {1} limón; edulcorante solo si hace falta"]}],
+    pasos: ["<b>Bate</b> los huevos, las claras, los yogures y la ralladura.", "<b>Añade</b> la harina de avena, la proteína y la levadura tamizadas, y mezcla con espátula sin batir de más.", "<b>Precalienta</b> la freidora a 160 °C durante 5 minutos [[t:5]].", "<b>Hornea</b> en molde de 16–18 cm con papel, con la bandeja en la posición baja, a <b>160 °C durante 28–32 min</b> [[t:28]]. Tapa con aluminio si se dora mucho.", "<b>Prueba del palillo</b> en el centro: limpio. Con proteína se seca antes que el normal, así que mira a partir del minuto 25.", "<b>Enfría</b> 15 min antes de desmoldar."],
+    tabla: {"cols": ["Bizcocho entero", "Por porción (1/6)"], "rows": [["Calorías", "~915 kcal", "~152 kcal"], ["Proteínas", "~90 g", "~15 g"], ["Grasas", "~20,5 g", "~3,4 g"], ["Carbohidratos", "~84 g", "~14 g"]]},
+    notaTabla: "El [[bizcocho-yogur]] con un tercio de la avena cambiado por proteína: misma energía, +5 g de proteína por porción. Cuentas con proteína whey de unos 362 kcal, 74 g de proteína y 3,8 g de grasa por 100 g (HSN Evowhey 2.0). Con otra marca cambia un poco: mira su etiqueta.",
+    tips: ["<b>Más jugoso:</b> si te queda seco, la próxima vez añade 1 yogur más o 5 min menos de horno."],
+    conserva: { nevera: "4–5 días, mejor en la nevera.", congelar: "Sí, en porciones, hasta 2 meses." },
+    compra: [["yogur", 375, "g"], ["huevos", 4, "ud. (2 enteros + 2 claras)"], ["avena", 100, "g"], ["proteina", 50, "g"], ["levadura", 1, "sobre"], ["limon", 1, "ud."]],
+    usa: ["yogur", "huevos", "avena", "proteina"]
+  },
+  {
+    id: "helado-pro", corto: "helado proteico", nombre: "Helado exprés proteico de frutos rojos",
+    pro: true, base: "helado-frutos-rojos",
+    cat: ["Postre", "Merienda"], met: ["Batidora"], ext: ["Sin huevo", "Sin gluten"], tags: ["Con proteína en polvo", "5 minutos"],
+    gluten: "natural", lacteos: true,
+    raciones: 2, racionesTxt: "2 copas", tiempoTxt: "5 min", min: 5,
+    completa: { kcal: 280, p: 36.5, g: 2, c: 22.6 }, racion: { kcal: 140, p: 18, g: 1, c: 11.3 },
+    ingredientes: [{"t": "Ingredientes", "items": ["Frutos rojos congelados: {250} g", "Queso fresco batido 0%, bien frío: {200} g", "Proteína en polvo de vainilla: {25} g", "Unas gotas de limón"]}],
+    pasos: ["<b>Deja los frutos rojos</b> 5 min fuera del congelador [[t:5]].", "<b>Tritura</b> todo junto a golpes, rascando las paredes, hasta tener una crema espesa.", "<b>Sirve al momento</b> o 30 min en el congelador [[t:30]] si lo quieres más firme."],
+    tabla: {"cols": ["Receta (2 copas)", "Por copa"], "rows": [["Calorías", "~280 kcal", "~140 kcal"], ["Proteínas", "~36,5 g", "~18 g"], ["Grasas", "~2 g", "~1 g"], ["Carbohidratos", "~22,6 g", "~11,3 g"]]},
+    notaTabla: "El [[helado-frutos-rojos]] con un cacito de proteína: el doble de proteína por copa. Cuentas con proteína whey de unos 362 kcal, 74 g de proteína y 3,8 g de grasa por 100 g (HSN Evowhey 2.0). Con otra marca cambia un poco: mira su etiqueta.",
+    tips: ["<b>La proteína espesa:</b> si no se mueve en la batidora, un chorrito de leche."],
+    conserva: { nevera: "Al momento.", congelar: "Si se congela del todo queda duro: sácalo 15 min antes." },
+    compra: [["frutos", 250, "g"], ["batido", 200, "g"], ["proteina", 25, "g"], ["limon", null]],
+    usa: ["frutos", "batido", "proteina"]
+  },
+  {
+    id: "cheesecake-blanco", corto: "tarta de chocolate blanco", nombre: "Tarta de queso fría de chocolate blanco y frambuesa",
+    pro: true, base: "cheesecake-nevera",
+    cat: ["Merienda", "Postre"], met: ["Sin horno"], ext: ["Sin huevo"], tags: ["Con proteína en polvo", "Sin horno"],
+    gluten: "avena", lacteos: true,
+    raciones: 2, racionesTxt: "1 grande o 2 pequeñas (ración = ½)", tiempoTxt: "15 min + 3–4 h en la nevera", min: 225,
+    completa: { kcal: 445, p: 58.6, g: 4.6, c: 38.5 }, racion: { kcal: 222, p: 29.3, g: 2.3, c: 19.3 },
+    ingredientes: [{"t": "Base", "items": ["Copos de avena finos: {25} g", "Queso fresco batido 0%: {15} g (1 cda.)"]}, {"t": "Crema", "items": ["Queso fresco batido 0% M.G.: {300} g", "Proteína en polvo de chocolate blanco: {30} g (un cacito)", "Gelatina neutra: {3} láminas (unos {6} g)", "Leche desnatada: {60} ml", "Frambuesas (frescas o congeladas): {100} g"]}],
+    pasos: ["<b>Atempera el queso batido</b> 20–30 min fuera de la nevera.", "<b>Hidrata la gelatina</b> en agua fría 5 minutos [[t:5]].", "<b>Base:</b> avena tostada 2–3 min en sartén sin aceite, un poco triturada, mezclada con la cucharada de queso batido y apretada en el fondo del molde. 15 min al congelador [[t:15]].", "<b>Crema:</b> mezcla la proteína con 3–4 cucharadas del queso batido hasta tener una pasta lisa, y luego con el resto del queso.", "<b>Disuelve la gelatina</b> en la leche muy caliente (sin hervir). Atempera con 2 cucharadas de crema y vierte todo sobre la crema batiendo con varillas.", "<b>Frambuesas:</b> aplasta la mitad con un tenedor. Vierte la crema sobre la base, reparte el puré de frambuesa por encima a cucharadas y dibuja vetas con un palillo.", "<b>A la nevera</b> 3–4 horas [[t:180]]. Pon el resto de frambuesas enteras al servir."],
+    tabla: {"cols": ["Receta completa", "Por ración (½)"], "rows": [["Calorías", "~445 kcal", "~222 kcal"], ["Proteínas", "~58,6 g", "~29 g"], ["Grasas", "~4,6 g", "~2,3 g"], ["Carbohidratos", "~38,5 g", "~19 g"]]},
+    notaTabla: "Sabe a tarta de chocolate blanco con casi 30 g de proteína por ración. Es la [[cheesecake-nevera]] con un cacito de proteína de chocolate blanco y frambuesas. Cuentas con proteína de chocolate blanco con fresa de unos 388 kcal, 73 g de proteína y 4,6 g de grasa por 100 g (Masmusculo). Con otra marca cambia un poco: mira su etiqueta.",
+    tips: ["<b>La proteína ya endulza:</b> prueba la crema antes de añadir edulcorante.", "<b>Con otro sabor</b> de proteína sale igual: vainilla con frutos rojos, o galleta (cookies) con un poco de cacao en la base."],
+    conserva: { nevera: "3–4 días, tapada.", congelar: "Mejor no: la gelatina suelta agua al descongelar." },
+    compra: [["avena", 25, "g"], ["batido", 315, "g"], ["proteina", 30, "g (chocolate blanco)"], ["gelatina", 3, "láminas"], ["leche", 60, "ml"], ["frutos", 100, "g (frambuesas)"]],
+    usa: ["batido", "proteina", "avena", "gelatina", "frutos"]
   }
 ];
 
@@ -1504,7 +1684,9 @@ const NUTRI = {
   "pasta-atun": [8.6, 3, ["pescado", "azul"]], "garbanzos-espinacas": [18, 2, ["legumbre"]], "fruta-frutos-secos": [6, 1, []], "bocadillo-pavo": [5.9, 0.5, []], "bol-queso-fruta": [4, 1, []],
   "porridge-manzana": [7.4, 1, []], "tostada-salmon": [4.4, 0.5, ["pescado", "azul"]], "bizcocho-yogur": [2.5, 0, []], "brownie-fit": [3.5, 0.5, []], "galletas-avena": [4.3, 0.5, []],
   "helado-frutos-rojos": [5, 1.5, []], "pollo-curry": [4.1, 2.5, []], "albondigas-pollo": [4.8, 3, []], "pescado-pisto": [7, 5, ["pescado"]], "brochetas-pollo": [5, 3.5, []],
-  "sepia-plancha": [4, 2.5, ["pescado"]], "tortilla-calabacin": [2.9, 3, []]
+  "sepia-plancha": [4, 2.5, ["pescado"]], "tortilla-calabacin": [2.9, 3, []],
+  "cookies-avena": [3.6, 0, []], "cookies-pro": [2.8, 0, []], "tortitas-pro": [7, 1, []], "overnight-pro": [8, 1, []], "mousse-pro": [2.4, 0, []],
+  "batido-pro": [4.6, 1, []], "cheesecake-pro": [3.3, 0.5, []], "natillas-pro": [0, 0, []], "bizcocho-pro": [1.7, 0, []], "helado-pro": [5, 1.5, []], "cheesecake-blanco": [4.5, 0.5, []]
 };
 const nutri = r => NUTRI[r.id] || [0, 0, []];
 // Recetas con bastante sal (salmón ahumado, caldo de brik)
@@ -1560,7 +1742,8 @@ const NIVEL = {
   "overnight-oats": 1, "tostada-aguacate": 1, "tostada-salmon": 1, "bol-queso-fruta": 1, "fruta-frutos-secos": 1, "bocadillo-pavo": 1, "helado-frutos-rojos": 1, "batido-platano": 1, "porridge-manzana": 1,
   "revuelto-claras": 2, "pavo-verduras": 2, "tortitas": 2, "caldo-pollo": 2, "pasta-atun": 2, "garbanzos-espinacas": 2, "pollo": 2, "merluza": 2, "salmon-patata": 2, "brochetas-pollo": 2, "sepia-plancha": 2,
   "crema-calabacin": 2, "merluza-coliflor": 2, "bizcocho-yogur": 2, "brownie-fit": 2, "galletas-avena": 2, "albondigas-pollo": 2, "pollo-curry": 2, "arroz-pollo": 2, "lentejas": 2, "hamburguesas": 2, "pescado-pisto": 2,
-  "natillas": 3, "tortilla": 3, "tortilla-calabacin": 3, "cheesecake-nevera": 3, "cheesecake-airfryer": 3, "mousse": 3
+  "natillas": 3, "tortilla": 3, "tortilla-calabacin": 3, "cheesecake-nevera": 3, "cheesecake-airfryer": 3, "mousse": 3,
+  "cookies-avena": 2, "cookies-pro": 2, "tortitas-pro": 2, "overnight-pro": 1, "mousse-pro": 3, "batido-pro": 1, "cheesecake-pro": 3, "natillas-pro": 3, "bizcocho-pro": 2, "helado-pro": 1, "cheesecake-blanco": 3
 };
 const NIVEL_TXT = { 1: "Muy fácil", 2: "Fácil", 3: "Con un poco de mano" };
 const nivel = r => NIVEL[r.id] || 2;
@@ -1607,6 +1790,17 @@ const UTENSILIOS = {
   "brochetas-pollo": [["Freidora de aire", AF_HORNO("unos 215 °C y 15 min") + " O a la plancha en sartén, 3 min por cada lado."], ["Palitos de brocheta", "Todo suelto en la bandeja, sin palitos."]],
   "sepia-plancha": [["Sartén antiadherente o plancha"], ["Papel de cocina (para secar la sepia)"]],
   "tortilla-calabacin": [["Sartén antiadherente con tapa", "Un plato grande encima hace de tapa."], ["Un plato para darle la vuelta"], ["Rallador (opcional)", "Láminas finas con el cuchillo."]],
+  "cookies-avena": [["Freidora de aire", AF_HORNO("unos 185 °C y 12–14 min")], ["Batidora o picadora (para media avena)", "Sin triturar también salen, más rústicas; o usa harina de avena comprada para esa mitad."], ["Papel de horno"], ["Tenedor y cuchara"]],
+  "cookies-pro": [["Freidora de aire", AF_HORNO("unos 185 °C y 11–13 min")], ["Batidora o picadora (para media avena)", "Sin triturar también salen, más rústicas."], ["Papel de horno"]],
+  "tortitas-pro": [BASCULA("15 g de proteína es medio cacito; 30 g de avena, unas 3 cucharadas soperas."), ["Batidora o picadora (para la harina de avena)", "Harina de avena comprada."], ["Sartén antiadherente y espátula"]],
+  "overnight-pro": [["Tarro o táper con tapa", "Un vaso o bol tapado con film."], BASCULA("25 g de proteína es un cacito pequeño (mira el de tu bote); 40 g de avena, unas 4 cucharadas soperas.")],
+  "mousse-pro": [["Varillas o batidora de varillas", "Varillas a mano con energía 2–3 min."], ["Microondas (para la leche)", "Un cazo pequeño."], ["Bol y 2 vasitos"]],
+  "batido-pro": [["Batidora de vaso o de brazo", "Con un bote con tapa (tipo shaker) se mezcla la leche con la proteína; el plátano, chafado aparte y añadido: queda con trocitos."]],
+  "cheesecake-pro": [["Freidora de aire", AF_HORNO("unos 170 °C y 30–35 min")], ["Molde de 12 cm y papel de horno", "Cualquier recipiente pequeño apto para horno."], ["Varillas", "Bate a mano 2–3 min hasta que no queden grumos de proteína."]],
+  "natillas-pro": [["Cazo"], ["Varillas", "Un tenedor; la proteína, mejor tamizada con un colador para que no haga grumos."], ["2 vasitos"]],
+  "bizcocho-pro": [["Freidora de aire", AF_HORNO("unos 175 °C y 32–36 min")], ["Molde de 16–18 cm", "Uno más pequeño (alarga 5 min) o dos pequeños (unos 18–20 min)."], ["Batidora o picadora (para la harina de avena)", "Harina de avena comprada."]],
+  "cheesecake-blanco": [BASCULA("300 g de queso batido son unas 20 cucharadas soperas; 30 g de proteína, un cacito."), ["Molde de 10–12 cm", "Un vaso ancho, una taza grande o un táper redondo."], ["Bol y varillas"], ["Microondas (para la leche)", "Un cazo pequeño."]],
+  "helado-pro": [["Batidora potente o picadora", "Sin batidora: frutos rojos descongelados 20 min y chafados, mezclados con el queso batido y la proteína. Queda tipo yogur helado con trozos."]],
   "bol-queso-fruta": [["Bol y cuchillo"], BASCULA("200 g de queso batido son unas 13 cucharadas soperas, o 2/5 de una tarrina de 500 g.")]
 };
 
@@ -1763,9 +1957,21 @@ const INGREDIENTES = [
     criterio: "Úsalo poco: <b>30 g como mucho</b> por receta.",
     aviso: "Aunque sea «light», tiene unos 11–12 g de grasa por 100 g. Por eso el libro no lo usa por defecto.",
     productos: [{ marca: "Philadelphia", nombre: "Philadelphia Light", tienda: "Lidl, Alcampo, Ahorramás", formato: "200 g", v: [154, 5.9, 12, 4.1], src: OFF("7622210103338") }] },
-  { id: "proteina", nombre: "Proteína en polvo (opcional)", pasillo: "Despensa", rol: "Para subir la proteína en tortitas, cheesecake, mousse o natillas.",
-    criterio: "Whey o isolate de vainilla o chocolate con <b>≥ 70 g de proteína</b> por 100 g y poca grasa (≤ 7 g).",
-    nota: "No he verificado marcas concretas: hay muchísimas y cambian a menudo. Compara la etiqueta con este criterio.", productos: [] },
+  { id: "proteina", nombre: "Proteína en polvo (whey)", pasillo: "Despensa", rol: "Para las recetas «con proteína en polvo» (se activan en Filtros).",
+    criterio: "Whey o isolate de <b>vainilla o chocolate</b> con <b>≥ 70 g de proteína</b> por 100 g y <b>≤ 7 g de grasa</b>. Un cacito (25–30 g) son unas 90–120 kcal, casi todas de proteína.",
+    aviso: "Sí tiene calorías: la proteína aporta 4 kcal por gramo. Lo que no tiene calorías son los «saborizantes en polvo» (tipo FlavDrops), que solo dan sabor y no son proteína. Las de sabores ya vienen endulzadas: prueba antes de añadir edulcorante.",
+    productos: [
+      { marca: "HSN", nombre: "Evowhey 2.0", tienda: "Tienda online HSN", formato: "Cacito de 30 g", v: [362, 74, 3.8, 6.5], src: OFF("5060326270001"), nota: "La de referencia para los cálculos del libro." },
+      { marca: "Myprotein", nombre: "Proteína whey (Impact Whey)", tienda: "Tienda online Myprotein", formato: "—", v: [395, 77, 6.2, 7.1], src: OFF("5056307356451") },
+      { marca: "Masmusculo", nombre: "Whey chocolate blanco con fresa", tienda: "Tienda online Masmusculo", formato: "—", v: [388, 72.8, 4.6, 13.4], src: OFF("8436619590878"), nota: "Para la tarta de chocolate blanco. Sabores como este existen en varias marcas." },
+      { marca: "Sin marca en la ficha", nombre: "Whey protein vainilla", tienda: "Sin dato de tienda", formato: "—", v: [390, 80, 4.9, 6.8], src: OFF("8414192347621") }
+    ] },
+  { id: "chocolate-negro", nombre: "Chocolate negro 85%", pasillo: "Despensa", rol: "Para las cookies. Poquito: es casi la mitad grasa.",
+    criterio: "<b>85% de cacao o más</b>, sin azúcares añadidos si lo encuentras. Unos 15 g por bandeja de cookies.",
+    productos: [
+      { marca: "Valor", nombre: "85% cacao 0% azúcares añadidos", tienda: "Carrefour, Alcampo, Eroski, El Corte Inglés, Consum", formato: "100 g", v: [568, 11, 49, 19], src: OFF("8410109109832") },
+      { marca: "Suchard", nombre: "Fino 85% negro", tienda: "Carrefour, Eroski, El Corte Inglés, Consum", formato: "90 g", v: [607, 10, 50, 24], src: OFF("7622210780355") }
+    ] },
   { id: "spray", nombre: "Spray de aceite", pasillo: "Despensa", rol: "Para la sartén y la airfryer.",
     criterio: "<b>Aceite de oliva en spray</b>. 1–2 pulverizaciones bastan.",
     nota: "Cada cucharada de aceite son unos 10 g de grasa. El spray es lo que más grasa ahorra en las cenas.", productos: [] }
@@ -1800,7 +2006,7 @@ const EXTRA_ING = {
 const PASILLOS = ["Fruta y verdura", "Carne y pescado", "Lácteos y huevos", "Congelados", "Despensa", "Otros"];
 
 /* ===================== CONFIGURACIÓN ===================== */
-const SABOR = { "tortitas": "avena", "cheesecake-nevera": "frambuesa", "cheesecake-airfryer": "melocoton", "mousse": "cacao", "natillas": "vainilla", "tortilla": "espinaca", "pollo": "melocoton", "merluza": "vainilla", "hamburguesas": "espinaca", "tostada-aguacate": "espinaca", "revuelto-claras": "melocoton", "overnight-oats": "frambuesa", "batido-platano": "vainilla", "crema-calabacin": "espinaca", "merluza-coliflor": "vainilla", "pavo-verduras": "melocoton", "caldo-pollo": "avena", "lentejas": "cacao", "salmon-patata": "melocoton", "arroz-pollo": "avena", "pasta-atun": "frambuesa", "garbanzos-espinacas": "espinaca", "fruta-frutos-secos": "avena", "bocadillo-pavo": "melocoton", "bol-queso-fruta": "frambuesa", "porridge-manzana": "avena", "tostada-salmon": "melocoton", "bizcocho-yogur": "vainilla", "brownie-fit": "cacao", "galletas-avena": "avena", "helado-frutos-rojos": "frambuesa", "pollo-curry": "vainilla", "albondigas-pollo": "melocoton", "pescado-pisto": "espinaca", "brochetas-pollo": "melocoton", "sepia-plancha": "vainilla", "tortilla-calabacin": "espinaca" };
+const SABOR = { "tortitas": "avena", "cheesecake-nevera": "frambuesa", "cheesecake-airfryer": "melocoton", "mousse": "cacao", "natillas": "vainilla", "tortilla": "espinaca", "pollo": "melocoton", "merluza": "vainilla", "hamburguesas": "espinaca", "tostada-aguacate": "espinaca", "revuelto-claras": "melocoton", "overnight-oats": "frambuesa", "batido-platano": "vainilla", "crema-calabacin": "espinaca", "merluza-coliflor": "vainilla", "pavo-verduras": "melocoton", "caldo-pollo": "avena", "lentejas": "cacao", "salmon-patata": "melocoton", "arroz-pollo": "avena", "pasta-atun": "frambuesa", "garbanzos-espinacas": "espinaca", "fruta-frutos-secos": "avena", "bocadillo-pavo": "melocoton", "bol-queso-fruta": "frambuesa", "porridge-manzana": "avena", "tostada-salmon": "melocoton", "bizcocho-yogur": "vainilla", "brownie-fit": "cacao", "galletas-avena": "avena", "helado-frutos-rojos": "frambuesa", "pollo-curry": "vainilla", "albondigas-pollo": "melocoton", "pescado-pisto": "espinaca", "brochetas-pollo": "melocoton", "sepia-plancha": "vainilla", "tortilla-calabacin": "espinaca", "cookies-avena": "cacao", "cookies-pro": "cacao", "tortitas-pro": "avena", "overnight-pro": "frambuesa", "mousse-pro": "cacao", "batido-pro": "vainilla", "cheesecake-pro": "melocoton", "natillas-pro": "vainilla", "bizcocho-pro": "vainilla", "helado-pro": "frambuesa", "cheesecake-blanco": "frambuesa" };
 const SABOR_MOMENTO = { Tentempié: "avena", Desayuno: "avena", Comida: "melocoton", Merienda: "frambuesa", Postre: "frambuesa", Cena: "espinaca" };
 const sabor = r => r.sabor || SABOR[r.id] || SABOR_MOMENTO[r.cat[0]] || "avena";
 const CATS = ["Desayuno", "Tentempié", "Comida", "Merienda", "Postre", "Cena"];
@@ -1831,7 +2037,7 @@ const state = {
   q: "", cat: new Set(), met: new Set(), ext: new Set(),
   maxK: LIM.kcal, minP: LIM.p, maxG: LIM.g,
   sort: prefs.get("sort", "kcal"), dir: prefs.get("dir", "asc"), base: prefs.get("base", "racion"),
-  view: prefs.get("view", "mosaico"), opcion: "B", mult: 1, abierta: null, cookIdx: 0, semana: null, tengoOn: false
+  view: prefs.get("view", "mosaico"), verPro: prefs.get("verPro", false), opcion: "B", mult: 1, abierta: null, cookIdx: 0, semana: null, tengoOn: false
 };
 
 /* ===================== UTILIDADES ===================== */
@@ -2097,7 +2303,10 @@ function chipGroup(el, list, set, cls) {
     b.setAttribute("aria-pressed", set.has(b.dataset.v)); renderGrid();
   });
 }
+// Las recetas con proteína en polvo solo se ven si el usuario las activa
+const visible = r => !r.pro || state.verPro;
 function matches(r) {
+  if (!visible(r)) return false;
   if (state.cat.size && !r.cat.some(c => state.cat.has(c))) return false;
   if (state.met.size && !r.met.some(c => state.met.has(c))) return false;
   for (const x of state.ext) {
@@ -2134,7 +2343,9 @@ function renderGrid() {
   });
   const n = state.met.size + state.ext.size + (state.base === "completa" ? 1 : 0) + (state.maxK < LIM.kcal) + (state.minP > LIM.p) + (state.maxG < LIM.g);
   $("#nfilters").hidden = !n; $("#nfilters").textContent = n;
-  $("#count").textContent = state.tengoOn ? `${list.length} recetas, primero las que tienes casi todo` : list.length === RECETAS.length ? `${list.length} recetas, valores ${state.base === "racion" ? "por ración" : "de la receta completa"}` : `${list.length} de ${RECETAS.length} recetas`;
+  const nPro = RECETAS.filter(r => r.pro).length, total = RECETAS.filter(visible).length;
+  const ocultas = !state.verPro && nPro ? ` (+${nPro} con proteína en polvo, ocultas)` : "";
+  $("#count").textContent = (state.tengoOn ? `${list.length} recetas, primero las que tienes casi todo` : list.length === total ? `${list.length} recetas, valores ${state.base === "racion" ? "por ración" : "de la receta completa"}` : `${list.length} de ${total} recetas`) + ocultas;
   $("#dir").textContent = state.dir === "asc" ? "↑" : "↓";
   $("#dir").setAttribute("aria-label", state.dir === "asc" ? "De menor a mayor. Pulsa para invertir" : "De mayor a menor. Pulsa para invertir");
   const grid = $("#grid");
@@ -2153,7 +2364,7 @@ function renderGrid() {
     const sub = f ? (f.length ? `Te falta: ${f.map(i => ingNombre(i).replace(/ \(.*\)$/, "").toLowerCase()).join(", ")}` : "✓ Tienes todo") : r.opciones ? "Valores de la opción B" : (state.base === "racion" && r.raciones > 1 ? `1 ración de ${r.raciones}` : (r.min < 60 ? r.min + " min" : ""));
     return `<button type="button" class="card f-${sabor(r)}" data-open="${r.id}" aria-label="${esc(r.nombre)}, ${fmt(v.kcal)} kcal">
       <span class="blob"></span>${favMark(r)}
-      <div class="kind">${[...r.cat.slice(0, 1), ...r.met, NIVEL_TXT[nivel(r)]].map(t => `<span>${t}</span>`).join("")}</div>
+      <div class="kind">${[...r.cat.slice(0, 1), ...r.met, NIVEL_TXT[nivel(r)], ...(r.pro ? ["Con proteína"] : [])].map(t => `<span>${t}</span>`).join("")}</div>
       <div><h3>${r.nombre}</h3></div>
       <div style="display:grid;gap:8px">
         <div class="kcal">${fmt(v.kcal)}<small>kcal</small></div>
@@ -2258,6 +2469,7 @@ function renderDetail(r) {
       <section><h3>Ingredientes</h3><div id="ings">${ingHTML(r, m)}</div></section>
       <section><h3>Cómo se hace</h3><div class="before">${ANTES}</div><ol class="steps">${r.pasos.map((p, i) => `<li><div>${timersIn(refs(glos(p)), r.corto + ", paso " + (i + 1))}</div></li>`).join("")}</ol><p class="note">Las palabras subrayadas con puntos se explican si las tocas.</p></section>
       <section><h3>Valores aproximados</h3><div class="tbl-wrap"><table>${head}${body}</table></div>${r.notaTabla ? `<p class="note">${r.notaTabla}</p>` : ""}${m !== 1 ? `<p class="note">Con ${fmtQ(racTot)} ${racTot === 1 ? "ración" : "raciones"}, todo junto son unas ${fmt(Math.round(vc.kcal * m))} kcal. Cada ración sigue teniendo lo mismo.</p>` : ""}</section>
+      ${state.verPro && RECETAS.some(x => x.base === r.id) ? `<div class="buy"><b>Versión con proteína en polvo</b><div class="links">${RECETAS.filter(x => x.base === r.id).map(x => `<a href="#${x.id}" data-goto="${x.id}">${x.nombre} (${fmt(valores(x, "racion").p)} g de proteína por ración)</a>`).join("")}</div></div>` : ""}
       ${r.tips.length || SAL[r.id] ? `<div class="tip">${SAL[r.id] ? `<p><b>Sal:</b> ${SAL[r.id]}</p>` : ""}${r.tips.map(x => `<p>${refs(x)}</p>`).join("")}</div>` : ""}
       <section><h3>Conservación e intolerancias</h3><div class="facts2">
         <div><b>Nevera</b><p>${r.conserva.nevera}</p></div>
@@ -2500,7 +2712,7 @@ function renderPlan() {
         if (["desayuno", "comida", "cena"].includes(k) && v.p * x < 20) bajas.push(label.toLowerCase());
       }
       if (sel === "otro") otro = true;
-      const opts = RECETAS.filter(y => y.cat.some(c => cats.includes(c))).map(y => `<option value="${y.id}" ${y.id === sel ? "selected" : ""}>${y.nombre} (${fmt(valores(y, "racion").kcal)} kcal)</option>`).join("");
+      const opts = RECETAS.filter(y => y.cat.some(c => cats.includes(c)) && (visible(y) || y.id === sel)).map(y => `<option value="${y.id}" ${y.id === sel ? "selected" : ""}>${y.nombre} (${fmt(valores(y, "racion").kcal)} kcal)</option>`).join("");
       const dbl = r ? `<button type="button" class="stepbtn" data-doble="${di}|${k}" aria-pressed="${x !== 1}" aria-label="Tamaño de la ración: ×${fmtQ(x)}. Pulsa para cambiar">×${fmtQ(x)}</button><button type="button" class="stepbtn" data-planopen="${sel}|${x / r.raciones}" aria-label="Ver la receta con las cantidades de este hueco">Ver</button>` : "";
       const hint = !r ? "" : r.raciones === 1 ? (x === 1 ? "" : `Ración ×${fmtQ(x)}: «Ver» te da las cantidades ya multiplicadas.`)
         : `${fmtQ(x)} de las ${r.raciones} raciones que da la receta${x / r.raciones === 1 ? " (la receta entera)" : ` (${fmtQ(x / r.raciones)} de la receta)`}. «Ver» te da las cantidades.`;
@@ -2775,7 +2987,7 @@ const BASICOS = new Set(["especias", "spray", "aceite", "edulcorante", "canela",
 const ingsReceta = r => [...new Set([...r.compra, ...(r.opciones ? r.opciones[r.opcionDefecto].compra : [])].map(c => c[0]).filter(i => !BASICOS.has(i)))];
 const faltan = r => ingsReceta(r).filter(i => !Saved.despensa.includes(i));
 function renderTengo() {
-  const todos = [...new Set(RECETAS.flatMap(ingsReceta))];
+  const todos = [...new Set(RECETAS.filter(visible).flatMap(ingsReceta))];
   const grupos = PASILLOS.map(p => [p, todos.filter(i => ingPasillo(i) === p).sort((a, b) => ingNombre(a).localeCompare(ingNombre(b)))]).filter(([, l]) => l.length);
   $("#tengo-chips").innerHTML = grupos.map(([p, l]) => `<div class="fgroup"><span>${p}</span><div class="chips">${l.map(i => `<button type="button" class="chip" data-tengo="${i}" aria-pressed="${Saved.despensa.includes(i)}">${esc(ingNombre(i).replace(/ \(.*\)$/, ""))}</button>`).join("")}</div></div>`).join("");
   $("#tengo-on").setAttribute("aria-pressed", state.tengoOn);
@@ -2962,6 +3174,9 @@ function clearFilters() {
   renderGrid();
 }
 const toggleFilters = show => { $("#filters").hidden = !show; $("#toggle-filters").setAttribute("aria-expanded", show); };
+function syncPro() { $("#ver-pro").setAttribute("aria-pressed", state.verPro); }
+$("#ver-pro").addEventListener("click", () => { state.verPro = !state.verPro; prefs.set("verPro", state.verPro); syncPro(); renderGrid(); renderPlan(); renderTengo(); toast(state.verPro ? "Recetas con proteína en polvo visibles" : "Recetas con proteína en polvo ocultas"); });
+syncPro();
 $("#toggle-filters").addEventListener("click", () => toggleFilters($("#filters").hidden));
 $("#close-filters").addEventListener("click", () => toggleFilters(false));
 $("#clear").addEventListener("click", clearFilters);
