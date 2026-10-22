@@ -747,7 +747,7 @@ const RECETAS = [
     ],
     tabla: { cols: ["Receta completa", "Por ración (½)", "Completa + 100 g frutos rojos", "Sin base (completa)"], rows: [["Calorías", "~270 kcal", "~135 kcal", "~320 kcal", "~170 kcal"], ["Proteínas", "~35 g", "~17 g", "~36 g", "~30 g"], ["Grasas", "~2,5 g", "~1,3 g", "~3 g", "~0,7 g"], ["Carbohidratos", "~28 g", "~14 g", "~36 g", "~12 g"]] },
     notaTabla: "Textura: sin queso crema queda más ligera, como una mousse firme de queso. Si echas de menos el sabor, añade 30 g de queso crema light (+3 g de grasa y +45 kcal).",
-    tips: [],
+    tips: ["<b>Base de chocolate:</b> añade media cucharada de cacao puro desgrasado a la avena (+17 kcal). O untar 1 cucharadita de [[crema-cacao]] en la base ya fría.", "<b>Para que la base no se rompa:</b> cámbiale la cucharada de queso batido por una de clara y hornéala 5 min a 160 °C en la airfryer; la clara la pega sin añadir grasa. Apriétala con el fondo de un vaso y déjala enfriar antes de echar la crema. Con todo de chocolate: [[tarta-chocolate]]."],
     conserva: { nevera: "3–4 días, tapada. La cobertura, mejor al servir.", congelar: "Mejor no: la gelatina suelta agua al descongelar y queda acuosa." },
     compra: [["avena", 25, "g"], ["batido", 315, "g"], ["gelatina", 3, "láminas"], ["leche", 40, "ml"], ["vainilla", 1, "cdta."], ["frutos", 100, "g"], ["edulcorante", null], ["canela", null]],
     usa: ["batido", "skyr", "avena", "gelatina", "leche", "edulcorante", "frutos", "queso-crema"]
@@ -779,7 +779,7 @@ const RECETAS = [
     ],
     tabla: { firstCol: "Opción (receta entera)", cols: ["Calorías", "Proteínas", "Grasas", "Carbohid.", "½ ración"], rows: [["A) 3 claras", "~325 kcal", "~40 g", "~2,5 g", "~35 g", "~160 kcal, 1,3 g grasa"], ["B) 1 huevo + 2 claras", "~380 kcal", "~43 g", "~7 g", "~35 g", "~190 kcal, 3,5 g grasa"], ["C) 3 huevos enteros", "~490 kcal", "~48 g", "~17 g", "~36 g", "~245 kcal, 8,5 g grasa"]] },
     notaTabla: "Sin cobertura: 100 g de frutos rojos suman unas 50 kcal. Con proteína en polvo en lugar de Maizena: unos +12 g de proteína y −8 g de carbohidratos. La A queda firme, como un flan de queso; cada yema la hace más cremosa. El horneado es igual en las tres.",
-    tips: ["<b>¿Te han sobrado yemas?</b> Con 2 yemas tienes unas [[natillas]] o una [[tortilla]] para cenar."],
+    tips: ["<b>¿Te han sobrado yemas?</b> Con 2 yemas tienes unas [[natillas]] o una [[tortilla]] para cenar.", "<b>Base de chocolate:</b> media cucharada de cacao puro desgrasado en la avena de la base (+17 kcal). La clara ya hace que no se rompa: apriétala bien con el fondo de un vaso."],
     conserva: { nevera: "4 días, tapada.", congelar: "Sí, en porciones envueltas, hasta 2 meses. Descongela en la nevera la noche antes." },
     compra: [["avena", 25, "g"], ["batido", 300, "g"], ["maizena", 10, "g"], ["vainilla", 1, "cdta."], ["frutos", 100, "g"], ["edulcorante", null], ["canela", null]],
     usa: ["batido", "avena", "claras", "huevos", "maizena", "edulcorante", "frutos", "proteina"]
@@ -1869,6 +1869,83 @@ const RECETAS = [
     conserva: { nevera: "1 día, con film pegado a la superficie.", congelar: "No." },
     compra: [["aguacate", 80, "g"], ["batido", 80, "g"], ["tomate", 0.5, "ud."], ["cebolla", 0.25, "ud."], ["limon", 0.5, "ud."], ["especias", null]],
     usa: ["aguacate", "batido"]
+  },
+  {
+    id: "tarta-chocolate", corto: "tarta de queso de chocolate", nombre: "Tarta de queso de chocolate con base de cacao",
+    cat: ["Merienda", "Postre"], met: ["Sin horno", "Airfryer"], ext: [], tags: ["Chocolate", "Base que no se rompe"],
+    gluten: "avena", lacteos: true,
+    raciones: 2, racionesTxt: "1 grande o 2 pequeñas (ración = ½)", tiempoTxt: "20 min + 3–4 h en la nevera", min: 230,
+    molde: "Molde de 10–12 cm forrado con papel de horno. Freidora Princess 10 L (solo para la base)",
+    completa: { kcal: 341, p: 40.5, g: 5.5, c: 30.6 }, racion: { kcal: 170, p: 20.3, g: 2.8, c: 15.3 },
+    ingredientes: [{"t": "Base de cacao (horneada, para que no se rompa)", "items": ["Copos de avena finos: {25} g", "Cacao puro desgrasado: {5} g (media cucharada)", "Claras de huevo: {15} g (1 cucharada)", "Una pizca de edulcorante"]}, {"t": "Crema de chocolate", "items": ["Queso fresco batido 0% M.G.: {300} g", "Cacao puro desgrasado: {15} g (1½ cucharadas)", "Gelatina neutra: {3} láminas (unos {6} g)", "Leche desnatada: {40} ml", "Edulcorante al gusto y una pizca de sal"]}, {"t": "Por encima (opcional)", "items": ["Frambuesas o fresas, o una cucharadita de [[crema-cacao]]"]}],
+    pasos: ["<b>Atempera el queso batido</b> 20–30 min fuera de la nevera.", "<b>Precalienta</b> la freidora a 160 °C durante 3 minutos [[t:3]].", "<b>Base:</b> tritura un poco la avena y mézclala con el cacao, la clara y el edulcorante. Apriétala muy fuerte con el fondo de un vaso en un molde de 10–12 cm forrado con papel. Hornéala con la bandeja en la posición media, a <b>160 °C durante 5 min</b> [[t:5]]: la clara la pega y queda crujiente. Déjala enfriar.", "<b>Hidrata la gelatina</b> en agua fría 5 minutos [[t:5]].", "<b>Crema:</b> mezcla el cacao, el edulcorante y la sal con 3–4 cucharadas del queso batido hasta hacer una pasta sin grumos; después añade el resto y bate.", "<b>Disuelve la gelatina</b> en la leche muy caliente (sin hervir), atempera con 2 cucharadas de crema y vierte todo sobre la crema batiendo con varillas.", "<b>Vierte</b> sobre la base y a la nevera 3–4 horas [[t:180]]."],
+    tabla: {"cols": ["Receta completa", "Por ración (½)"], "rows": [["Calorías", "~341 kcal", "~170 kcal"], ["Proteínas", "~40,5 g", "~20 g"], ["Grasas", "~5,5 g", "~2,8 g"], ["Carbohidratos", "~30,6 g", "~15 g"]]},
+    notaTabla: "Como la [[cheesecake-nevera]] pero toda de chocolate y con la base horneada: la clara hace de pegamento sin añadir grasa, que es lo que hace que no se desmorone.",
+    tips: ["<b>Por qué la base no se rompe:</b> las bases de siempre se pegan con mantequilla. Aquí lo hace la clara al hornearse. Apretarla bien y dejarla enfriar antes de echar la crema ayuda mucho.", "<b>Sin airfryer:</b> la base en el horno a 170 °C, 6–7 min, o en una sartén sin aceite 3 min removiendo antes de apretarla (pega algo menos)."],
+    conserva: { nevera: "3–4 días, tapada.", congelar: "Mejor no: la gelatina suelta agua al descongelar." },
+    compra: [["avena", 25, "g"], ["cacao", 20, "g"], ["claras", 15, "ml"], ["batido", 300, "g"], ["gelatina", 3, "láminas"], ["leche", 40, "ml"], ["edulcorante", null]],
+    usa: ["batido", "cacao", "avena", "gelatina"]
+  },
+  {
+    id: "coulant-fit", corto: "coulant fit", nombre: "Coulant fit de chocolate (centro líquido)",
+    cat: ["Postre", "Merienda"], met: ["Airfryer"], ext: [], tags: ["Centro líquido", "Chocolate"],
+    gluten: "avena", lacteos: true,
+    raciones: 2, racionesTxt: "2 coulants", tiempoTxt: "10 min + 7–8 min de airfryer", min: 18,
+    molde: "2 flaneras o ramequines aptos para horno. Freidora Princess 10 L",
+    completa: { kcal: 308, p: 21.7, g: 14, c: 19.6 }, racion: { kcal: 154, p: 10.8, g: 7, c: 9.8 },
+    ingredientes: [{"t": "Ingredientes", "items": ["Huevo L: {1}, y claras de huevo: {1} (unos {35} ml)", "Cacao puro desgrasado: {15} g (1½ cucharadas)", "Harina de avena (copos triturados): {20} g", "Yogur natural 0%: {60} g", "Chocolate negro 85%: {10} g (2 onzas pequeñas), para el centro", "Edulcorante al gusto, una pizca de sal y una pizca de levadura", "Spray de aceite y un poco de cacao para los moldes"]}],
+    pasos: ["<b>Prepara los moldes:</b> 2 flaneras o ramequines pulverizados con spray y espolvoreados con cacao (así se desmoldan).", "<b>Bate</b> el huevo, la clara, el yogur, el edulcorante y la sal. Añade el cacao, la harina de avena y la levadura y mezcla sin grumos.", "<b>Llena</b> los moldes hasta la mitad, pon una onza de chocolate en el centro de cada uno y cubre con el resto de la masa.", "<b>Precalienta</b> la freidora a 180 °C durante 3 minutos [[t:3]].", "<b>Hornea</b> con la bandeja en la posición media, a <b>180 °C durante 7–8 min</b> [[t:7]]. Está en su punto cuando los bordes están hechos y el centro aún tiembla al mover el molde.", "<b>Reposa 1 min</b>, pasa un cuchillo por el borde y desmolda sobre un plato. Al cortarlo sale el chocolate fundido."],
+    tabla: {"cols": ["Los 2", "Por coulant"], "rows": [["Calorías", "~308 kcal", "~154 kcal"], ["Proteínas", "~21,7 g", "~10,8 g"], ["Grasas", "~14 g", "~7 g"], ["Carbohidratos", "~19,6 g", "~9,8 g"]]},
+    notaTabla: "Un coulant de restaurante ronda las 400–450 kcal y 25 g de grasa. Este, unas 150 kcal y 7 g de grasa: la mitad viene del huevo y la otra mitad de la onza de chocolate.",
+    tips: ["<b>El punto es lo más importante:</b> un minuto de más y el centro se cuaja (queda un bizcocho rico, pero sin chocolate líquido). La primera vez, mira a partir del minuto 6.", "<b>Con frambuesas</b> o una cucharada de [[helado-frutos-rojos]] al lado, queda de restaurante."],
+    conserva: { nevera: "Mejor recién hecho. La masa cruda aguanta 1 día en la nevera, ya en los moldes.", congelar: "La masa cruda en los moldes, sí: se hornea congelada con 2–3 min más." },
+    compra: [["huevos", 2, "ud. (1 entero + 1 clara)"], ["cacao", 15, "g"], ["avena", 20, "g"], ["yogur", 60, "g"], ["chocolate-negro", 10, "g"], ["levadura", null], ["edulcorante", null], ["spray", null]],
+    usa: ["cacao", "chocolate-negro", "yogur", "huevos"]
+  },
+  {
+    id: "tiramisu-fit", corto: "tiramisú fit", nombre: "Tiramisú fit en vaso (de avena)",
+    cat: ["Postre", "Merienda", "Desayuno"], met: ["Sin horno"], ext: ["Sin huevo"], tags: ["Se prepara la noche antes", "Con café"],
+    gluten: "avena", lacteos: true,
+    raciones: 1, racionesTxt: "1 vaso", tiempoTxt: "5 min + 2 h (o la noche) en la nevera", min: 5,
+    completa: { kcal: 200, p: 17.5, g: 3.4, c: 23.8 }, racion: { kcal: 200, p: 17.5, g: 3.4, c: 23.8 },
+    ingredientes: [{"t": "Ingredientes", "items": ["Copos de avena: {30} g", "Café solo frío: {60} ml (descafeinado si es de tarde)", "Queso fresco batido 0%: {150} g", "Edulcorante y unas gotas de vainilla", "Cacao puro desgrasado: {5} g, para espolvorear"]}],
+    pasos: ["<b>Empapa la avena</b> en el café con un poco de edulcorante, en el fondo de un vaso. Es la capa de «bizcocho».", "<b>Mezcla</b> el queso batido con la vainilla y el edulcorante, y ponlo encima.", "<b>Espolvorea el cacao</b> con un colador pequeño, para que quede fino.", "<b>A la nevera</b> 2 horas [[t:120]] o toda la noche: la avena se ablanda y coge el sabor a café."],
+    tabla: {"cols": ["Vaso"], "rows": [["Calorías", "~200 kcal"], ["Proteínas", "~17.5 g"], ["Grasas", "~3.4 g"], ["Carbohidratos", "~23.8 g"]]},
+    notaTabla: "Un tiramisú normal (mascarpone, huevo, azúcar y bizcochos) ronda las 400–450 kcal y 25–30 g de grasa por ración. Este sabe a tiramisú con 3,4 g.",
+    tips: ["<b>En capas</b> queda más bonito: avena, crema, avena, crema y cacao.", "<b>Con un chorrito de licor de café o amaretto</b> en el café sabe más a tiramisú de verdad (unas 20 kcal más)."],
+    conserva: { nevera: "2 días tapado.", congelar: "No." },
+    compra: [["avena", 30, "g"], ["cafe", 60, "ml"], ["batido", 150, "g"], ["cacao", 5, "g"], ["edulcorante", null], ["vainilla", null]],
+    usa: ["avena", "batido", "cacao"]
+  },
+  {
+    id: "arroz-con-leche", corto: "arroz con leche", nombre: "Arroz con leche fit",
+    cat: ["Postre", "Merienda"], met: ["Cazo"], ext: ["Sin huevo", "Sin gluten"], tags: ["Clásico de siempre", "Casi sin grasa"],
+    gluten: "natural", lacteos: true,
+    raciones: 2, racionesTxt: "2 boles", tiempoTxt: "5 min + 40 min de cocción + enfriar", min: 45,
+    completa: { kcal: 313, p: 19.3, g: 1.9, c: 54.5 }, racion: { kcal: 156, p: 9.7, g: 1, c: 27.3 },
+    ingredientes: [{"t": "Ingredientes", "items": ["Arroz redondo: {40} g", "Leche desnatada: {500} ml", "Canela en rama: {1}. Piel de limón: {0.5} (solo la parte amarilla)", "Edulcorante al gusto (se añade al final)", "Canela en polvo para servir"]}],
+    pasos: ["<b>Pon la leche</b> en un cazo con la canela en rama y la piel de limón, y calienta hasta que casi hierva.", "<b>Añade el arroz</b> y baja a fuego bajo. Cuece unos 35–40 min [[t:35]], <b>removiendo cada pocos minutos</b> para que no se pegue: es el truco del arroz con leche cremoso.", "<b>Cuando el arroz esté muy tierno</b> y la leche haya espesado, retira la canela y el limón.", "<b>Fuera del fuego</b>, añade el edulcorante (con calor algunos amargan) y remueve.", "<b>Reparte</b> en boles, espolvorea canela y deja enfriar. En la nevera espesa más."],
+    tabla: {"cols": ["Receta completa", "Por bol"], "rows": [["Calorías", "~313 kcal", "~156 kcal"], ["Proteínas", "~19,3 g", "~9,7 g"], ["Grasas", "~1,9 g", "~1 g"], ["Carbohidratos", "~54,5 g", "~27 g"]]},
+    notaTabla: "El de siempre (leche entera y azúcar) ronda las 250–300 kcal y 8 g de grasa por bol. Cuentas con arroz redondo de 344 kcal por 100 g (Hacendado).",
+    tips: ["<b>Más proteína:</b> mezcla 50 g de queso batido 0% en cada bol ya frío (+23 kcal, +4 g de proteína). Con la opción de proteína en polvo activada, 10 g de proteína de vainilla al final, fuera del fuego.", "<b>Si espesa demasiado</b> al enfriar, un chorrito de leche fría."],
+    conserva: { nevera: "3–4 días tapado.", congelar: "No: el arroz se pone duro." },
+    compra: [["arroz-redondo", 40, "g"], ["leche", 500, "ml"], ["canela", 1, "rama"], ["limon", 0.5, "ud."], ["edulcorante", null]],
+    usa: ["leche"]
+  },
+  {
+    id: "manzana-asada", corto: "manzana asada", nombre: "Manzana asada con canela y crema de queso",
+    cat: ["Postre", "Merienda"], met: ["Airfryer"], ext: ["Sin huevo", "Sin gluten"], tags: ["2 ingredientes", "Caliente"],
+    gluten: "natural", lacteos: true,
+    raciones: 1, racionesTxt: "1 manzana", tiempoTxt: "5 min + 15–18 min de airfryer", min: 22,
+    completa: { kcal: 132, p: 5.3, g: 0.6, c: 25 }, racion: { kcal: 132, p: 5.3, g: 0.6, c: 25 },
+    ingredientes: [{"t": "Ingredientes", "items": ["Manzana grande (Golden, Reineta o Fuji): {1} (unos {200} g)", "Canela en polvo y edulcorante al gusto", "Queso fresco batido 0%: {60} g, para servir (o [[crema-cacao-expres]])"]}],
+    pasos: ["<b>Descorazona</b> la manzana sin llegar al fondo (que haga de cuenco) y hazle un corte superficial alrededor de la piel, a media altura: así no revienta.", "<b>Pon canela y edulcorante</b> en el hueco y un chorrito de agua en el fondo de una fuente pequeña apta para horno.", "<b>Precalienta</b> la freidora a 180 °C durante 3 minutos [[t:3]].", "<b>Ásala</b> en la fuente, con la bandeja en la posición media, a <b>180 °C durante 15–18 min</b> [[t:15]], hasta que esté blanda al pincharla.", "<b>Sirve templada</b> con el queso batido (con un poco de edulcorante y canela) en el hueco."],
+    tabla: {"cols": ["Manzana"], "rows": [["Calorías", "~132 kcal"], ["Proteínas", "~5.3 g"], ["Grasas", "~0.6 g"], ["Carbohidratos", "~25 g"]]},
+    notaTabla: "El postre más ligero que se puede hacer: fruta, canela y queso batido.",
+    tips: ["<b>Con pera</b> también sale, unos minutos menos.", "<b>Con frutos secos:</b> 3 nueces picadas en el hueco antes de asar (+60 kcal, +6 g de grasa buena)."],
+    conserva: { nevera: "1–2 días; se recalienta 1 min en el microondas.", congelar: "No." },
+    compra: [["fruta", 1, "manzana grande"], ["batido", 60, "g"], ["canela", null], ["edulcorante", null]],
+    usa: ["batido"]
   }
 ];
 
@@ -1885,7 +1962,7 @@ const NUTRI = {
   "helado-frutos-rojos": [5, 1.5, []], "pollo-curry": [4.1, 2.5, []], "albondigas-pollo": [4.8, 3, []], "pescado-pisto": [7, 5, ["pescado"]], "brochetas-pollo": [5, 3.5, []],
   "sepia-plancha": [4, 2.5, ["pescado"]], "tortilla-calabacin": [2.9, 3, []],
   "cookies-avena": [3.6, 0, []], "cookies-pro": [2.8, 0, []], "tortitas-pro": [7, 1, []], "overnight-pro": [8, 1, []], "mousse-pro": [2.4, 0, []],
-  "batido-pro": [4.6, 1, []], "cheesecake-pro": [3.3, 0.5, []], "natillas-pro": [0, 0, []], "bizcocho-pro": [1.7, 0, []], "helado-pro": [5, 1.5, []], "cheesecake-blanco": [4.5, 0.5, []], "crema-cacao": [1, 0, []], "cookies-rellenas": [4.8, 0, []], "cookies-cacahuete": [4.2, 0, []], "crema-cacao-pro": [0.8, 0, []], "crema-cacao-expres": [0.8, 0, []], "salsa-yogur": [0.2, 0, []], "salsa-pimienta": [0.3, 0, []], "salsa-queso": [0.2, 0, []], "salsa-barbacoa": [0.4, 0.5, []], "alioli-yogur": [0, 0, []], "guacamole-fit": [1.5, 0.5, []]
+  "batido-pro": [4.6, 1, []], "cheesecake-pro": [3.3, 0.5, []], "natillas-pro": [0, 0, []], "bizcocho-pro": [1.7, 0, []], "helado-pro": [5, 1.5, []], "cheesecake-blanco": [4.5, 0.5, []], "crema-cacao": [1, 0, []], "cookies-rellenas": [4.8, 0, []], "cookies-cacahuete": [4.2, 0, []], "crema-cacao-pro": [0.8, 0, []], "crema-cacao-expres": [0.8, 0, []], "salsa-yogur": [0.2, 0, []], "salsa-pimienta": [0.3, 0, []], "salsa-queso": [0.2, 0, []], "salsa-barbacoa": [0.4, 0.5, []], "alioli-yogur": [0, 0, []], "guacamole-fit": [1.5, 0.5, []], "tarta-chocolate": [5.5, 0, []], "coulant-fit": [4.5, 0, []], "tiramisu-fit": [4.6, 0, []], "arroz-con-leche": [0.3, 0, []], "manzana-asada": [4.8, 2, []]
 };
 const nutri = r => NUTRI[r.id] || [0, 0, []];
 // Recetas con bastante sal (salmón ahumado, caldo de brik)
@@ -1942,7 +2019,7 @@ const NIVEL = {
   "revuelto-claras": 2, "pavo-verduras": 2, "tortitas": 2, "caldo-pollo": 2, "pasta-atun": 2, "garbanzos-espinacas": 2, "pollo": 2, "merluza": 2, "salmon-patata": 2, "brochetas-pollo": 2, "sepia-plancha": 2,
   "crema-calabacin": 2, "merluza-coliflor": 2, "bizcocho-yogur": 2, "brownie-fit": 2, "galletas-avena": 2, "albondigas-pollo": 2, "pollo-curry": 2, "arroz-pollo": 2, "lentejas": 2, "hamburguesas": 2, "pescado-pisto": 2,
   "natillas": 3, "tortilla": 3, "tortilla-calabacin": 3, "cheesecake-nevera": 3, "cheesecake-airfryer": 3, "mousse": 3,
-  "cookies-avena": 2, "cookies-pro": 2, "tortitas-pro": 2, "overnight-pro": 1, "mousse-pro": 3, "batido-pro": 1, "cheesecake-pro": 3, "natillas-pro": 3, "bizcocho-pro": 2, "helado-pro": 1, "cheesecake-blanco": 3, "crema-cacao": 2, "cookies-rellenas": 3, "cookies-cacahuete": 2, "crema-cacao-pro": 2, "crema-cacao-expres": 1, "salsa-yogur": 1, "salsa-pimienta": 2, "salsa-queso": 2, "salsa-barbacoa": 1, "alioli-yogur": 1, "guacamole-fit": 1
+  "cookies-avena": 2, "cookies-pro": 2, "tortitas-pro": 2, "overnight-pro": 1, "mousse-pro": 3, "batido-pro": 1, "cheesecake-pro": 3, "natillas-pro": 3, "bizcocho-pro": 2, "helado-pro": 1, "cheesecake-blanco": 3, "crema-cacao": 2, "cookies-rellenas": 3, "cookies-cacahuete": 2, "crema-cacao-pro": 2, "crema-cacao-expres": 1, "salsa-yogur": 1, "salsa-pimienta": 2, "salsa-queso": 2, "salsa-barbacoa": 1, "alioli-yogur": 1, "guacamole-fit": 1, "tarta-chocolate": 3, "coulant-fit": 3, "tiramisu-fit": 1, "arroz-con-leche": 2, "manzana-asada": 1
 };
 const NIVEL_TXT = { 1: "Muy fácil", 2: "Fácil", 3: "Con un poco de mano" };
 const nivel = r => NIVEL[r.id] || 2;
@@ -2009,6 +2086,11 @@ const UTENSILIOS = {
   "salsa-barbacoa": [["Cazo pequeño"], ["Tarro con tapa"]],
   "alioli-yogur": [["Mortero (para el ajo)", "Rállalo con un rallador fino o aplástalo con el lado del cuchillo y una pizca de sal."], ["Bol"]],
   "guacamole-fit": [["Tenedor y bol"], ["Cuchillo y tabla"]],
+  "tarta-chocolate": [["Freidora de aire (solo la base)", AF_HORNO("unos 170–175 °C y 6–7 min")], ["Molde de 10–12 cm y papel de horno", "Un vaso ancho o un táper redondo (la base, sin hornear: congélala 15 min)."], ["Bol y varillas"], ["Microondas (para la leche)", "Un cazo pequeño."]],
+  "coulant-fit": [["Freidora de aire", AF_HORNO("unos 195 °C y 8–9 min")], ["2 flaneras o ramequines", "Tazas o moldes de magdalena de silicona grandes (1 min menos)."], ["Batidora o picadora (para la harina de avena)", "Harina de avena comprada."]],
+  "tiramisu-fit": [["Vaso o tarro"], ["Colador pequeño (para el cacao)", "Espolvoréalo con los dedos, poco a poco."]],
+  "arroz-con-leche": [["Cazo mediano, mejor de fondo grueso", "En uno fino, fuego más bajo y remover más a menudo."], ["Cuchara de madera"]],
+  "manzana-asada": [["Freidora de aire", AF_HORNO("unos 195 °C y 20–25 min") + " O en el microondas: 4–5 min tapada, queda más blanda y menos tostada."], ["Fuente pequeña apta para horno"], ["Cuchillo pequeño o descorazonador"]],
   "cheesecake-blanco": [BASCULA("300 g de queso batido son unas 20 cucharadas soperas; 30 g de proteína, un cacito."), ["Molde de 10–12 cm", "Un vaso ancho, una taza grande o un táper redondo."], ["Bol y varillas"], ["Microondas (para la leche)", "Un cazo pequeño."]],
   "helado-pro": [["Batidora potente o picadora", "Sin batidora: frutos rojos descongelados 20 min y chafados, mezclados con el queso batido y la proteína. Queda tipo yogur helado con trozos."]],
   "bol-queso-fruta": [["Bol y cuchillo"], BASCULA("200 g de queso batido son unas 13 cucharadas soperas, o 2/5 de una tarrina de 500 g.")]
@@ -2246,13 +2328,15 @@ const EXTRA_ING = {
   mostaza: ["Mostaza", "Despensa"],
   vinagre: ["Vinagre de manzana o de vino", "Despensa"],
   pimienta: ["Pimienta negra o verde en grano", "Despensa"],
+  cafe: ["Café (o descafeinado)", "Despensa"],
+  "arroz-redondo": ["Arroz redondo", "Despensa"],
   pepino: ["Pepino", "Fruta y verdura"],
   pimiento: ["Pimiento rojo", "Fruta y verdura"]
 };
 const PASILLOS = ["Fruta y verdura", "Carne y pescado", "Lácteos y huevos", "Congelados", "Despensa", "Otros"];
 
 /* ===================== CONFIGURACIÓN ===================== */
-const SABOR = { "tortitas": "avena", "cheesecake-nevera": "frambuesa", "cheesecake-airfryer": "melocoton", "mousse": "cacao", "natillas": "vainilla", "tortilla": "espinaca", "pollo": "melocoton", "merluza": "vainilla", "hamburguesas": "espinaca", "tostada-aguacate": "espinaca", "revuelto-claras": "melocoton", "overnight-oats": "frambuesa", "batido-platano": "vainilla", "crema-calabacin": "espinaca", "merluza-coliflor": "vainilla", "pavo-verduras": "melocoton", "caldo-pollo": "avena", "lentejas": "cacao", "salmon-patata": "melocoton", "arroz-pollo": "avena", "pasta-atun": "frambuesa", "garbanzos-espinacas": "espinaca", "fruta-frutos-secos": "avena", "bocadillo-pavo": "melocoton", "bol-queso-fruta": "frambuesa", "porridge-manzana": "avena", "tostada-salmon": "melocoton", "bizcocho-yogur": "vainilla", "brownie-fit": "cacao", "galletas-avena": "avena", "helado-frutos-rojos": "frambuesa", "pollo-curry": "vainilla", "albondigas-pollo": "melocoton", "pescado-pisto": "espinaca", "brochetas-pollo": "melocoton", "sepia-plancha": "vainilla", "tortilla-calabacin": "espinaca", "cookies-avena": "cacao", "cookies-pro": "cacao", "tortitas-pro": "avena", "overnight-pro": "frambuesa", "mousse-pro": "cacao", "batido-pro": "vainilla", "cheesecake-pro": "melocoton", "natillas-pro": "vainilla", "bizcocho-pro": "vainilla", "helado-pro": "frambuesa", "cheesecake-blanco": "frambuesa", "crema-cacao": "cacao", "cookies-rellenas": "cacao", "cookies-cacahuete": "melocoton", "crema-cacao-pro": "cacao", "crema-cacao-expres": "cacao", "salsa-yogur": "espinaca", "salsa-pimienta": "vainilla", "salsa-queso": "avena", "salsa-barbacoa": "melocoton", "alioli-yogur": "vainilla", "guacamole-fit": "espinaca" };
+const SABOR = { "tortitas": "avena", "cheesecake-nevera": "frambuesa", "cheesecake-airfryer": "melocoton", "mousse": "cacao", "natillas": "vainilla", "tortilla": "espinaca", "pollo": "melocoton", "merluza": "vainilla", "hamburguesas": "espinaca", "tostada-aguacate": "espinaca", "revuelto-claras": "melocoton", "overnight-oats": "frambuesa", "batido-platano": "vainilla", "crema-calabacin": "espinaca", "merluza-coliflor": "vainilla", "pavo-verduras": "melocoton", "caldo-pollo": "avena", "lentejas": "cacao", "salmon-patata": "melocoton", "arroz-pollo": "avena", "pasta-atun": "frambuesa", "garbanzos-espinacas": "espinaca", "fruta-frutos-secos": "avena", "bocadillo-pavo": "melocoton", "bol-queso-fruta": "frambuesa", "porridge-manzana": "avena", "tostada-salmon": "melocoton", "bizcocho-yogur": "vainilla", "brownie-fit": "cacao", "galletas-avena": "avena", "helado-frutos-rojos": "frambuesa", "pollo-curry": "vainilla", "albondigas-pollo": "melocoton", "pescado-pisto": "espinaca", "brochetas-pollo": "melocoton", "sepia-plancha": "vainilla", "tortilla-calabacin": "espinaca", "cookies-avena": "cacao", "cookies-pro": "cacao", "tortitas-pro": "avena", "overnight-pro": "frambuesa", "mousse-pro": "cacao", "batido-pro": "vainilla", "cheesecake-pro": "melocoton", "natillas-pro": "vainilla", "bizcocho-pro": "vainilla", "helado-pro": "frambuesa", "cheesecake-blanco": "frambuesa", "crema-cacao": "cacao", "cookies-rellenas": "cacao", "cookies-cacahuete": "melocoton", "crema-cacao-pro": "cacao", "crema-cacao-expres": "cacao", "salsa-yogur": "espinaca", "salsa-pimienta": "vainilla", "salsa-queso": "avena", "salsa-barbacoa": "melocoton", "alioli-yogur": "vainilla", "guacamole-fit": "espinaca", "tarta-chocolate": "cacao", "coulant-fit": "cacao", "tiramisu-fit": "avena", "arroz-con-leche": "vainilla", "manzana-asada": "melocoton" };
 const SABOR_MOMENTO = { Salsa: "vainilla", Tentempié: "avena", Desayuno: "avena", Comida: "melocoton", Merienda: "frambuesa", Postre: "frambuesa", Cena: "espinaca" };
 const sabor = r => r.sabor || SABOR[r.id] || SABOR_MOMENTO[r.cat[0]] || "avena";
 const CATS = ["Desayuno", "Tentempié", "Comida", "Merienda", "Postre", "Cena", "Salsa"];
