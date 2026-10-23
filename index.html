@@ -301,7 +301,8 @@ tr.hl td { background: var(--ok-bg); }
 .savebar i { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-soft); }
 .savebar.on i { background: var(--prot); }
 .tabs { flex-wrap: nowrap; }
-@media (max-width: 560px) { .title-row { flex-wrap: wrap; } .tabs { width: 100%; justify-content: space-between; } .tabs a { flex: 1; text-align: center; padding: 7px 6px; } }
+@media (max-width: 560px) { .title-row { flex-wrap: wrap; } .tabs { width: 100%; justify-content: space-between; } .tabs a { flex: 1; text-align: center; padding: 7px 4px; } }
+@media (max-width: 420px) { .tabs { gap: 2px; } .tabs a { font-size: .78rem; padding: 7px 2px; } }
 .timer-btn svg { width: 13px; height: 13px; fill: currentColor; vertical-align: -2px; margin-right: 4px; }
 .card .fav, .lrow .fav { position: absolute; right: 12px; top: 10px; font-size: 1.1rem; line-height: 1; }
 .lrow { position: relative; }
@@ -515,6 +516,22 @@ tr.hl td { background: var(--ok-bg); }
 .gticket summary { display: flex; justify-content: space-between; gap: 10px; color: var(--ink); }
 .gticket summary b { font-variant-numeric: tabular-nums; }
 .gticket summary > span { flex: 1; }
+.of { display: grid; gap: 14px; }
+.of-head .chips { margin-top: 2px; }
+.of-sups { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; }
+.of-sups .chip { flex: none; }
+.of-warn { background: var(--warn-bg); color: var(--warn-ink); border-radius: 12px; padding: 8px 12px; font-weight: 600; font-size: .9rem; }
+.of-list { list-style: none; margin: 0; padding: 0; display: grid; }
+.of-row { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 12px; align-items: start; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.of-row:last-child { border-bottom: 0; }
+.of-row img, .of-noimg { width: 56px; height: 56px; object-fit: contain; background: #fff; border-radius: 10px; }
+.of-row > div { display: grid; gap: 2px; min-width: 0; }
+.of-t { font-weight: 600; }
+.of-p { font-variant-numeric: tabular-nums; } .of-p b { font-family: var(--display); font-size: 1.1rem; } .of-p s { color: var(--ink-soft); font-size: .85rem; }
+.of-sup summary { display: flex; align-items: baseline; justify-content: space-between; cursor: pointer; list-style: none; }
+.of-sup summary::-webkit-details-marker { display: none; }
+.of-sup summary h3::before { content: "▸ "; color: var(--ink-soft); }
+.of-sup[open] summary h3::before { content: "▾ "; }
 .objrow input { width: 110px; border: 0; border-radius: 10px; padding: 8px 10px; background: var(--bg); box-shadow: inset 0 0 0 1.5px var(--line); font-weight: 700; color: var(--ink); }
 .slot-hint { grid-column: 2; font-size: .8rem; color: var(--ink-soft); margin-top: -4px; }
 .slot-in { display: flex; gap: 6px; min-width: 0; }
@@ -540,6 +557,7 @@ tr.hl td { background: var(--ok-bg); }
         <a href="#recetas" data-tab="recetas">Recetas</a>
         <a href="#plan" data-tab="plan">Plan</a>
         <a href="#compra" data-tab="compra">Compra</a>
+        <a href="#ofertas" data-tab="ofertas">Ofertas</a>
         <a href="#progreso" data-tab="progreso">Progreso</a>
         <a href="#trucos" data-tab="trucos">Trucos</a>
       </nav>
@@ -684,6 +702,15 @@ tr.hl td { background: var(--ok-bg); }
       </div>
     </div>
     <div class="ing-list" id="ing-list"></div>
+  </section>
+
+  <!-- ================= OFERTAS ================= -->
+  <section class="panel" id="panel-ofertas" aria-label="Ofertas" hidden>
+    <div class="intro">
+      <h2>Ofertas</h2>
+      <p>Ofertas de los folletos de tu zona, sacadas de <a href="https://www.tiendeo.com" target="_blank" rel="noopener">Tiendeo</a> los lunes y jueves. Solo salen las que Tiendeo destaca, no el folleto entero. El precio es por paquete: compáralo con tu precio normal solo si es el mismo producto y formato.</p>
+    </div>
+    <div class="of" id="of-box"></div>
   </section>
 
   <!-- ================= PROGRESO ================= -->
@@ -3272,6 +3299,86 @@ gPanel.addEventListener("click", e => {
   else if ((b = T("[data-gdel]"))) confirmar(b, "Pulsa otra vez para borrar", () => { Saved.gastos = Object.assign({}, Saved.gastos, { tickets: Saved.gastos.tickets.filter(x => x.id !== b.dataset.gdel), borrados: [...(Saved.gastos.borrados || []), b.dataset.gdel] }); Saved.setGastos(); renderGastos(); });
 });
 
+/* ===================== OFERTAS ===================== */
+/* ofertas.json lo genera el miniPC (scripts/ofertas.py en recetario-datos) a partir de Tiendeo. La web solo lo lee:
+   no forma parte de Saved ni se sube nunca. Son textos de terceros: todo pasa por esc() y las imágenes solo de su CDN. */
+const OF_IMG = "https://d1h08qwp2t1dnu.cloudfront.net/";
+const OF_VACIAS = new Set(["de", "del", "la", "el", "los", "las", "con", "sin", "en", "y", "para"]);
+const ofState = { datos: null, cargando: false, error: "", q: "", sup: "", mio: false, t: 0 };
+try { ofState.datos = JSON.parse(localStorage.getItem("rf-ofertas") || "null"); } catch (e) {}
+async function cargarOfertas(forzar) {
+  if (!Saved.token || ofState.cargando) return;
+  if (!forzar && Date.now() - ofState.t < 3600000 && ofState.datos) return;
+  ofState.cargando = true; ofState.error = ""; renderOfertas();
+  try {
+    const r = await Saved.api("ofertas.json", { raw: true });
+    if (r.status === 404) ofState.error = "Todavía no hay ofertas: el miniPC aún no ha generado ofertas.json.";
+    else if (!r.ok) ofState.error = "No se han podido leer las ofertas (error " + r.status + ").";
+    else { ofState.datos = await r.json(); ofState.t = Date.now(); try { localStorage.setItem("rf-ofertas", JSON.stringify(ofState.datos)); } catch (e) {} }
+  } catch (e) { ofState.error = "Sin conexión: se muestran las últimas ofertas guardadas."; }
+  ofState.cargando = false; renderOfertas();
+}
+// Lo «mío»: ingredientes de las recetas, lo apuntado en gastos y lo añadido a mano a la lista
+function ofPalabras(txt) { return norm(txt.replace(/\(.*\)/g, "")).split(/[^a-zñ]+/).filter(w => w.length >= 4 && !OF_VACIAS.has(w)).slice(0, 3); }
+function ofMios() {
+  const nombres = new Set([...INGREDIENTES.map(i => i.nombre), ...Saved.gastos.tickets.flatMap(t => (t.lineas || []).map(l => l.txt)), ...(Saved.compra.extra || []).map(x => x.txt)]);
+  return [...nombres].map(n => ({ n: n.replace(/ \(.*\)$/, ""), w: ofPalabras(n) })).filter(x => x.w.length);
+}
+// Palabra entera o su plural: «desnatada» no encaja con «semidesnatada»
+function ofEncaja(o, mios) { const t = norm(o.titulo).split(/[^a-zñ]+/); return mios.filter(m => m.w.every(w => t.some(x => x.startsWith(w)))); }
+function ofFecha(o, hoy) {
+  if (!o.hasta) return "fechas sin confirmar";
+  if (o.desde && o.desde > hoy) return `del ${fechaCorta(o.desde)} al ${fechaCorta(o.hasta)}`;
+  return `hasta el ${fechaCorta(o.hasta)}`;
+}
+function ofFila(o, hoy, para) {
+  const img = typeof o.img === "string" && o.img.startsWith(OF_IMG) ? `<img src="${esc(o.img)}" alt="" loading="lazy">` : `<span class="of-noimg"></span>`;
+  const precio = typeof o.precio === "number" ? `<b>${eur(o.precio)}</b>${typeof o.antes === "number" && o.antes > o.precio ? ` <s>${eur(o.antes)}</s>` : ""}` : `<span class="muted">precio en el folleto</span>`;
+  const ref = para && para.length ? para.map(m => { const u = gUltimoNormal(m.n); return `para ${esc(m.n.toLowerCase())}${u != null ? ` · tu precio normal: ${eur(u)}/ud.` : ""}`; }).join("; ") : "";
+  return `<li class="of-row">${img}<div><span class="of-t">${esc(o.titulo)}</span>
+    <span class="of-p">${precio}${o.descuento ? `<span class="gtag">${esc(o.descuento)}</span>` : ""}</span>
+    <small class="muted">${esc(o.super)} · ${ofFecha(o, hoy)}${o.desde && o.desde > hoy ? " · <b>próximamente</b>" : ""}</small>${ref ? `<small class="muted">${ref}</small>` : ""}</div></li>`;
+}
+function renderOfertas() {
+  const box = $("#of-box"); if (!box) return;
+  const d = ofState.datos, hoy = iso(new Date());
+  if (!Saved.token && !d) { box.innerHTML = `<div class="panelcard"><p>Las ofertas se guardan en tu GitHub privado. Para verlas, <a href="#trucos" data-tabgo="trucos">conecta GitHub</a> en este dispositivo.</p></div>`; return; }
+  if (!d) { box.innerHTML = `<div class="panelcard"><p class="muted">${ofState.cargando ? "Cargando ofertas…" : esc(ofState.error || "Sin ofertas todavía.")}</p></div>`; return; }
+  const of = (Array.isArray(d.ofertas) ? d.ofertas : []).filter(o => o && typeof o.titulo === "string" && !(o.hasta && o.hasta < hoy));
+  const dias = Math.floor((Date.now() - new Date(d.actualizado).getTime()) / 86400000);
+  const fecha = isNaN(dias) ? "" : new Date(d.actualizado).toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long" });
+  const mios = ofMios();
+  const PRIMERO = ["Lidl", "ALDI", "Mercadona", "Dia", "Carrefour", "Supermercados MAS"]; // las de siempre, delante
+  const pos = x => (PRIMERO.indexOf(x) + 1 || 99);
+  const supers = [...new Set(of.map(o => o.super))].sort((a, b) => pos(a) - pos(b) || a.localeCompare(b));
+  const q = norm(ofState.q);
+  const vis = of.filter(o => (!ofState.sup || o.super === ofState.sup) && (!q || norm(o.titulo + " " + o.super).includes(q)));
+  const conMio = vis.map(o => [o, ofEncaja(o, mios)]).filter(([, m]) => m.length);
+  const lista = ofState.mio ? conMio.map(([o]) => o) : vis;
+  const porSuper = supers.map(s => [s, lista.filter(o => o.super === s)]).filter(([, l]) => l.length);
+  box.innerHTML = `<div class="panelcard of-head">
+      <p class="muted">${fecha ? `Actualizado el ${fecha}` : ""}${Array.isArray(d.ciudades) ? ` · ${esc(d.ciudades.join(", "))}` : ""} · ${of.length} ofertas en vigor. ${ofState.cargando ? "Cargando…" : `<button type="button" class="btn-text" data-ofrecargar>Recargar</button>`}</p>
+      ${dias > 5 ? `<p class="of-warn">Llevan ${dias} días sin actualizarse: revisa que el miniPC esté encendido y su tarea programada.</p>` : ""}
+      ${ofState.error ? `<p class="muted">${esc(ofState.error)}</p>` : ""}
+      <input class="search" id="of-q" type="search" placeholder="Busca un producto o súper (p. ej. pollo, Lidl)" value="${esc(ofState.q)}" aria-label="Buscar ofertas">
+      <div class="chips of-sups"><button type="button" class="chip" data-ofsup="" aria-pressed="${!ofState.sup}">Todos</button>${supers.map(s => `<button type="button" class="chip" data-ofsup="${esc(s)}" aria-pressed="${ofState.sup === s}">${esc(s)}</button>`).join("")}</div>
+      <div class="chips"><button type="button" class="chip" id="of-mio" aria-pressed="${ofState.mio}">Solo lo que uso</button></div>
+    </div>
+    ${conMio.length && !ofState.mio ? `<div class="panelcard"><h3>Lo que usas, en oferta</h3><ul class="of-list">${conMio.map(([o, m]) => ofFila(o, hoy, m)).join("")}</ul></div>` : ""}
+    ${porSuper.length ? porSuper.map(([s, l], i) => `<details class="panelcard of-sup"${i === 0 || ofState.sup || q || ofState.mio ? " open" : ""}><summary><h3>${esc(s)}</h3><span class="muted">${l.length}</span></summary><ul class="of-list">${l.map(o => ofFila(o, hoy, ofState.mio ? ofEncaja(o, mios) : null)).join("")}</ul></details>`).join("") : `<div class="panelcard"><p class="muted">Nada con esos filtros.</p></div>`}`;
+}
+$("#panel-ofertas").addEventListener("input", e => {
+  if (e.target.id !== "of-q") return;
+  ofState.q = e.target.value; const pos = e.target.selectionStart; renderOfertas();
+  const i = $("#of-q"); i.focus(); i.setSelectionRange(pos, pos);
+});
+$("#panel-ofertas").addEventListener("click", e => {
+  const T = sel => e.target.closest(sel); let b;
+  if ((b = T("[data-ofsup]"))) { ofState.sup = b.dataset.ofsup; renderOfertas(); }
+  else if (T("#of-mio")) { ofState.mio = !ofState.mio; renderOfertas(); }
+  else if (T("[data-ofrecargar]")) cargarOfertas(true);
+});
+
 /* ===================== PLAN SEMANAL ===================== */
 /* Un hueco guarda "id", "id|2" (ración doble) o "otro" (algo que ya tienes, sin contar) */
 const slotParse = v => { if (!v) return { id: "", x: 1 }; const [id, x] = v.split("|"); return { id, x: +x || 1 }; };
@@ -3655,7 +3762,7 @@ if ("serviceWorker" in navigator && location.protocol === "https:") navigator.se
 window.addEventListener("online", () => { if (Saved.token && Saved.sucios.size) Saved.push(); });
 
 /* ===================== NAVEGACIÓN Y EVENTOS ===================== */
-const TABS = ["recetas", "plan", "compra", "progreso", "trucos"];
+const TABS = ["recetas", "plan", "compra", "ofertas", "progreso", "trucos"];
 function showTab(tab, scrollTo) {
   if (!TABS.includes(tab)) tab = "recetas";
   TABS.forEach(t => { $("#panel-" + t).hidden = t !== tab; });
@@ -3664,6 +3771,7 @@ function showTab(tab, scrollTo) {
   prefs.set("tab", tab);
   if (tab === "recetas") fitLast();
   if (tab === "progreso") renderProgreso();
+  if (tab === "ofertas") { renderOfertas(); cargarOfertas(); }
   if (scrollTo) { const el = document.getElementById(scrollTo); if (el) el.scrollIntoView({ block: "start" }); }
   else window.scrollTo(0, 0);
 }

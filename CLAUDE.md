@@ -2,7 +2,7 @@
 
 Recetario personal publicado en GitHub Pages: https://hectorgarvi.github.io/recetario-fit/
 
-Recetas con mucha proteína y poca grasa que sacien, con filtros, plan semanal, lista de la compra, registro de gastos y precios, modo cocina y guía de marcas. Todo el texto de la web está en español de España.
+Recetas con mucha proteína y poca grasa que sacien, con filtros, plan semanal, lista de la compra, registro de gastos y precios, ofertas de los folletos de su zona, modo cocina y guía de marcas. Todo el texto de la web está en español de España.
 
 ## Estructura
 
@@ -74,6 +74,15 @@ Antes de publicar, ejecuta en la consola del navegador (o en un navegador headle
 - `progreso`: `{ registros: [{ fecha, peso, cintura? }] }`. Los consejos se basan en medias semanales: 3 semanas sin cambios → −150–200 kcal; más de 0,5 kg/semana → +150–200 kcal.
 - `despensa`: los ids de lo que el usuario tiene en casa («Con lo que tengo»).
 - `gastos`: `{ tickets: [{ id, fecha, tienda, total, lineas: [{ txt, ing?, cant, pagado, oferta }] }], borrados: [ids] }`. Sección «Lo que gasto» de la pestaña Compra. `pagado` es lo que costó la línea entera; el precio por unidad es `pagado / cant`. Las líneas con `oferta` (2x1, 3x2…) no cuentan como precio «normal». «Apuntar lo tachado en gastos» rellena las líneas desde la lista con el último precio normal.
+
+## Ofertas (pestaña «Ofertas»)
+
+- `ofertas.json` vive en el repo privado `recetario-datos` y **la web solo lo lee** (`cargarOfertas`, con el token; copia en localStorage `rf-ofertas`). No forma parte de `Saved` (`datos()`, `aplicar()`, `mezclar()`): no lo metas ahí ni lo subas desde la web.
+- Lo genera `scripts/ofertas.py` (en `recetario-datos`) desde el **miniPC de casa** con `scripts/ofertas-minipc.sh` por cron, lunes y jueves. Tiendeo responde 403 a GitHub Actions, por eso no hay workflow; no intentes saltarte ese bloqueo.
+- Ciudades: `ciudades.txt` en `recetario-datos`, una por línea como en la URL de Tiendeo. Las páginas `/<ciudad>/<cadena>` son de esa ciudad vengas de donde vengas; las búsquedas `/ofertas/<producto>` usan la ubicación de la IP y, si no es una de las ciudades, solo se guardan cadenas nacionales.
+- Rutas de Tiendeo que lee el script (permitidas por su robots.txt): `/<ciudad>`, `/<ciudad>/<cadena>` y `/ofertas/<producto>`. Nunca `/Catalogos/`, `/api/` ni `/graphql/`. Una petición cada 1,5 s. Si sale con cero ofertas, no sobrescribe el archivo.
+- Son textos de terceros en una página que guarda el token: todo pasa por `esc()` y las imágenes solo se aceptan de `https://d1h08qwp2t1dnu.cloudfront.net/`.
+- «Lo que usas, en oferta» cruza los títulos con los ingredientes, lo apuntado en gastos y los extras de la lista (palabras enteras, hasta 3 por nombre). El precio es por paquete: se enseña su precio normal de gastos como referencia, sin calcular ahorros.
 
 ## App instalable
 
@@ -161,6 +170,7 @@ Su perfil (datos, objetivos, gustos) está en `perfil.md` del repo privado. Lée
 
 Pendiente del usuario:
 - Decidir si se protege la web con login de verdad (Cloudflare Pages + Access) o se deja así. Otras personas tienen el enlace; los datos personales ya están a salvo en el repo privado.
+- Montar en el miniPC la tarea de ofertas (instrucciones en el README de `recetario-datos`). Mientras no esté, `ofertas.json` es la primera tanda generada a mano el 23/10/2026 y la pestaña avisará de que está desactualizada.
 - Probar «Lo que gasto» con dos dispositivos reales (la mezcla de `gastos` solo se ha probado con un GitHub simulado, para no tocar sus datos).
 - Recetas con un solo tiempo («35 min») cuentan todo como elaboración; se podrían partir en trabajo + cocción (arroz con pollo, crema de calabacín, pescado con pisto, caldo).
 
