@@ -71,6 +71,7 @@ Antes de publicar, ejecuta en la consola del navegador (o en un navegador headle
 - `plan`: `{ semanas: { "AAAA-MM-DD" (lunes): { dias, entreno[7] } }, obj: { kcal, kcalD, p, g } }`. El formato antiguo `plan.dias` se migra solo a la semana actual.
 - `progreso`: `{ registros: [{ fecha, peso, cintura? }] }`. Los consejos se basan en medias semanales: 3 semanas sin cambios → −150–200 kcal; más de 0,5 kg/semana → +150–200 kcal.
 - `despensa`: los ids de lo que el usuario tiene en casa («Con lo que tengo»).
+- `gastos`: `{ tickets: [{ id, fecha, tienda, total, lineas: [{ txt, ing?, cant, pagado, oferta }] }], borrados: [ids] }`. Sección «Lo que gasto» de la pestaña Compra. `pagado` es lo que costó la línea entera; el precio por unidad es `pagado / cant`. Las líneas con `oferta` (2x1, 3x2…) no cuentan como precio «normal». «Apuntar lo tachado en gastos» rellena las líneas desde la lista con el último precio normal.
 
 ## App instalable
 
@@ -122,7 +123,7 @@ Salieron de una revisión de código con dos fallos de pérdida de datos:
 - `Saved.sucios` (las secciones con cambios sin subir) se guarda en localStorage (`rf-sucios`) y se recupera al abrir. Si no, al reabrir con conexión el `pull` pisaba lo local.
 - Con cambios pendientes, `pull` **no** adopta el `sha` remoto ni aplica los datos. Así el `push` choca (409/422) y mezcla por secciones; si no, borraba lo de otro dispositivo.
 - Al conectar, lo local se mezcla con lo remoto (`mezclar`). Si se conecta sin conexión, se marca `todo` y la mezcla se hace al volver.
-- Las secciones son `recetas` (una clave por receta, `r-<id>`), `compra`, `plan`, `progreso` y `despensa`. Si añades una sección nueva, inclúyela en `datos()`, `aplicar()`, la mezcla de `push` y `mezclar()`.
+- Las secciones son `recetas` (una clave por receta, `r-<id>`), `compra`, `plan`, `progreso`, `despensa` y `gastos`. `gastos` no se sustituye entera en un choque: `gMezcla` suma las compras por id y respeta `borrados`, para que dos dispositivos que apuntan a la vez no se pisen. Si añades una sección nueva, inclúyela en `datos()`, `aplicar()`, la mezcla de `push` y `mezclar()`.
 - Hay una prueba de punta a punta que se hizo con el token de `gh` (`gh auth token -u hectorgarvi`) contra el repo privado, borrando después lo que crea. Repítela si tocas `Saved`.
 
 ## Estilo visual

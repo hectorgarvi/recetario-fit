@@ -386,7 +386,7 @@ tr.hl td { background: var(--ok-bg); }
 .stars .muted { margin-left: 8px; }
 @media print {
   body { background: #fff; color: #000; }
-  header.top, nav, .panel:not(#panel-compra), #panel-compra .intro, #panel-compra .shop > .panelcard:first-child, #panel-compra .addrow, #marcas, #ing-list, .timers, .toast, .overlay, .cook { display: none !important; }
+  header.top, nav, .panel:not(#panel-compra), #panel-compra .intro, #panel-compra .shop > .panelcard:first-child, #panel-compra .addrow, #panel-compra .rowbtns, .gastos, #marcas, #ing-list, .timers, .toast, .overlay, .cook { display: none !important; }
   #panel-compra { display: block !important; }
   #panel-compra .shop { display: block; }
   #panel-compra .panelcard { box-shadow: none; padding: 0; }
@@ -496,6 +496,25 @@ tr.hl td { background: var(--ok-bg); }
 .objrow > span { font-weight: 700; width: 100%; }
 .objrow label { display: grid; gap: 3px; color: var(--ink-soft); font-weight: 600; }
 .objrow input[type="date"] { width: 160px; }
+.gline { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 34px; gap: 6px 8px; align-items: end; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: .82rem; }
+.gline label { display: grid; gap: 3px; color: var(--ink-soft); font-weight: 600; }
+.gline .gl-n { grid-column: 1 / 3; }
+.gline input, .gline select, .gform input { width: 100%; min-width: 0; border: 0; border-radius: 10px; padding: 8px 10px; background: var(--bg); box-shadow: inset 0 0 0 1.5px var(--line); font: inherit; font-size: .95rem; font-weight: 600; color: var(--ink); }
+.gline .gl-ud { grid-column: 2 / 4; align-self: center; text-align: right; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.gform { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; font-size: .88rem; }
+.gform label { display: grid; gap: 3px; color: var(--ink-soft); font-weight: 600; }
+.gform label.full { grid-column: 1 / -1; }
+.gsum { font-variant-numeric: tabular-nums; }
+.gstat { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.gstat div { background: var(--bg); border-radius: 14px; padding: 10px; display: grid; gap: 2px; }
+.gstat b { font-family: var(--display); font-size: 1.25rem; font-variant-numeric: tabular-nums; }
+.gstat span { font-size: .78rem; color: var(--ink-soft); }
+.gtag { display: inline-block; background: var(--warn-bg); color: var(--warn-ink); border-radius: 6px; padding: 0 6px; font-size: .74rem; font-weight: 700; margin-left: 4px; }
+.gup { color: var(--warn-ink); font-weight: 700; } .gdown { color: var(--prot); font-weight: 700; }
+.gticket { border-bottom: 1px solid var(--line); padding: 4px 0; }
+.gticket summary { display: flex; justify-content: space-between; gap: 10px; color: var(--ink); }
+.gticket summary b { font-variant-numeric: tabular-nums; }
+.gticket summary > span { flex: 1; }
 .objrow input { width: 110px; border: 0; border-radius: 10px; padding: 8px 10px; background: var(--bg); box-shadow: inset 0 0 0 1.5px var(--line); font-weight: 700; color: var(--ink); }
 .slot-hint { grid-column: 2; font-size: .8rem; color: var(--ink-soft); margin-top: -4px; }
 .slot-in { display: flex; gap: 6px; min-width: 0; }
@@ -631,8 +650,21 @@ tr.hl td { background: var(--ok-bg); }
         <h3>Qué comprar</h3>
         <div id="shop-items"></div>
         <div class="addrow"><input id="shop-add" type="text" placeholder="Añadir algo más (p. ej. café)" aria-label="Añadir producto a la lista"><button type="button" class="pbtn" id="shop-add-btn">Añadir</button></div>
+        <div class="rowbtns"><button type="button" class="pbtn acc" id="shop-apuntar">Apuntar lo tachado en gastos</button></div>
       </div>
     </div>
+
+    <div class="intro gastos" id="gastos">
+      <h2>Lo que gasto</h2>
+      <p>Apunta cada compra con su fecha, tienda y total. Si quieres saber en qué se va el dinero y si algo sube de precio, añade también los productos.</p>
+    </div>
+    <div class="shop gastos">
+      <div class="panelcard" id="g-form"></div>
+      <div class="panelcard" id="g-resumen"></div>
+      <div class="panelcard" id="g-precios"></div>
+      <div class="panelcard"><h3>Compras apuntadas</h3><div id="g-lista"></div></div>
+    </div>
+    <datalist id="g-tiendas"></datalist><datalist id="g-prods"></datalist>
 
     <div class="intro guide-toggle" id="marcas">
       <h2>Qué marca comprar</h2>
@@ -2462,10 +2494,17 @@ const b64enc = str => { const bytes = new TextEncoder().encode(str); let bin = "
 const b64dec = b64 => { const bin = atob(b64.replace(/\n/g, "")); const bytes = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i); return new TextDecoder().decode(bytes); };
 const bufToB64 = buf => { const bytes = new Uint8Array(buf); let bin = ""; for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000)); return btoa(bin); };
 
+// Gastos: las compras se suman por id (gana la versión de b) y los borrados se recuerdan, para que dos dispositivos no se pisen
+function gMezcla(a, b) {
+  a = a || {}; b = b || {};
+  const borrados = [...new Set([...(a.borrados || []), ...(b.borrados || [])])], m = {};
+  [...(a.tickets || []), ...(b.tickets || [])].forEach(t => { m[t.id] = t; });
+  return { tickets: Object.values(m).filter(t => !borrados.includes(t.id)), borrados };
+}
 const Saved = {
   mode: "local", // local | github | offline | error
   error: "", token: "", sha: null,
-  recetas: {}, compra: { recetas: {}, tachados: {}, extra: [] }, plan: { semanas: {}, obj: {} }, progreso: { registros: [] }, despensa: [],
+  recetas: {}, compra: { recetas: {}, tachados: {}, extra: [] }, plan: { semanas: {}, obj: {} }, progreso: { registros: [] }, despensa: [], gastos: { tickets: [], borrados: [] },
   sucios: new Set(), tPush: null, subiendo: false, otraVez: false, fotosUrl: {},
   async init() {
     this.cargarLocal();
@@ -2475,7 +2514,7 @@ const Saved = {
     // Al volver a la página, trae lo último del otro dispositivo
     document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible" && this.token && !this.sucios.size) this.pull().then(alCambiarDatos); });
   },
-  datos() { return { recetas: this.recetas, compra: this.compra, plan: this.plan, progreso: this.progreso, despensa: this.despensa }; },
+  datos() { return { recetas: this.recetas, compra: this.compra, plan: this.plan, progreso: this.progreso, despensa: this.despensa, gastos: this.gastos }; },
   aplicar(d) {
     this.recetas = d.recetas || {};
     this.compra = Object.assign({ recetas: {}, tachados: {}, extra: [] }, d.compra || {});
@@ -2486,6 +2525,7 @@ const Saved = {
     }
     this.progreso = Object.assign({ registros: [] }, d.progreso || {});
     this.despensa = Array.isArray(d.despensa) ? d.despensa : [];
+    this.gastos = Object.assign({ tickets: [], borrados: [] }, d.gastos || {});
   },
   cargarLocal() {
     try { this.aplicar(JSON.parse(localStorage.getItem("rf-datos") || "{}")); } catch (e) {}
@@ -2543,8 +2583,8 @@ const Saved = {
             const loc = JSON.parse(JSON.stringify(local)); this.aplicar(remoto); this.mezclar(loc);
           } else {
             // Solo las secciones cambiadas aquí sustituyen a las de GitHub
-            const m = { recetas: Object.assign({}, remoto.recetas), compra: remoto.compra, plan: remoto.plan, progreso: remoto.progreso, despensa: remoto.despensa };
-            this.sucios.forEach(k => { if (k === "compra") m.compra = local.compra; else if (k === "plan") m.plan = local.plan; else if (k === "progreso") m.progreso = local.progreso; else if (k === "despensa") m.despensa = local.despensa; else if (k.startsWith("r-")) m.recetas[k.slice(2)] = local.recetas[k.slice(2)]; });
+            const m = { recetas: Object.assign({}, remoto.recetas), compra: remoto.compra, plan: remoto.plan, progreso: remoto.progreso, despensa: remoto.despensa, gastos: remoto.gastos };
+            this.sucios.forEach(k => { if (k === "compra") m.compra = local.compra; else if (k === "plan") m.plan = local.plan; else if (k === "progreso") m.progreso = local.progreso; else if (k === "despensa") m.despensa = local.despensa; else if (k === "gastos") m.gastos = gMezcla(remoto.gastos, local.gastos); else if (k.startsWith("r-")) m.recetas[k.slice(2)] = local.recetas[k.slice(2)]; });
             this.aplicar(m);
           }
           this.guardarLocal();
@@ -2570,6 +2610,7 @@ const Saved = {
   setPlan() { return this.guardar("plan"); },
   setProgreso() { return this.guardar("progreso"); },
   setDespensa() { return this.guardar("despensa"); },
+  setGastos() { return this.guardar("gastos"); },
   async conectar(token) {
     const prev = this.token; this.token = token;
     const r = await this.api(`https://api.github.com/repos/${GH.owner}/${GH.repo}`).catch(() => null);
@@ -2605,6 +2646,7 @@ const Saved = {
     });
     ((local.progreso || {}).registros || []).forEach(x => { if (!this.progreso.registros.some(y => y.fecha === x.fecha)) { this.progreso.registros.push(x); cambio = true; } });
     (local.despensa || []).forEach(x => { if (!this.despensa.includes(x)) { this.despensa.push(x); cambio = true; } });
+    const g = gMezcla(this.gastos, local.gastos); if (JSON.stringify(g) !== JSON.stringify(this.gastos)) { this.gastos = g; cambio = true; }
     return cambio;
   },
   desconectar() { this.token = ""; prefs.set("ghtoken", ""); this.mode = "local"; this.error = ""; this.sha = null; alCambiarDatos(); },
@@ -2647,6 +2689,7 @@ function alCambiarDatos() {
   renderGrid();
   renderPlan();
   renderCompra();
+  renderGastos();
   renderConexion();
   if (state.abierta && !$("#overlay").hidden) refrescarPersonal();
 }
@@ -3068,6 +3111,166 @@ function confirmar(btn, aviso, accion) {
   btn.dataset.txt = btn.textContent; btn.dataset.armed = "1"; btn.textContent = aviso;
   setTimeout(() => { if (btn.dataset.armed) { delete btn.dataset.armed; btn.textContent = btn.dataset.txt; } }, 4000);
 }
+
+/* ===================== GASTOS ===================== */
+/* Saved.gastos.tickets: [{ id, fecha, tienda, total, lineas: [{ txt, ing?, cant, pagado, oferta }] }]
+   pagado es lo que costó la línea entera; el precio por unidad es pagado / cant. Las ofertas no cuentan como precio normal. */
+const OFERTAS = ["2x1", "3x2", "2ª al 50 %", "2ª al 70 %", "Descuento", "Otra oferta"];
+const TIENDAS = ["Mercadona", "Lidl", "Carrefour", "Dia", "Alcampo", "Consum", "Aldi"];
+const eur = n => (n == null ? "—" : n.toLocaleString("es-ES", { style: "currency", currency: "EUR" }));
+const gNum = v => { const n = parseFloat(String(v ?? "").replace(",", ".")); return isFinite(n) ? n : null; };
+const gTxt = n => (n == null ? "" : String(Math.round(n * 100) / 100).replace(".", ","));
+const gIng = txt => { const t = norm(txt); const i = INGREDIENTES.find(x => norm(x.nombre.replace(/ \(.*\)$/, "")) === t); return i ? i.id : null; };
+const gMes = ym => { const [y, m] = ym.split("-").map(Number); const t = new Date(y, m - 1, 1).toLocaleDateString("es-ES", { month: "long", year: "numeric" }); return t[0].toUpperCase() + t.slice(1); };
+let gEdit = null; // borrador del formulario abierto, o null
+const gNuevo = (lineas = []) => ({ id: null, fecha: iso(new Date()), tienda: "", total: "", lineas });
+const gLineaVacia = () => ({ txt: "", cant: "1", pagado: "", oferta: "" });
+// Historial de precios por producto, del más antiguo al más reciente
+function gHistorial() {
+  const h = {};
+  Saved.gastos.tickets.forEach(t => (t.lineas || []).forEach(l => {
+    if (l.pagado == null || !l.cant) return;
+    const k = norm(l.txt); const e = h[k] || (h[k] = { txt: l.txt, ing: l.ing, regs: [] });
+    e.regs.push({ fecha: t.fecha, tienda: t.tienda, ud: l.pagado / l.cant, oferta: l.oferta || "" });
+  }));
+  Object.values(h).forEach(e => e.regs.sort((a, b) => a.fecha.localeCompare(b.fecha)));
+  return h;
+}
+function gUltimoNormal(txt) {
+  const e = gHistorial()[norm(txt)]; if (!e) return null;
+  const n = e.regs.filter(r => !r.oferta); return (n.length ? n : e.regs)[(n.length ? n : e.regs).length - 1].ud;
+}
+function gLineaHtml(l, i) {
+  const ud = gNum(l.pagado) != null && gNum(l.cant) ? `${eur(gNum(l.pagado) / gNum(l.cant))}/ud.` : "";
+  return `<div class="gline" data-gi="${i}">
+    <label class="gl-n">Producto<input type="text" data-gl="txt" list="g-prods" value="${esc(l.txt)}" placeholder="p. ej. Queso batido"></label>
+    <button type="button" class="x" data-gldel="${i}" aria-label="Quitar producto">✕</button>
+    <label>Cantidad<input type="text" inputmode="decimal" data-gl="cant" value="${esc(l.cant)}"></label>
+    <label>Pagado (€)<input type="text" inputmode="decimal" data-gl="pagado" value="${esc(l.pagado)}" placeholder="0,00"></label>
+    <span></span>
+    <label>Oferta<select data-gl="oferta"><option value="">Sin oferta</option>${OFERTAS.map(o => `<option${l.oferta === o ? " selected" : ""}>${o}</option>`).join("")}</select></label>
+    <span class="gl-ud">${ud}</span></div>`;
+}
+function gSuma() { return gEdit.lineas.reduce((s, l) => s + (gNum(l.pagado) || 0), 0); }
+function gPintaSuma() {
+  const el = $("#g-suma"); if (!el) return;
+  const suma = gSuma(), tot = gNum(gEdit.total);
+  el.textContent = !gEdit.lineas.length ? "" : `Productos: ${eur(suma)}` + (tot != null && tot - suma > 0.005 ? ` · el resto (${eur(tot - suma)}) cuenta como «otras cosas»` : tot != null && suma - tot > 0.005 ? " · ojo: suman más que el total del ticket" : "");
+}
+function renderGastoForm() {
+  const box = $("#g-form");
+  if (!gEdit) {
+    box.innerHTML = `<h3>Apuntar una compra</h3><p class="muted">Desde la lista de la compra, «Apuntar lo tachado en gastos» te rellena los productos con el último precio que pagaste.</p><div class="rowbtns"><button type="button" class="pbtn acc" data-gnew>Nueva compra</button></div>`;
+    return;
+  }
+  const e = gEdit;
+  box.innerHTML = `<h3>${e.id ? "Editar compra" : "Nueva compra"}</h3>
+    <div class="gform">
+      <label>Fecha<input type="date" data-gf="fecha" value="${e.fecha}"></label>
+      <label>Tienda<input type="text" data-gf="tienda" list="g-tiendas" value="${esc(e.tienda)}" placeholder="Mercadona"></label>
+      <label class="full">Total del ticket (€)<input type="text" inputmode="decimal" data-gf="total" value="${esc(e.total)}" placeholder="Si lo dejas vacío, la suma de los productos"></label>
+    </div>
+    <div>${e.lineas.map(gLineaHtml).join("")}</div>
+    <p class="muted gsum" id="g-suma"></p>
+    <p class="muted">Pon lo que has pagado de verdad por cada producto y cuántas unidades te llevas: el precio por unidad sale solo. En un 2x1, cantidad 2 y lo que pagaste. Marca la oferta para que no se tome como su precio normal.</p>
+    <div class="rowbtns"><button type="button" class="pbtn alt" data-gadd>+ Producto</button><button type="button" class="pbtn acc" data-gsave>Guardar</button><button type="button" class="pbtn alt" data-gcancel>Cancelar</button></div>
+    <p class="muted" id="g-msg"></p>`;
+  gPintaSuma();
+}
+function renderGastos() {
+  const tk = Saved.gastos.tickets.slice().sort((a, b) => b.fecha.localeCompare(a.fecha) || b.id.localeCompare(a.id));
+  const h = gHistorial();
+  $("#g-tiendas").innerHTML = [...new Set([...tk.map(t => t.tienda).filter(Boolean), ...TIENDAS])].map(t => `<option value="${esc(t)}">`).join("");
+  $("#g-prods").innerHTML = [...new Set([...Object.values(h).map(e => e.txt), ...INGREDIENTES.map(i => i.nombre.replace(/ \(.*\)$/, ""))])].map(t => `<option value="${esc(t)}">`).join("");
+  if (!$("#g-form").innerHTML) renderGastoForm();
+  // Resumen
+  if (!tk.length) {
+    $("#g-resumen").innerHTML = `<h3>Resumen</h3><p class="muted">Aún no hay compras apuntadas.</p>`;
+    $("#g-precios").hidden = true; $("#g-lista").innerHTML = `<p class="muted">Nada todavía.</p>`; return;
+  }
+  const porMes = {}; tk.forEach(t => { const m = t.fecha.slice(0, 7); (porMes[m] || (porMes[m] = { n: 0, tot: 0 })); porMes[m].n++; porMes[m].tot += t.total; });
+  const mesAct = iso(new Date()).slice(0, 7), d = new Date(); d.setDate(1); d.setMonth(d.getMonth() - 1); const mesAnt = iso(d).slice(0, 7);
+  const cerrados = Object.keys(porMes).filter(m => m < mesAct).sort().slice(-6);
+  const media = cerrados.length ? cerrados.reduce((s, m) => s + porMes[m].tot, 0) / cerrados.length : null;
+  const desde = masDias(iso(new Date()), -90), rec = tk.filter(t => t.fecha >= desde), totRec = rec.reduce((s, t) => s + t.total, 0);
+  const porTienda = {}; rec.forEach(t => { const k = t.tienda || "Sin tienda"; porTienda[k] = (porTienda[k] || 0) + t.total; });
+  const porZona = {}; let detallado = 0;
+  rec.forEach(t => (t.lineas || []).forEach(l => { if (l.pagado == null) return; const z = l.ing ? ingPasillo(l.ing) : "Otros"; porZona[z] = (porZona[z] || 0) + l.pagado; detallado += l.pagado; }));
+  if (detallado && totRec - detallado > 0.005) porZona["Sin detallar"] = totRec - detallado;
+  const filas = obj => Object.entries(obj).sort((a, b) => b[1] - a[1]).map(([k, v]) => `<tr><td>${esc(k)}</td><td class="n">${eur(v)}</td><td class="n">${Math.round(v / totRec * 100)} %</td></tr>`).join("");
+  $("#g-resumen").innerHTML = `<h3>Resumen</h3>
+    <div class="gstat"><div><span>Este mes</span><b>${eur((porMes[mesAct] || {}).tot || 0)}</b></div><div><span>Mes pasado</span><b>${eur((porMes[mesAnt] || {}).tot || 0)}</b></div><div><span>Media al mes</span><b>${media == null ? "—" : eur(media)}</b></div></div>
+    ${media == null ? `<p class="muted">La media sale cuando haya un mes completo apuntado.</p>` : `<p class="muted">Media de ${cerrados.length === 1 ? "1 mes completo" : cerrados.length + " meses completos"}.</p>`}
+    <details class="usedin-d"><summary>Por meses</summary><div class="tbl-wrap"><table><tr><th>Mes</th><th class="n">Compras</th><th class="n">Total</th></tr>${Object.keys(porMes).sort().reverse().slice(0, 12).map(m => `<tr><td>${gMes(m)}</td><td class="n">${porMes[m].n}</td><td class="n">${eur(porMes[m].tot)}</td></tr>`).join("")}</table></div></details>
+    <details class="usedin-d"><summary>Por tienda (últimos 3 meses)</summary><div class="tbl-wrap"><table>${filas(porTienda)}</table></div></details>
+    ${detallado ? `<details class="usedin-d"><summary>En qué (últimos 3 meses)</summary><div class="tbl-wrap"><table>${filas(porZona)}</table></div><p class="muted">Solo cuenta lo que tiene productos apuntados. «Otros» son productos sin ficha en la guía de marcas.</p></details>` : ""}`;
+  // Precios
+  const prods = Object.values(h).sort((a, b) => b.regs[b.regs.length - 1].fecha.localeCompare(a.regs[a.regs.length - 1].fecha));
+  $("#g-precios").hidden = !prods.length;
+  $("#g-precios").innerHTML = `<h3>Precios</h3><p class="muted">Precio por unidad de lo que has apuntado. El «normal» no cuenta las ofertas.</p>` + prods.map(e => {
+    const ult = e.regs[e.regs.length - 1], norm_ = e.regs.filter(r => !r.oferta);
+    const prev = norm_.length >= 2 ? norm_[norm_.length - 2].ud : null, lastN = norm_.length ? norm_[norm_.length - 1].ud : null;
+    const dif = prev != null && lastN != null ? lastN - prev : 0;
+    const tend = Math.abs(dif) >= 0.01 ? ` <span class="${dif > 0 ? "gup" : "gdown"}">${dif > 0 ? "↑ +" : "↓ −"}${eur(Math.abs(dif))}</span>` : "";
+    const min = e.regs.reduce((a, b) => (b.ud < a.ud ? b : a));
+    return `<details class="usedin-d gticket"><summary><span>${esc(e.txt)}${tend}</span><b>${eur(ult.ud)}${ult.oferta ? `<span class="gtag">${esc(ult.oferta)}</span>` : ""}</b></summary>
+      <p class="muted">Normal: ${lastN == null ? "—" : eur(lastN)} · Mínimo: ${eur(min.ud)} (${fechaCorta(min.fecha)}${min.tienda ? ", " + esc(min.tienda) : ""})</p>
+      <div class="tbl-wrap"><table>${e.regs.slice().reverse().map(r => `<tr><td>${fechaCorta(r.fecha)}</td><td>${esc(r.tienda || "")}</td><td class="n">${eur(r.ud)}${r.oferta ? `<span class="gtag">${esc(r.oferta)}</span>` : ""}</td></tr>`).join("")}</table></div></details>`;
+  }).join("");
+  // Lista de tickets
+  $("#g-lista").innerHTML = tk.map(t => `<details class="usedin-d gticket"><summary><span>${fechaCorta(t.fecha)} · ${esc(t.tienda || "Sin tienda")}</span><b>${eur(t.total)}</b></summary>
+    ${(t.lineas || []).length ? `<div class="tbl-wrap"><table>${t.lineas.map(l => `<tr><td>${esc(l.txt)}${l.cant !== 1 ? ` ×${fmt(l.cant)}` : ""}${l.oferta ? `<span class="gtag">${esc(l.oferta)}</span>` : ""}</td><td class="n">${eur(l.pagado)}</td></tr>`).join("")}</table></div>` : `<p class="muted">Sin productos apuntados.</p>`}
+    <div class="rowbtns"><button type="button" class="pbtn alt" data-gedit="${t.id}">Editar</button><button type="button" class="pbtn alt" data-gdel="${t.id}">Borrar</button></div></details>`).join("");
+}
+function gAbrir(borrador) { gEdit = borrador; renderGastoForm(); $("#g-form").scrollIntoView({ behavior: "smooth", block: "start" }); }
+function gGuardar() {
+  const e = gEdit, msg = $("#g-msg");
+  const lineas = e.lineas.filter(l => l.txt.trim()).map(l => {
+    const txt = l.txt.trim(), x = { txt, cant: gNum(l.cant) || 1, pagado: gNum(l.pagado), oferta: l.oferta || "" };
+    const ing = l.ing || gIng(txt); if (ing) x.ing = ing; return x;
+  });
+  const suma = lineas.reduce((s, l) => s + (l.pagado || 0), 0), total = gNum(e.total) ?? (suma || null);
+  if (!e.fecha) { msg.textContent = "Pon la fecha."; return; }
+  if (total == null || total <= 0) { msg.textContent = "Pon el total del ticket o el precio de algún producto."; return; }
+  const t = { id: e.id || String(Date.now()), fecha: e.fecha, tienda: e.tienda.trim(), total: Math.round(total * 100) / 100, lineas };
+  Saved.gastos = Object.assign({}, Saved.gastos, { tickets: [...Saved.gastos.tickets.filter(x => x.id !== t.id), t] });
+  Saved.setGastos(); gEdit = null; renderGastoForm(); renderGastos(); toast(`Compra de ${eur(t.total)} apuntada`);
+}
+$("#shop-apuntar").addEventListener("click", () => {
+  const tach = Saved.compra.tachados || {};
+  const lineas = agregarCompra().filter(it => tach[it.key]).map(it => ({ txt: ingNombre(it.ing).replace(/ \(.*\)$/, ""), ing: it.ing }))
+    .concat((Saved.compra.extra || []).filter(x => tach["x-" + x.id]).map(x => ({ txt: x.txt })))
+    .map(l => { const u = gUltimoNormal(l.txt); return Object.assign(gLineaVacia(), l, { pagado: gTxt(u) }); });
+  if (!lineas.length) { toast("Tacha primero lo que has comprado"); return; }
+  gAbrir(gNuevo(lineas));
+});
+const gPanel = $("#panel-compra");
+gPanel.addEventListener("input", e => {
+  if (!gEdit) return;
+  const f = e.target.dataset.gf, l = e.target.dataset.gl;
+  if (f) gEdit[f] = e.target.value;
+  if (l) {
+    const row = e.target.closest("[data-gi]"), li = gEdit.lineas[+row.dataset.gi]; li[l] = e.target.value;
+    if (l === "txt") delete li.ing; // cambió el nombre: se vuelve a buscar su ficha al guardar
+    if (l === "txt" && !li.pagado) { const u = gUltimoNormal(li.txt); if (u != null) { li.pagado = gTxt(u * (gNum(li.cant) || 1)); row.querySelector('[data-gl="pagado"]').value = li.pagado; } }
+    const ud = row.querySelector(".gl-ud"), p = gNum(li.pagado), c = gNum(li.cant); ud.textContent = p != null && c ? `${eur(p / c)}/ud.` : "";
+  }
+  gPintaSuma();
+});
+gPanel.addEventListener("change", e => { if (gEdit && e.target.dataset.gl === "oferta") gEdit.lineas[+e.target.closest("[data-gi]").dataset.gi].oferta = e.target.value; });
+gPanel.addEventListener("click", e => {
+  const T = sel => e.target.closest(sel); let b;
+  if (T("[data-gnew]")) gAbrir(gNuevo([]));
+  else if (T("[data-gadd]")) { gEdit.lineas.push(gLineaVacia()); renderGastoForm(); const ins = $("#g-form").querySelectorAll('[data-gl="txt"]'); ins[ins.length - 1].focus(); }
+  else if ((b = T("[data-gldel]"))) { gEdit.lineas.splice(+b.dataset.gldel, 1); renderGastoForm(); }
+  else if (T("[data-gsave]")) gGuardar();
+  else if (T("[data-gcancel]")) { gEdit = null; renderGastoForm(); }
+  else if ((b = T("[data-gedit]"))) {
+    const t = Saved.gastos.tickets.find(x => x.id === b.dataset.gedit); if (!t) return;
+    gAbrir({ id: t.id, fecha: t.fecha, tienda: t.tienda, total: gTxt(t.total), lineas: (t.lineas || []).map(l => ({ txt: l.txt, ing: l.ing, cant: gTxt(l.cant), pagado: gTxt(l.pagado), oferta: l.oferta || "" })) });
+  }
+  else if ((b = T("[data-gdel]"))) confirmar(b, "Pulsa otra vez para borrar", () => { Saved.gastos = Object.assign({}, Saved.gastos, { tickets: Saved.gastos.tickets.filter(x => x.id !== b.dataset.gdel), borrados: [...(Saved.gastos.borrados || []), b.dataset.gdel] }); Saved.setGastos(); renderGastos(); });
+});
 
 /* ===================== PLAN SEMANAL ===================== */
 /* Un hueco guarda "id", "id|2" (ración doble) o "otro" (algo que ya tienes, sin contar) */
