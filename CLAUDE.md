@@ -73,7 +73,7 @@ Antes de publicar, ejecuta en la consola del navegador (o en un navegador headle
 - `plan`: `{ semanas: { "AAAA-MM-DD" (lunes): { dias, entreno[7] } }, obj: { kcal, kcalD, p, g } }`. El formato antiguo `plan.dias` se migra solo a la semana actual.
 - `progreso`: `{ registros: [{ fecha, peso, cintura? }] }`. Los consejos se basan en medias semanales: 3 semanas sin cambios → −150–200 kcal; más de 0,5 kg/semana → +150–200 kcal.
 - `despensa`: los ids de lo que el usuario tiene en casa («Con lo que tengo»).
-- `gastos`: `{ tickets: [{ id, fecha, tienda, total, lineas: [{ txt, ing?, cant, pagado, oferta }] }], borrados: [ids] }`. Sección «Lo que gasto» de la pestaña Compra. `pagado` es lo que costó la línea entera; el precio por unidad es `pagado / cant`. Las líneas con `oferta` (2x1, 3x2…) no cuentan como precio «normal». «Apuntar lo tachado en gastos» rellena las líneas desde la lista con el último precio normal.
+- `gastos`: `{ tickets: [{ id, fecha, tienda, total, lineas: [{ txt, ing?, cant, pagado, oferta }] }], borrados: [ids], anot: { <id de oferta>: { precio, cant, prod, hasta, titulo, super } } }`. `anot` son precios que el usuario apunta a mano desde la pestaña Ofertas (visor de la imagen) para compararlos con su precio normal de `prod`; los de ofertas caducadas hace más de 30 días se limpian al guardar. Sección «Lo que gasto» de la pestaña Compra. `pagado` es lo que costó la línea entera; el precio por unidad es `pagado / cant`. Las líneas con `oferta` (2x1, 3x2…) no cuentan como precio «normal». «Apuntar lo tachado en gastos» rellena las líneas desde la lista con el último precio normal.
 
 ## Ofertas (pestaña «Ofertas»)
 
@@ -82,7 +82,7 @@ Antes de publicar, ejecuta en la consola del navegador (o en un navegador headle
 - Ciudades: `ciudades.txt` en `recetario-datos`, una por línea como en la URL de Tiendeo. Las páginas `/<ciudad>/<cadena>` son de esa ciudad vengas de donde vengas; las búsquedas `/ofertas/<producto>` usan la ubicación de la IP y, si no es una de las ciudades, solo se guardan cadenas nacionales.
 - Rutas de Tiendeo que lee el script (permitidas por su robots.txt): `/<ciudad>`, `/<ciudad>/<cadena>` y `/ofertas/<producto>`. Nunca `/Catalogos/`, `/api/` ni `/graphql/`. Una petición cada 1,5 s. Si sale con cero ofertas, no sobrescribe el archivo.
 - Son textos de terceros en una página que guarda el token: todo pasa por `esc()` y las imágenes solo se aceptan de `https://d1h08qwp2t1dnu.cloudfront.net/`.
-- «Lo que usas, en oferta» cruza los títulos con los ingredientes, lo apuntado en gastos y los extras de la lista (palabras enteras, hasta 3 por nombre). El precio es por paquete: se enseña su precio normal de gastos como referencia, sin calcular ahorros.
+- «Lo que usas, en oferta» cruza los títulos con los ingredientes, lo apuntado en gastos y los extras de la lista (palabras enteras, hasta 3 por nombre). El precio es por paquete: se enseña su precio normal de gastos como referencia. El ahorro solo se calcula cuando el usuario apunta el precio del folleto y con qué producto suyo compararlo (`ofComparar`, por unidad).
 
 ## App instalable
 

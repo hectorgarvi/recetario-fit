@@ -524,11 +524,15 @@ tr.hl td { background: var(--ok-bg); }
 .of-list { list-style: none; margin: 0; padding: 0; display: grid; }
 .of-row { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 12px; align-items: start; padding: 10px 0; border-bottom: 1px solid var(--line); }
 .of-row:last-child { border-bottom: 0; }
+.of-anot { justify-self: start; font-size: .85rem; padding: 2px 0; }
 .of-zoom { border: 0; padding: 0; background: none; cursor: zoom-in; border-radius: 10px; }
-.of-visor { position: fixed; inset: 0; z-index: 90; background: rgba(10, 12, 20, .88); display: grid; place-items: center; align-content: center; gap: 14px; padding: 20px; cursor: zoom-out; }
+.of-visor { position: fixed; inset: 0; z-index: 90; background: rgba(10, 12, 20, .88); display: grid; place-items: center; padding: 16px; overflow-y: auto; }
 .of-visor[hidden] { display: none; }
-.of-visor img { width: min(100%, 560px); max-height: 75vh; object-fit: contain; background: #fff; border-radius: 14px; }
-.of-visor p { color: #fff; font-weight: 600; text-align: center; max-width: 560px; }
+.of-vcard { background: var(--paper); color: var(--ink); border-radius: 22px; padding: 14px; width: min(100%, 560px); display: grid; gap: 10px; }
+.of-vcard img { width: 100%; max-height: 50vh; object-fit: contain; background: #fff; border-radius: 14px; }
+.of-vcard img:not([src]) { display: none; }
+.of-vt { font-weight: 700; }
+.of-tuyo { font-weight: 600; }
 .of-row img, .of-noimg { width: 56px; height: 56px; object-fit: contain; background: #fff; border-radius: 10px; }
 .of-row > div { display: grid; gap: 2px; min-width: 0; }
 .of-t { font-weight: 600; }
@@ -749,8 +753,19 @@ tr.hl td { background: var(--ok-bg); }
   </section>
 </main>
 
-<div class="of-visor" id="of-visor" role="dialog" aria-modal="true" aria-label="Imagen del folleto" hidden>
-  <img alt=""><p></p><button type="button" class="pbtn">Cerrar</button>
+<div class="of-visor" id="of-visor" role="dialog" aria-modal="true" aria-labelledby="ofv-t" hidden>
+  <div class="of-vcard">
+    <img alt="">
+    <p class="of-vt" id="ofv-t"></p>
+    <div class="gform">
+      <label>Precio del folleto (€)<input type="text" inputmode="decimal" id="ofv-precio" placeholder="2,68"></label>
+      <label>Por cuántas unidades<input type="text" inputmode="decimal" id="ofv-cant" value="1"></label>
+      <label class="full">Comparar con lo que compro<input type="text" id="ofv-prod" list="g-prods" placeholder="p. ej. Yogur griego"></label>
+    </div>
+    <p class="muted" id="ofv-res"></p>
+    <p class="muted">En un «2ª unidad al 50 %» pon lo que pagarías por las dos y 2 unidades. El precio normal sale de lo que has apuntado en «Lo que gasto».</p>
+    <div class="rowbtns"><button type="button" class="pbtn acc" id="ofv-ok">Guardar</button><button type="button" class="pbtn alt" id="ofv-del" hidden>Quitar</button><button type="button" class="pbtn alt" id="ofv-x">Cerrar</button></div>
+  </div>
 </div>
 <div class="overlay" id="overlay" hidden>
   <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="d-title"></div>
@@ -2534,7 +2549,8 @@ function gMezcla(a, b) {
   a = a || {}; b = b || {};
   const borrados = [...new Set([...(a.borrados || []), ...(b.borrados || [])])], m = {};
   [...(a.tickets || []), ...(b.tickets || [])].forEach(t => { m[t.id] = t; });
-  return { tickets: Object.values(m).filter(t => !borrados.includes(t.id)), borrados };
+  // anot: precios apuntados a mano desde la pestaña Ofertas, por id de oferta
+  return { tickets: Object.values(m).filter(t => !borrados.includes(t.id)), borrados, anot: Object.assign({}, a.anot, b.anot) };
 }
 const Saved = {
   mode: "local", // local | github | offline | error
@@ -3339,13 +3355,25 @@ function ofFecha(o, hoy) {
   if (o.desde && o.desde > hoy) return `del ${fechaCorta(o.desde)} al ${fechaCorta(o.hasta)}`;
   return `hasta el ${fechaCorta(o.hasta)}`;
 }
+const ofAnot = o => (Saved.gastos.anot || {})[o.id];
+// Precio apuntado del folleto frente a tu precio normal (de «Lo que gasto»)
+function ofComparar(precio, cant, prod) {
+  const ud = precio / (cant || 1), normal = prod ? gUltimoNormal(prod) : null;
+  if (normal == null) return { ud, txt: `${eur(ud)}/ud.` + (prod ? ` · no tienes precio apuntado de «${esc(prod)}»` : "") };
+  const dif = ud - normal, pct = Math.round(Math.abs(dif) / normal * 100);
+  const res = Math.abs(dif) < 0.005 ? `<span>mismo precio</span>` : `<span class="${dif < 0 ? "gdown" : "gup"}">${dif < 0 ? "ahorras" : "es más caro:"} ${eur(Math.abs(dif))}/ud. (${pct} %)</span>`;
+  return { ud, txt: `${eur(ud)}/ud. · tu normal ${eur(normal)} → ${res}` };
+}
 function ofFila(o, hoy, para) {
-  const img = typeof o.img === "string" && o.img.startsWith(OF_IMG) ? `<button type="button" class="of-zoom" data-ofimg="${esc(o.img)}" data-oft="${esc(o.titulo)} · ${esc(o.super)}" aria-label="Ampliar la imagen del folleto"><img src="${esc(o.img)}" alt="" loading="lazy"></button>` : `<span class="of-noimg"></span>`;
+  const img = typeof o.img === "string" && o.img.startsWith(OF_IMG) ? `<button type="button" class="of-zoom" data-ofid="${esc(o.id)}" aria-label="Ampliar la imagen y apuntar el precio"><img src="${esc(o.img)}" alt="" loading="lazy"></button>` : `<span class="of-noimg"></span>`;
+  const a = ofAnot(o);
+  const tuyo = a ? `<small class="of-tuyo">Folleto: ${ofComparar(a.precio, a.cant, a.prod).txt}</small>` : "";
   const precio = typeof o.precio === "number" ? `<b>${eur(o.precio)}</b>${typeof o.antes === "number" && o.antes > o.precio ? ` <s>${eur(o.antes)}</s>` : ""}` : `<span class="muted">precio en el folleto</span>`;
   const ref = para && para.length ? para.map(m => { const u = gUltimoNormal(m.n); return `para ${esc(m.n.toLowerCase())}${u != null ? ` · tu precio normal: ${eur(u)}/ud.` : ""}`; }).join("; ") : "";
   return `<li class="of-row">${img}<div><span class="of-t">${esc(o.titulo)}</span>
     <span class="of-p">${precio}${o.descuento ? `<span class="gtag">${esc(o.descuento)}</span>` : ""}</span>
-    <small class="muted">${esc(o.super)} · ${ofFecha(o, hoy)}${o.desde && o.desde > hoy ? " · <b>próximamente</b>" : ""}</small>${ref ? `<small class="muted">${ref}</small>` : ""}</div></li>`;
+    <small class="muted">${esc(o.super)} · ${ofFecha(o, hoy)}${o.desde && o.desde > hoy ? " · <b>próximamente</b>" : ""}</small>${ref ? `<small class="muted">${ref}</small>` : ""}${tuyo}
+    <button type="button" class="btn-text of-anot" data-ofid="${esc(o.id)}">${a ? "Cambiar precio apuntado" : "Apuntar precio del folleto"}</button></div></li>`;
 }
 function renderOfertas() {
   const box = $("#of-box"); if (!box) return;
@@ -3361,7 +3389,7 @@ function renderOfertas() {
   const supers = [...new Set(of.map(o => o.super))].sort((a, b) => pos(a) - pos(b) || a.localeCompare(b));
   const q = norm(ofState.q);
   const vis = of.filter(o => (!ofState.sup || o.super === ofState.sup) && (!q || norm(o.titulo + " " + o.super).includes(q)));
-  const conMio = vis.map(o => [o, ofEncaja(o, mios)]).filter(([, m]) => m.length);
+  const conMio = vis.map(o => [o, ofEncaja(o, mios)]).filter(([o, m]) => m.length || ofAnot(o));
   const lista = ofState.mio ? conMio.map(([o]) => o) : vis;
   const porSuper = supers.map(s => [s, lista.filter(o => o.super === s)]).filter(([, l]) => l.length);
   box.innerHTML = `<div class="panelcard of-head">
@@ -3385,14 +3413,46 @@ $("#panel-ofertas").addEventListener("click", e => {
   if ((b = T("[data-ofsup]"))) { ofState.sup = b.dataset.ofsup; renderOfertas(); }
   else if (T("#of-mio")) { ofState.mio = !ofState.mio; renderOfertas(); }
   else if (T("[data-ofrecargar]")) cargarOfertas(true);
-  else if ((b = T("[data-ofimg]")) && b.dataset.ofimg.startsWith(OF_IMG)) {
-    // Visor: el recorte del folleto en grande, para leer el precio y la letra pequeña
-    $("#of-visor img").src = b.dataset.ofimg; $("#of-visor p").textContent = b.dataset.oft;
-    $("#of-visor").hidden = false; $("#of-visor button").focus();
+  else if ((b = T("[data-ofid]"))) abrirVisor(b.dataset.ofid);
+});
+// Visor: el recorte del folleto en grande para leer el precio, y apuntarlo para compararlo con lo que pagas
+let ofVisorId = null;
+function abrirVisor(id) {
+  const o = ((ofState.datos || {}).ofertas || []).find(x => x.id === id); if (!o) return;
+  ofVisorId = id;
+  const img = $("#of-visor img");
+  if (typeof o.img === "string" && o.img.startsWith(OF_IMG)) img.src = o.img; else img.removeAttribute("src");
+  $("#ofv-t").textContent = `${o.titulo} · ${o.super}`;
+  const a = ofAnot(o), m = ofEncaja(o, ofMios()), conPrecio = m.find(x => gUltimoNormal(x.n) != null);
+  $("#ofv-precio").value = a ? gTxt(a.precio) : (typeof o.precio === "number" ? gTxt(o.precio) : "");
+  $("#ofv-cant").value = a ? gTxt(a.cant) : "1";
+  $("#ofv-prod").value = a ? a.prod || "" : (conPrecio || m[0] || { n: "" }).n;
+  $("#ofv-del").hidden = !a;
+  ofVisorRes(); $("#of-visor").hidden = false; $("#ofv-precio").focus();
+}
+function ofVisorRes() {
+  const p = gNum($("#ofv-precio").value), c = gNum($("#ofv-cant").value) || 1, prod = $("#ofv-prod").value.trim();
+  $("#ofv-res").innerHTML = p ? ofComparar(p, c, prod).txt : "Pon el precio que ves en el folleto.";
+}
+const cerrarVisor = () => { $("#of-visor").hidden = true; $("#of-visor img").removeAttribute("src"); ofVisorId = null; };
+function ofGuardarAnot(valor) {
+  const o = ((ofState.datos || {}).ofertas || []).find(x => x.id === ofVisorId); if (!o) return;
+  const limite = masDias(iso(new Date()), -30), anot = {};
+  // Las de ofertas caducadas hace más de un mes se van solas
+  Object.entries(Saved.gastos.anot || {}).forEach(([k, v]) => { if (!v.hasta || v.hasta >= limite) anot[k] = v; });
+  if (valor) anot[o.id] = Object.assign(valor, { hasta: o.hasta, titulo: o.titulo, super: o.super }); else delete anot[o.id];
+  Saved.gastos = Object.assign({}, Saved.gastos, { anot }); Saved.setGastos(); cerrarVisor(); renderOfertas();
+}
+$("#of-visor").addEventListener("click", e => {
+  if (e.target.id === "of-visor" || e.target.id === "ofv-x") cerrarVisor();
+  else if (e.target.id === "ofv-del") ofGuardarAnot(null);
+  else if (e.target.id === "ofv-ok") {
+    const precio = gNum($("#ofv-precio").value);
+    if (!precio || precio <= 0) { $("#ofv-res").textContent = "Pon el precio que ves en el folleto."; return; }
+    ofGuardarAnot({ precio, cant: gNum($("#ofv-cant").value) || 1, prod: $("#ofv-prod").value.trim() });
   }
 });
-const cerrarVisor = () => { $("#of-visor").hidden = true; $("#of-visor img").removeAttribute("src"); };
-$("#of-visor").addEventListener("click", cerrarVisor);
+$("#of-visor").addEventListener("input", ofVisorRes);
 document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("#of-visor").hidden) cerrarVisor(); });
 
 /* ===================== PLAN SEMANAL ===================== */
