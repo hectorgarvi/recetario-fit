@@ -501,7 +501,7 @@ tr.hl td { background: var(--ok-bg); }
 .gline label { display: grid; gap: 3px; color: var(--ink-soft); font-weight: 600; }
 .gline .gl-n { grid-column: 1 / 3; }
 .gline input, .gline select, .gform input { width: 100%; min-width: 0; border: 0; border-radius: 10px; padding: 8px 10px; background: var(--bg); box-shadow: inset 0 0 0 1.5px var(--line); font: inherit; font-size: .95rem; font-weight: 600; color: var(--ink); }
-.gline .gl-ud { grid-column: 2 / 4; align-self: center; text-align: right; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.gline .gl-ud { grid-column: 1 / 4; align-self: center; text-align: right; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
 .gform { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; font-size: .88rem; }
 .gform label { display: grid; gap: 3px; color: var(--ink-soft); font-weight: 600; }
 .gform label.full { grid-column: 1 / -1; }
@@ -760,10 +760,11 @@ tr.hl td { background: var(--ok-bg); }
     <div class="gform">
       <label>Precio del folleto (€)<input type="text" inputmode="decimal" id="ofv-precio" placeholder="2,68"></label>
       <label>Por cuántas unidades<input type="text" inputmode="decimal" id="ofv-cant" value="1"></label>
+      <label class="full">Peso de 1 unidad de la oferta (g o ml)<input type="text" inputmode="decimal" id="ofv-peso" placeholder="mira el folleto: 1 kg = 1000"></label>
       <label class="full">Comparar con lo que compro<input type="text" id="ofv-prod" list="g-prods" placeholder="p. ej. Yogur griego"></label>
     </div>
     <p class="muted" id="ofv-res"></p>
-    <p class="muted">En un «2ª unidad al 50 %» pon lo que pagarías por las dos y 2 unidades. El precio normal sale de lo que has apuntado en «Lo que gasto».</p>
+    <p class="muted">En un «2ª unidad al 50 %» pon lo que pagarías por las dos y 2 unidades. Con el peso se compara por kilo, que es lo que dice si de verdad sale más barato. El precio normal sale de lo que has apuntado en «Lo que gasto».</p>
     <div class="rowbtns"><button type="button" class="pbtn acc" id="ofv-ok">Guardar</button><button type="button" class="pbtn alt" id="ofv-del" hidden>Quitar</button><button type="button" class="pbtn alt" id="ofv-x">Cerrar</button></div>
   </div>
 </div>
@@ -3175,24 +3176,35 @@ const gIng = txt => { const t = norm(txt); const i = INGREDIENTES.find(x => norm
 const gMes = ym => { const [y, m] = ym.split("-").map(Number); const t = new Date(y, m - 1, 1).toLocaleDateString("es-ES", { month: "long", year: "numeric" }); return t[0].toUpperCase() + t.slice(1); };
 let gEdit = null; // borrador del formulario abierto, o null
 const gNuevo = (lineas = []) => ({ id: null, fecha: iso(new Date()), tienda: "", total: "", lineas });
-const gLineaVacia = () => ({ txt: "", cant: "1", pagado: "", oferta: "" });
+const gLineaVacia = () => ({ txt: "", cant: "1", pagado: "", oferta: "", peso: "" });
 // Historial de precios por producto, del más antiguo al más reciente
 function gHistorial() {
   const h = {};
   Saved.gastos.tickets.forEach(t => (t.lineas || []).forEach(l => {
     if (l.pagado == null || !l.cant) return;
     const k = norm(l.txt); const e = h[k] || (h[k] = { txt: l.txt, ing: l.ing, regs: [] });
-    e.regs.push({ fecha: t.fecha, tienda: t.tienda, ud: l.pagado / l.cant, oferta: l.oferta || "" });
+    const ud = l.pagado / l.cant; // peso: gramos (o ml) de cada unidad, para comparar por kilo
+    e.regs.push({ fecha: t.fecha, tienda: t.tienda, ud, peso: l.peso || null, kg: l.peso ? ud / (l.peso / 1000) : null, oferta: l.oferta || "" });
   }));
   Object.values(h).forEach(e => e.regs.sort((a, b) => a.fecha.localeCompare(b.fecha)));
   return h;
 }
-function gUltimoNormal(txt) {
+// Última compra sin oferta (o la última si todas fueron en oferta): { ud, kg, peso }
+function gNormal(txt) {
   const e = gHistorial()[norm(txt)]; if (!e) return null;
-  const n = e.regs.filter(r => !r.oferta); return (n.length ? n : e.regs)[(n.length ? n : e.regs).length - 1].ud;
+  const n = e.regs.filter(r => !r.oferta), l = n.length ? n : e.regs, r = l[l.length - 1];
+  // si la última no tiene peso, el €/kg sale de la última que sí lo tenga
+  const conKg = l.filter(x => x.kg != null);
+  return { ud: r.ud, peso: r.peso || (conKg.length ? conKg[conKg.length - 1].peso : null), kg: r.kg ?? (conKg.length ? conKg[conKg.length - 1].kg : null) };
+}
+function gUltimoNormal(txt) { const n = gNormal(txt); return n ? n.ud : null; }
+function gUdTxt(l) {
+  const p = gNum(l.pagado), c = gNum(l.cant), g = gNum(l.peso);
+  if (p == null || !c) return "";
+  return `${eur(p / c)}/ud.` + (g ? ` · ${eur(p / c / (g / 1000))}/kg` : "");
 }
 function gLineaHtml(l, i) {
-  const ud = gNum(l.pagado) != null && gNum(l.cant) ? `${eur(gNum(l.pagado) / gNum(l.cant))}/ud.` : "";
+  const ud = gUdTxt(l);
   return `<div class="gline" data-gi="${i}">
     <label class="gl-n">Producto<input type="text" data-gl="txt" list="g-prods" value="${esc(l.txt)}" placeholder="p. ej. Queso batido"></label>
     <button type="button" class="x" data-gldel="${i}" aria-label="Quitar producto">✕</button>
@@ -3200,6 +3212,8 @@ function gLineaHtml(l, i) {
     <label>Pagado (€)<input type="text" inputmode="decimal" data-gl="pagado" value="${esc(l.pagado)}" placeholder="0,00"></label>
     <span></span>
     <label>Oferta<select data-gl="oferta"><option value="">Sin oferta</option>${OFERTAS.map(o => `<option${l.oferta === o ? " selected" : ""}>${o}</option>`).join("")}</select></label>
+    <label>Peso de 1 ud. (g o ml)<input type="text" inputmode="decimal" data-gl="peso" value="${esc(l.peso || "")}" placeholder="opcional"></label>
+    <span></span>
     <span class="gl-ud">${ud}</span></div>`;
 }
 function gSuma() { return gEdit.lineas.reduce((s, l) => s + (gNum(l.pagado) || 0), 0); }
@@ -3258,7 +3272,7 @@ function renderGastos() {
   // Precios
   const prods = Object.values(h).sort((a, b) => b.regs[b.regs.length - 1].fecha.localeCompare(a.regs[a.regs.length - 1].fecha));
   $("#g-precios").hidden = !prods.length;
-  $("#g-precios").innerHTML = `<h3>Precios</h3><p class="muted">Precio por unidad de lo que has apuntado. El «normal» no cuenta las ofertas.</p>` + prods.map(e => {
+  $("#g-precios").innerHTML = `<h3>Precios</h3><p class="muted">Precio por unidad de lo que has apuntado (y por kilo si pusiste el peso). El «normal» no cuenta las ofertas.</p>` + prods.map(e => {
     const ult = e.regs[e.regs.length - 1], norm_ = e.regs.filter(r => !r.oferta);
     const prev = norm_.length >= 2 ? norm_[norm_.length - 2].ud : null, lastN = norm_.length ? norm_[norm_.length - 1].ud : null;
     const dif = prev != null && lastN != null ? lastN - prev : 0;
@@ -3266,7 +3280,7 @@ function renderGastos() {
     const min = e.regs.reduce((a, b) => (b.ud < a.ud ? b : a));
     return `<details class="usedin-d gticket"><summary><span>${esc(e.txt)}${tend}</span><b>${eur(ult.ud)}${ult.oferta ? `<span class="gtag">${esc(ult.oferta)}</span>` : ""}</b></summary>
       <p class="muted">Normal: ${lastN == null ? "—" : eur(lastN)} · Mínimo: ${eur(min.ud)} (${fechaCorta(min.fecha)}${min.tienda ? ", " + esc(min.tienda) : ""})</p>
-      <div class="tbl-wrap"><table>${e.regs.slice().reverse().map(r => `<tr><td>${fechaCorta(r.fecha)}</td><td>${esc(r.tienda || "")}</td><td class="n">${eur(r.ud)}${r.oferta ? `<span class="gtag">${esc(r.oferta)}</span>` : ""}</td></tr>`).join("")}</table></div></details>`;
+      <div class="tbl-wrap"><table>${e.regs.slice().reverse().map(r => `<tr><td>${fechaCorta(r.fecha)}</td><td>${esc(r.tienda || "")}</td><td class="n">${eur(r.ud)}${r.oferta ? `<span class="gtag">${esc(r.oferta)}</span>` : ""}${r.kg != null ? `<br><small class="muted">${eur(r.kg)}/kg</small>` : ""}</td></tr>`).join("")}</table></div></details>`;
   }).join("");
   // Lista de tickets
   $("#g-lista").innerHTML = tk.map(t => `<details class="usedin-d gticket"><summary><span>${fechaCorta(t.fecha)} · ${esc(t.tienda || "Sin tienda")}</span><b>${eur(t.total)}</b></summary>
@@ -3278,6 +3292,7 @@ function gGuardar() {
   const e = gEdit, msg = $("#g-msg");
   const lineas = e.lineas.filter(l => l.txt.trim()).map(l => {
     const txt = l.txt.trim(), x = { txt, cant: gNum(l.cant) || 1, pagado: gNum(l.pagado), oferta: l.oferta || "" };
+    if (gNum(l.peso)) x.peso = gNum(l.peso);
     const ing = l.ing || gIng(txt); if (ing) x.ing = ing; return x;
   });
   const suma = lineas.reduce((s, l) => s + (l.pagado || 0), 0), total = gNum(e.total) ?? (suma || null);
@@ -3291,7 +3306,7 @@ $("#shop-apuntar").addEventListener("click", () => {
   const tach = Saved.compra.tachados || {};
   const lineas = agregarCompra().filter(it => tach[it.key]).map(it => ({ txt: ingNombre(it.ing).replace(/ \(.*\)$/, ""), ing: it.ing }))
     .concat((Saved.compra.extra || []).filter(x => tach["x-" + x.id]).map(x => ({ txt: x.txt })))
-    .map(l => { const u = gUltimoNormal(l.txt); return Object.assign(gLineaVacia(), l, { pagado: gTxt(u) }); });
+    .map(l => { const n = gNormal(l.txt) || {}; return Object.assign(gLineaVacia(), l, { pagado: gTxt(n.ud), peso: gTxt(n.peso) }); });
   if (!lineas.length) { toast("Tacha primero lo que has comprado"); return; }
   gAbrir(gNuevo(lineas));
 });
@@ -3304,7 +3319,7 @@ gPanel.addEventListener("input", e => {
     const row = e.target.closest("[data-gi]"), li = gEdit.lineas[+row.dataset.gi]; li[l] = e.target.value;
     if (l === "txt") delete li.ing; // cambió el nombre: se vuelve a buscar su ficha al guardar
     if (l === "txt" && !li.pagado) { const u = gUltimoNormal(li.txt); if (u != null) { li.pagado = gTxt(u * (gNum(li.cant) || 1)); row.querySelector('[data-gl="pagado"]').value = li.pagado; } }
-    const ud = row.querySelector(".gl-ud"), p = gNum(li.pagado), c = gNum(li.cant); ud.textContent = p != null && c ? `${eur(p / c)}/ud.` : "";
+    row.querySelector(".gl-ud").textContent = gUdTxt(li);
   }
   gPintaSuma();
 });
@@ -3318,7 +3333,7 @@ gPanel.addEventListener("click", e => {
   else if (T("[data-gcancel]")) { gEdit = null; renderGastoForm(); }
   else if ((b = T("[data-gedit]"))) {
     const t = Saved.gastos.tickets.find(x => x.id === b.dataset.gedit); if (!t) return;
-    gAbrir({ id: t.id, fecha: t.fecha, tienda: t.tienda, total: gTxt(t.total), lineas: (t.lineas || []).map(l => ({ txt: l.txt, ing: l.ing, cant: gTxt(l.cant), pagado: gTxt(l.pagado), oferta: l.oferta || "" })) });
+    gAbrir({ id: t.id, fecha: t.fecha, tienda: t.tienda, total: gTxt(t.total), lineas: (t.lineas || []).map(l => ({ txt: l.txt, ing: l.ing, cant: gTxt(l.cant), pagado: gTxt(l.pagado), oferta: l.oferta || "", peso: gTxt(l.peso) })) });
   }
   else if ((b = T("[data-gdel]"))) confirmar(b, "Pulsa otra vez para borrar", () => { Saved.gastos = Object.assign({}, Saved.gastos, { tickets: Saved.gastos.tickets.filter(x => x.id !== b.dataset.gdel), borrados: [...(Saved.gastos.borrados || []), b.dataset.gdel] }); Saved.setGastos(); renderGastos(); });
 });
@@ -3356,18 +3371,23 @@ function ofFecha(o, hoy) {
   return `hasta el ${fechaCorta(o.hasta)}`;
 }
 const ofAnot = o => (Saved.gastos.anot || {})[o.id];
-// Precio apuntado del folleto frente a tu precio normal (de «Lo que gasto»)
-function ofComparar(precio, cant, prod) {
-  const ud = precio / (cant || 1), normal = prod ? gUltimoNormal(prod) : null;
-  if (normal == null) return { ud, txt: `${eur(ud)}/ud.` + (prod ? ` · no tienes precio apuntado de «${esc(prod)}»` : "") };
-  const dif = ud - normal, pct = Math.round(Math.abs(dif) / normal * 100);
-  const res = Math.abs(dif) < 0.005 ? `<span>mismo precio</span>` : `<span class="${dif < 0 ? "gdown" : "gup"}">${dif < 0 ? "ahorras" : "es más caro:"} ${eur(Math.abs(dif))}/ud. (${pct} %)</span>`;
-  return { ud, txt: `${eur(ud)}/ud. · tu normal ${eur(normal)} → ${res}` };
+// Precio apuntado del folleto frente a tu precio normal (de «Lo que gasto»). Con el peso de los dos,
+// por kilo: una oferta puede bajar el paquete y aun así salir más cara por kilo.
+function ofComparar(precio, cant, prod, peso) {
+  const ud = precio / (cant || 1), kg = peso ? ud / (peso / 1000) : null, n = prod ? gNormal(prod) : null;
+  const propio = `${eur(ud)}/ud.` + (kg != null ? ` (${eur(kg)}/kg)` : "");
+  if (!n) return { txt: propio + (prod ? ` · no tienes precio apuntado de «${esc(prod)}»` : "") };
+  const porKg = kg != null && n.kg != null, a = porKg ? kg : ud, b = porKg ? n.kg : n.ud, u = porKg ? "kg" : "ud.";
+  const dif = a - b, pct = Math.round(Math.abs(dif) / b * 100);
+  const res = Math.abs(dif) < 0.005 ? `<span>mismo precio</span>` : `<span class="${dif < 0 ? "gdown" : "gup"}">${dif < 0 ? "ahorras" : "sale más caro:"} ${eur(Math.abs(dif))}/${u} (${pct} %)</span>`;
+  const aviso = porKg ? "" : kg != null ? ` <small>· apunta el peso en tus compras de «${esc(prod)}» para comparar por kilo</small>`
+    : n.kg != null ? ` <small>· pon el peso de la oferta para comparar por kilo (el tuyo: ${fmt(n.peso)} g)</small>` : ` <small>· por unidad: solo vale si es el mismo formato</small>`;
+  return { txt: `${propio} · tu normal ${porKg ? eur(n.kg) + "/kg" : eur(n.ud) + "/ud."} → ${res}${aviso}` };
 }
 function ofFila(o, hoy, para) {
   const img = typeof o.img === "string" && o.img.startsWith(OF_IMG) ? `<button type="button" class="of-zoom" data-ofid="${esc(o.id)}" aria-label="Ampliar la imagen y apuntar el precio"><img src="${esc(o.img)}" alt="" loading="lazy"></button>` : `<span class="of-noimg"></span>`;
   const a = ofAnot(o);
-  const tuyo = a ? `<small class="of-tuyo">Folleto: ${ofComparar(a.precio, a.cant, a.prod).txt}</small>` : "";
+  const tuyo = a ? `<small class="of-tuyo">Folleto: ${ofComparar(a.precio, a.cant, a.prod, a.peso).txt}</small>` : "";
   const precio = typeof o.precio === "number" ? `<b>${eur(o.precio)}</b>${typeof o.antes === "number" && o.antes > o.precio ? ` <s>${eur(o.antes)}</s>` : ""}` : `<span class="muted">precio en el folleto</span>`;
   const ref = para && para.length ? para.map(m => { const u = gUltimoNormal(m.n); return `para ${esc(m.n.toLowerCase())}${u != null ? ` · tu precio normal: ${eur(u)}/ud.` : ""}`; }).join("; ") : "";
   return `<li class="of-row">${img}<div><span class="of-t">${esc(o.titulo)}</span>
@@ -3426,13 +3446,14 @@ function abrirVisor(id) {
   const a = ofAnot(o), m = ofEncaja(o, ofMios()), conPrecio = m.find(x => gUltimoNormal(x.n) != null);
   $("#ofv-precio").value = a ? gTxt(a.precio) : (typeof o.precio === "number" ? gTxt(o.precio) : "");
   $("#ofv-cant").value = a ? gTxt(a.cant) : "1";
+  $("#ofv-peso").value = a ? gTxt(a.peso) : "";
   $("#ofv-prod").value = a ? a.prod || "" : (conPrecio || m[0] || { n: "" }).n;
   $("#ofv-del").hidden = !a;
   ofVisorRes(); $("#of-visor").hidden = false; $("#ofv-precio").focus();
 }
 function ofVisorRes() {
   const p = gNum($("#ofv-precio").value), c = gNum($("#ofv-cant").value) || 1, prod = $("#ofv-prod").value.trim();
-  $("#ofv-res").innerHTML = p ? ofComparar(p, c, prod).txt : "Pon el precio que ves en el folleto.";
+  $("#ofv-res").innerHTML = p ? ofComparar(p, c, prod, gNum($("#ofv-peso").value)).txt : "Pon el precio que ves en el folleto.";
 }
 const cerrarVisor = () => { $("#of-visor").hidden = true; $("#of-visor img").removeAttribute("src"); ofVisorId = null; };
 function ofGuardarAnot(valor) {
@@ -3449,7 +3470,7 @@ $("#of-visor").addEventListener("click", e => {
   else if (e.target.id === "ofv-ok") {
     const precio = gNum($("#ofv-precio").value);
     if (!precio || precio <= 0) { $("#ofv-res").textContent = "Pon el precio que ves en el folleto."; return; }
-    ofGuardarAnot({ precio, cant: gNum($("#ofv-cant").value) || 1, prod: $("#ofv-prod").value.trim() });
+    ofGuardarAnot({ precio, cant: gNum($("#ofv-cant").value) || 1, peso: gNum($("#ofv-peso").value), prod: $("#ofv-prod").value.trim() });
   }
 });
 $("#of-visor").addEventListener("input", ofVisorRes);
