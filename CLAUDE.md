@@ -2,7 +2,7 @@
 
 Recetario personal publicado en GitHub Pages: https://hectorgarvi.github.io/recetario-fit/
 
-Recetas con mucha proteína y poca grasa que sacien, con filtros, plan semanal, lista de la compra, modo cocina y guía de marcas. Todo el texto de la web está en español de España.
+Recetas con mucha proteína y poca grasa que sacien, con filtros, plan semanal, lista de la compra, registro de gastos y precios, modo cocina y guía de marcas. Todo el texto de la web está en español de España.
 
 ## Estructura
 
@@ -49,6 +49,8 @@ Recetas con mucha proteína y poca grasa que sacien, con filtros, plan semanal, 
   - Si no hay un producto verificable, deja `productos: []` y explica el criterio en el texto. Nunca inventes una marca.
 - Cocina del usuario: freidora de aire Princess de 10 L (tipo horno, con varias alturas de bandeja), sartén, cazo y microondas. Toda receta de airfryer debe incluir: precalentado (temperatura y 3 min), altura de la bandeja, temperatura y tiempo de cada fase y cómo saber si está hecho.
 - Bases de tarta sin mantequilla: avena + clara, bien apretada y horneada 5 min a 160 °C (la clara hace de pegamento). Cremas o yogur en la base solo dan sabor y la ablandan.
+- Edulcorante: el del usuario es el de Mercadona (eritritol + sucralosa; 1 g endulza como unos 5 g de azúcar). No suma calorías en los valores. En las recetas, «al gusto» y orientar a media cucharadita para empezar. Se le explicó que es seguro en esas dosis, no «sano»: no animar a endulzarlo todo.
+- Cottage en recetas de fuera: se puede cambiar por queso batido si va triturado; no en masas horneadas donde el cottage da estructura (el batido lleva más agua) ni donde se notan los grumos.
 - Revisa que `completa` sea `racion × raciones`. Comprueba también que kcal ≈ 4·p + 4·c + 9·g, con margen por la fibra.
 
 ## Comprobación antes de publicar
@@ -159,6 +161,7 @@ Su perfil (datos, objetivos, gustos) está en `perfil.md` del repo privado. Lée
 
 Pendiente del usuario:
 - Decidir si se protege la web con login de verdad (Cloudflare Pages + Access) o se deja así. Otras personas tienen el enlace; los datos personales ya están a salvo en el repo privado.
+- Probar «Lo que gasto» con dos dispositivos reales (la mezcla de `gastos` solo se ha probado con un GitHub simulado, para no tocar sus datos).
 - Recetas con un solo tiempo («35 min») cuentan todo como elaboración; se podrían partir en trabajo + cocción (arroz con pollo, crema de calabacín, pescado con pisto, caldo).
 
 
