@@ -524,6 +524,11 @@ tr.hl td { background: var(--ok-bg); }
 .of-list { list-style: none; margin: 0; padding: 0; display: grid; }
 .of-row { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 12px; align-items: start; padding: 10px 0; border-bottom: 1px solid var(--line); }
 .of-row:last-child { border-bottom: 0; }
+.of-zoom { border: 0; padding: 0; background: none; cursor: zoom-in; border-radius: 10px; }
+.of-visor { position: fixed; inset: 0; z-index: 90; background: rgba(10, 12, 20, .88); display: grid; place-items: center; align-content: center; gap: 14px; padding: 20px; cursor: zoom-out; }
+.of-visor[hidden] { display: none; }
+.of-visor img { width: min(100%, 560px); max-height: 75vh; object-fit: contain; background: #fff; border-radius: 14px; }
+.of-visor p { color: #fff; font-weight: 600; text-align: center; max-width: 560px; }
 .of-row img, .of-noimg { width: 56px; height: 56px; object-fit: contain; background: #fff; border-radius: 10px; }
 .of-row > div { display: grid; gap: 2px; min-width: 0; }
 .of-t { font-weight: 600; }
@@ -744,6 +749,9 @@ tr.hl td { background: var(--ok-bg); }
   </section>
 </main>
 
+<div class="of-visor" id="of-visor" role="dialog" aria-modal="true" aria-label="Imagen del folleto" hidden>
+  <img alt=""><p></p><button type="button" class="pbtn">Cerrar</button>
+</div>
 <div class="overlay" id="overlay" hidden>
   <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="d-title"></div>
 </div>
@@ -3332,7 +3340,7 @@ function ofFecha(o, hoy) {
   return `hasta el ${fechaCorta(o.hasta)}`;
 }
 function ofFila(o, hoy, para) {
-  const img = typeof o.img === "string" && o.img.startsWith(OF_IMG) ? `<img src="${esc(o.img)}" alt="" loading="lazy">` : `<span class="of-noimg"></span>`;
+  const img = typeof o.img === "string" && o.img.startsWith(OF_IMG) ? `<button type="button" class="of-zoom" data-ofimg="${esc(o.img)}" data-oft="${esc(o.titulo)} · ${esc(o.super)}" aria-label="Ampliar la imagen del folleto"><img src="${esc(o.img)}" alt="" loading="lazy"></button>` : `<span class="of-noimg"></span>`;
   const precio = typeof o.precio === "number" ? `<b>${eur(o.precio)}</b>${typeof o.antes === "number" && o.antes > o.precio ? ` <s>${eur(o.antes)}</s>` : ""}` : `<span class="muted">precio en el folleto</span>`;
   const ref = para && para.length ? para.map(m => { const u = gUltimoNormal(m.n); return `para ${esc(m.n.toLowerCase())}${u != null ? ` · tu precio normal: ${eur(u)}/ud.` : ""}`; }).join("; ") : "";
   return `<li class="of-row">${img}<div><span class="of-t">${esc(o.titulo)}</span>
@@ -3377,7 +3385,15 @@ $("#panel-ofertas").addEventListener("click", e => {
   if ((b = T("[data-ofsup]"))) { ofState.sup = b.dataset.ofsup; renderOfertas(); }
   else if (T("#of-mio")) { ofState.mio = !ofState.mio; renderOfertas(); }
   else if (T("[data-ofrecargar]")) cargarOfertas(true);
+  else if ((b = T("[data-ofimg]")) && b.dataset.ofimg.startsWith(OF_IMG)) {
+    // Visor: el recorte del folleto en grande, para leer el precio y la letra pequeña
+    $("#of-visor img").src = b.dataset.ofimg; $("#of-visor p").textContent = b.dataset.oft;
+    $("#of-visor").hidden = false; $("#of-visor button").focus();
+  }
 });
+const cerrarVisor = () => { $("#of-visor").hidden = true; $("#of-visor img").removeAttribute("src"); };
+$("#of-visor").addEventListener("click", cerrarVisor);
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("#of-visor").hidden) cerrarVisor(); });
 
 /* ===================== PLAN SEMANAL ===================== */
 /* Un hueco guarda "id", "id|2" (ración doble) o "otro" (algo que ya tienes, sin contar) */
