@@ -760,11 +760,12 @@ tr.hl td { background: var(--ok-bg); }
     <div class="gform">
       <label>Precio del folleto (€)<input type="text" inputmode="decimal" id="ofv-precio" placeholder="2,68"></label>
       <label>Por cuántas unidades<input type="text" inputmode="decimal" id="ofv-cant" value="1"></label>
-      <label class="full">Peso de 1 unidad de la oferta (g o ml)<input type="text" inputmode="decimal" id="ofv-peso" placeholder="mira el folleto: 1 kg = 1000"></label>
+      <label>Peso de 1 ud. (g o ml)<input type="text" inputmode="decimal" id="ofv-peso" placeholder="1 kg = 1000"></label>
+      <label>O el €/kg del folleto<input type="text" inputmode="decimal" id="ofv-kg" placeholder="1,34"></label>
       <label class="full">Comparar con lo que compro<input type="text" id="ofv-prod" list="g-prods" placeholder="p. ej. Yogur griego"></label>
     </div>
     <p class="muted" id="ofv-res"></p>
-    <p class="muted">En un «2ª unidad al 50 %» pon lo que pagarías por las dos y 2 unidades. Con el peso se compara por kilo, que es lo que dice si de verdad sale más barato. El precio normal sale de lo que has apuntado en «Lo que gasto».</p>
+    <p class="muted">En un «2ª unidad al 50 %» pon lo que pagarías por las dos y 2 unidades. Con el peso o el €/kg que trae el folleto se compara por kilo, que es lo que dice si de verdad sale más barato. El precio normal sale de lo que has apuntado en «Lo que gasto».</p>
     <div class="rowbtns"><button type="button" class="pbtn acc" id="ofv-ok">Guardar</button><button type="button" class="pbtn alt" id="ofv-del" hidden>Quitar</button><button type="button" class="pbtn alt" id="ofv-x">Cerrar</button></div>
   </div>
 </div>
@@ -3373,11 +3374,14 @@ function ofFecha(o, hoy) {
 const ofAnot = o => (Saved.gastos.anot || {})[o.id];
 // Precio apuntado del folleto frente a tu precio normal (de «Lo que gasto»). Con el peso de los dos,
 // por kilo: una oferta puede bajar el paquete y aun así salir más cara por kilo.
-function ofComparar(precio, cant, prod, peso) {
-  const ud = precio / (cant || 1), kg = peso ? ud / (peso / 1000) : null, n = prod ? gNormal(prod) : null;
-  const propio = `${eur(ud)}/ud.` + (kg != null ? ` (${eur(kg)}/kg)` : "");
+// kgFolleto: el €/kg que pone el folleto; si está, manda sobre el calculado con el peso
+function ofComparar(precio, cant, prod, peso, kgFolleto) {
+  const ud = precio ? precio / (cant || 1) : null, kg = kgFolleto || (ud != null && peso ? ud / (peso / 1000) : null), n = prod ? gNormal(prod) : null;
+  const propio = [ud != null ? `${eur(ud)}/ud.` : "", kg != null ? `${eur(kg)}/kg` : ""].filter(Boolean).join(" · ");
   if (!n) return { txt: propio + (prod ? ` · no tienes precio apuntado de «${esc(prod)}»` : "") };
-  const porKg = kg != null && n.kg != null, a = porKg ? kg : ud, b = porKg ? n.kg : n.ud, u = porKg ? "kg" : "ud.";
+  const porKg = kg != null && n.kg != null;
+  if (!porKg && ud == null) return { txt: `${propio} · apunta el peso en tus compras de «${esc(prod)}» para comparar por kilo` };
+  const a = porKg ? kg : ud, b = porKg ? n.kg : n.ud, u = porKg ? "kg" : "ud.";
   const dif = a - b, pct = Math.round(Math.abs(dif) / b * 100);
   const res = Math.abs(dif) < 0.005 ? `<span>mismo precio</span>` : `<span class="${dif < 0 ? "gdown" : "gup"}">${dif < 0 ? "ahorras" : "sale más caro:"} ${eur(Math.abs(dif))}/${u} (${pct} %)</span>`;
   const aviso = porKg ? "" : kg != null ? ` <small>· apunta el peso en tus compras de «${esc(prod)}» para comparar por kilo</small>`
@@ -3387,7 +3391,7 @@ function ofComparar(precio, cant, prod, peso) {
 function ofFila(o, hoy, para) {
   const img = typeof o.img === "string" && o.img.startsWith(OF_IMG) ? `<button type="button" class="of-zoom" data-ofid="${esc(o.id)}" aria-label="Ampliar la imagen y apuntar el precio"><img src="${esc(o.img)}" alt="" loading="lazy"></button>` : `<span class="of-noimg"></span>`;
   const a = ofAnot(o);
-  const tuyo = a ? `<small class="of-tuyo">Folleto: ${ofComparar(a.precio, a.cant, a.prod, a.peso).txt}</small>` : "";
+  const tuyo = a ? `<small class="of-tuyo">Folleto: ${ofComparar(a.precio, a.cant, a.prod, a.peso, a.kg).txt}</small>` : "";
   const precio = typeof o.precio === "number" ? `<b>${eur(o.precio)}</b>${typeof o.antes === "number" && o.antes > o.precio ? ` <s>${eur(o.antes)}</s>` : ""}` : `<span class="muted">precio en el folleto</span>`;
   const ref = para && para.length ? para.map(m => { const u = gUltimoNormal(m.n); return `para ${esc(m.n.toLowerCase())}${u != null ? ` · tu precio normal: ${eur(u)}/ud.` : ""}`; }).join("; ") : "";
   return `<li class="of-row">${img}<div><span class="of-t">${esc(o.titulo)}</span>
@@ -3447,13 +3451,15 @@ function abrirVisor(id) {
   $("#ofv-precio").value = a ? gTxt(a.precio) : (typeof o.precio === "number" ? gTxt(o.precio) : "");
   $("#ofv-cant").value = a ? gTxt(a.cant) : "1";
   $("#ofv-peso").value = a ? gTxt(a.peso) : "";
+  $("#ofv-kg").value = a ? gTxt(a.kg) : "";
   $("#ofv-prod").value = a ? a.prod || "" : (conPrecio || m[0] || { n: "" }).n;
   $("#ofv-del").hidden = !a;
   ofVisorRes(); $("#of-visor").hidden = false; $("#ofv-precio").focus();
 }
 function ofVisorRes() {
   const p = gNum($("#ofv-precio").value), c = gNum($("#ofv-cant").value) || 1, prod = $("#ofv-prod").value.trim();
-  $("#ofv-res").innerHTML = p ? ofComparar(p, c, prod, gNum($("#ofv-peso").value)).txt : "Pon el precio que ves en el folleto.";
+  const kg = gNum($("#ofv-kg").value);
+  $("#ofv-res").innerHTML = p || kg ? ofComparar(p, c, prod, gNum($("#ofv-peso").value), kg).txt : "Pon el precio o el €/kg que ves en el folleto.";
 }
 const cerrarVisor = () => { $("#of-visor").hidden = true; $("#of-visor img").removeAttribute("src"); ofVisorId = null; };
 function ofGuardarAnot(valor) {
@@ -3468,9 +3474,9 @@ $("#of-visor").addEventListener("click", e => {
   if (e.target.id === "of-visor" || e.target.id === "ofv-x") cerrarVisor();
   else if (e.target.id === "ofv-del") ofGuardarAnot(null);
   else if (e.target.id === "ofv-ok") {
-    const precio = gNum($("#ofv-precio").value);
-    if (!precio || precio <= 0) { $("#ofv-res").textContent = "Pon el precio que ves en el folleto."; return; }
-    ofGuardarAnot({ precio, cant: gNum($("#ofv-cant").value) || 1, peso: gNum($("#ofv-peso").value), prod: $("#ofv-prod").value.trim() });
+    const precio = gNum($("#ofv-precio").value), kg = gNum($("#ofv-kg").value);
+    if (!(precio > 0) && !(kg > 0)) { $("#ofv-res").textContent = "Pon el precio o el €/kg que ves en el folleto."; return; }
+    ofGuardarAnot({ precio: precio > 0 ? precio : null, cant: gNum($("#ofv-cant").value) || 1, peso: gNum($("#ofv-peso").value), kg: kg > 0 ? kg : null, prod: $("#ofv-prod").value.trim() });
   }
 });
 $("#of-visor").addEventListener("input", ofVisorRes);
