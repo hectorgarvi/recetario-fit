@@ -2049,6 +2049,55 @@ const RECETAS = [
     conserva: { nevera: "1–2 días; se recalienta 1 min en el microondas.", congelar: "No." },
     compra: [["fruta", 1, "manzana grande"], ["batido", 60, "g"], ["canela", null], ["edulcorante", null]],
     usa: ["batido"]
+  },
+  {
+    id: "mugcake-pro", corto: "bizcocho en taza proteico", nombre: "Bizcocho en taza de chocolate con proteína (microondas)",
+    pro: true,
+    cat: ["Postre", "Merienda"], met: ["Microondas"], ext: [], tags: ["Con proteína en polvo", "Listo en 5 minutos"],
+    gluten: "avena", lacteos: true,
+    raciones: 1, racionesTxt: "1 taza grande", tiempoTxt: "3 min + 1 min de microondas", min: 4,
+    completa: { kcal: 243, p: 28.2, g: 5.6, c: 17.9 }, racion: { kcal: 243, p: 28.2, g: 5.6, c: 17.9 },
+    ingredientes: [{"t": "Ingredientes", "items": ["Proteína en polvo de chocolate: {25} g (un cacito)", "Harina de avena (copos triturados): {20} g", "Cacao puro desgrasado: {5} g (media cucharada)", "Claras de huevo: {1} (unos {35} ml)", "Leche desnatada: {40} ml", "Chocolate negro 85%: {5} g (una onza pequeña), para el centro", "Una pizca de levadura y de sal. Edulcorante solo si hace falta"]}],
+    pasos: ["<b>En una taza grande</b> (de 350 ml o más: sube mucho), mezcla con un tenedor la proteína, la harina de avena, el cacao, la levadura y la sal.", "<b>Añade</b> la clara y la leche y mezcla hasta que no queden grumos. Tiene que quedar como una crema espesa; si está muy seca, una cucharada más de leche.", "<b>Hunde la onza de chocolate</b> en el centro.", "<b>Microondas</b> a potencia media-alta (unos 800 W) <b>50–60 segundos</b> [[t:1]]. Está listo cuando la superficie ya no brilla pero el centro aún está tierno.", "<b>Espera 1 minuto</b> antes de comerlo: se termina de hacer con su calor."],
+    tabla: {"cols": ["Taza"], "rows": [["Calorías", "~243 kcal"], ["Proteínas", "~28 g"], ["Grasas", "~5,6 g"], ["Carbohidratos", "~18 g"]]},
+    notaTabla: "28 g de proteína en un postre de 5 minutos. Cuentas con proteína whey de unos 362 kcal, 74 g de proteína y 3,8 g de grasa por 100 g (HSN Evowhey 2.0). Con otra marca cambia un poco: mira su etiqueta.",
+    tips: ["<b>El fallo típico es pasarse de tiempo:</b> con proteína en polvo se seca y queda gomoso. Mejor quedarse corto y añadir 10 segundos.", "<b>Con un cacito de queso batido 0% o yogur por encima</b> queda más jugoso (+25 kcal, +4 g de proteína).", "<b>De vainilla:</b> cambia la proteína por la de vainilla, quita el cacao y añade canela. Con unas frambuesas dentro queda muy bien."],
+    conserva: { nevera: "Mejor recién hecho. Si sobra, 1 día tapado; se calienta 15 segundos.", congelar: "No." },
+    compra: [["proteina", 25, "g"], ["avena", 20, "g"], ["cacao", 5, "g"], ["claras", 35, "ml"], ["leche", 40, "ml"], ["chocolate-negro", 5, "g"], ["levadura", null], ["edulcorante", null]],
+    usa: ["proteina", "avena", "cacao", "claras", "chocolate-negro"]
+  },
+  {
+    id: "brownie-pro", corto: "brownie proteico", nombre: "Brownie proteico de cacao y plátano",
+    pro: true, base: "brownie-fit",
+    cat: ["Merienda", "Postre"], met: ["Airfryer"], ext: [], tags: ["Con proteína en polvo", "Chocolate"],
+    gluten: "avena", lacteos: true,
+    raciones: 6, racionesTxt: "6 cuadrados", tiempoTxt: "10 min + 16–18 min de airfryer", min: 28,
+    molde: "Molde cuadrado de 15–18 cm forrado con papel de horno. Freidora Princess 10 L",
+    completa: { kcal: 696, p: 56.6, g: 14.6, c: 76.7 }, racion: { kcal: 116, p: 9.4, g: 2.4, c: 12.8 },
+    ingredientes: [{"t": "Ingredientes", "items": ["Plátanos muy maduros: {2} (unos {200} g sin piel)", "Huevo L: {1}, y claras de huevo: {2} (unos {70} ml)", "Copos de avena triturados: {40} g", "Proteína en polvo de chocolate: {30} g (un cacito)", "Cacao puro desgrasado: {25} g (2 cucharadas y media)", "Yogur natural 0%: {1} unidad ({125} g)", "Levadura química: {1} cdta., una pizca de sal y edulcorante solo si hace falta"]}],
+    pasos: ["<b>Chafa los plátanos</b> con un tenedor hasta que sean puré.", "<b>Añade</b> el huevo, las claras y el yogur, y bate.", "<b>Incorpora</b> la avena triturada, la proteína, el cacao, la levadura y la sal. Mezcla hasta que no queden grumos.", "<b>Precalienta</b> la freidora a 165 °C durante 3 minutos [[t:3]].", "<b>Hornea</b> en el molde forrado con papel, con la bandeja en la posición baja, a <b>165 °C durante 16–18 min</b> [[t:16]]. Con proteína se hace antes que el normal.", "<b>Comprueba:</b> el palillo tiene que salir con alguna miga húmeda. Si sale limpio del todo, se ha secado. Deja enfriar antes de cortar en 6."],
+    tabla: {"cols": ["Molde entero", "Por cuadrado (1/6)"], "rows": [["Calorías", "~696 kcal", "~116 kcal"], ["Proteínas", "~56,6 g", "~9,4 g"], ["Grasas", "~14,6 g", "~2,4 g"], ["Carbohidratos", "~76,7 g", "~12,8 g"]]},
+    notaTabla: "Las mismas calorías que el [[brownie-fit]], con 3 g más de proteína por cuadrado: la proteína sustituye a parte de la avena y del cacao. Cuentas con proteína whey de unos 362 kcal, 74 g de proteína y 3,8 g de grasa por 100 g (HSN Evowhey 2.0). Con otra marca cambia un poco: mira su etiqueta.",
+    tips: ["<b>La proteína de chocolate ya está endulzada:</b> prueba la masa antes de añadir edulcorante.", "<b>No lo hornees de más:</b> con proteína se seca antes. Mejor sacarlo un poco húmedo; en la nevera se asienta.", "<b>Frío de la nevera</b> queda más denso, más tipo brownie de verdad."],
+    conserva: { nevera: "4 días en la nevera.", congelar: "Sí, por cuadrados, hasta 2 meses." },
+    compra: [["platano", 2, "ud. maduros"], ["huevos", 3, "ud. (1 entero + 2 claras)"], ["avena", 40, "g"], ["proteina", 30, "g"], ["cacao", 25, "g"], ["yogur", 125, "g"], ["levadura", 1, "cdta."], ["edulcorante", null]],
+    usa: ["proteina", "cacao", "avena", "yogur", "huevos"]
+  },
+  {
+    id: "tiramisu-pro", corto: "tiramisú proteico", nombre: "Tiramisú proteico en vaso",
+    pro: true, base: "tiramisu-fit",
+    cat: ["Postre", "Merienda", "Desayuno"], met: ["Sin horno"], ext: ["Sin huevo"], tags: ["Con proteína en polvo", "Se prepara la noche antes"],
+    gluten: "avena", lacteos: true,
+    raciones: 1, racionesTxt: "1 vaso", tiempoTxt: "5 min + 2 h (o la noche) en la nevera", min: 5,
+    completa: { kcal: 279, p: 33, g: 4.2, c: 26.4 }, racion: { kcal: 279, p: 33, g: 4.2, c: 26.4 },
+    ingredientes: [{"t": "Ingredientes", "items": ["Copos de avena: {30} g", "Café solo frío: {60} ml (descafeinado si es de tarde)", "Queso fresco batido 0%: {150} g", "Proteína en polvo de vainilla: {20} g", "Leche desnatada: {20} ml (2 cucharadas)", "Cacao puro desgrasado: {5} g, para espolvorear", "Edulcorante solo si hace falta"]}],
+    pasos: ["<b>Empapa la avena</b> en el café, en el fondo de un vaso. Es la capa de «bizcocho».", "<b>Crema:</b> mezcla la proteína con la leche hasta tener una pasta sin grumos, y después añade el queso batido y mezcla. Prueba: la proteína ya endulza.", "<b>Pon la crema</b> encima de la avena.", "<b>Espolvorea el cacao</b> con un colador pequeño.", "<b>A la nevera</b> 2 horas [[t:120]] o toda la noche."],
+    tabla: {"cols": ["Vaso"], "rows": [["Calorías", "~279 kcal"], ["Proteínas", "~33 g"], ["Grasas", "~4,2 g"], ["Carbohidratos", "~26,4 g"]]},
+    notaTabla: "El [[tiramisu-fit]] con proteína de vainilla en la crema: de 17,5 a 33 g de proteína por unas 80 kcal más. Sirve de desayuno completo. Cuentas con proteína whey de unos 362 kcal, 74 g de proteína y 3,8 g de grasa por 100 g (HSN Evowhey 2.0). Con otra marca cambia un poco: mira su etiqueta.",
+    tips: ["<b>Mezcla primero la proteína con la leche:</b> si la echas directa al queso batido hace grumos.", "<b>En capas</b> queda más bonito: avena, crema, avena, crema y cacao."],
+    conserva: { nevera: "2 días tapado.", congelar: "No." },
+    compra: [["avena", 30, "g"], ["cafe", 60, "ml"], ["batido", 150, "g"], ["proteina", 20, "g"], ["leche", 20, "ml"], ["cacao", 5, "g"], ["edulcorante", null]],
+    usa: ["avena", "batido", "proteina", "cacao"]
   }
 ];
 
@@ -2065,7 +2114,7 @@ const NUTRI = {
   "helado-frutos-rojos": [5, 1.5, []], "pollo-curry": [4.1, 2.5, []], "albondigas-pollo": [4.8, 3, []], "pescado-pisto": [7, 5, ["pescado"]], "brochetas-pollo": [5, 3.5, []],
   "sepia-plancha": [4, 2.5, ["pescado"]], "tortilla-calabacin": [2.9, 3, []],
   "cookies-avena": [3.6, 0, []], "cookies-pro": [2.8, 0, []], "tortitas-pro": [7, 1, []], "overnight-pro": [8, 1, []], "mousse-pro": [2.4, 0, []],
-  "batido-pro": [4.6, 1, []], "cheesecake-pro": [3.3, 0.5, []], "natillas-pro": [0, 0, []], "bizcocho-pro": [1.7, 0, []], "helado-pro": [5, 1.5, []], "cheesecake-blanco": [4.5, 0.5, []], "crema-cacao": [1, 0, []], "cookies-rellenas": [4.8, 0, []], "cookies-cacahuete": [4.2, 0, []], "crema-cacao-pro": [0.8, 0, []], "crema-cacao-expres": [0.8, 0, []], "crema-choco-cacahuete": [1.4, 0, []], "salsa-yogur": [0.2, 0, []], "salsa-pimienta": [0.3, 0, []], "salsa-queso": [0.2, 0, []], "salsa-barbacoa": [0.4, 0.5, []], "alioli-yogur": [0, 0, []], "guacamole-fit": [1.5, 0.5, []], "tarta-chocolate": [5.5, 0, []], "coulant-fit": [4.5, 0, []], "tiramisu-fit": [4.6, 0, []], "arroz-con-leche": [0.3, 0, []], "manzana-asada": [4.8, 2, []]
+  "batido-pro": [4.6, 1, []], "cheesecake-pro": [3.3, 0.5, []], "natillas-pro": [0, 0, []], "bizcocho-pro": [1.7, 0, []], "helado-pro": [5, 1.5, []], "cheesecake-blanco": [4.5, 0.5, []], "crema-cacao": [1, 0, []], "cookies-rellenas": [4.8, 0, []], "cookies-cacahuete": [4.2, 0, []], "crema-cacao-pro": [0.8, 0, []], "crema-cacao-expres": [0.8, 0, []], "crema-choco-cacahuete": [1.4, 0, []], "salsa-yogur": [0.2, 0, []], "salsa-pimienta": [0.3, 0, []], "salsa-queso": [0.2, 0, []], "salsa-barbacoa": [0.4, 0.5, []], "alioli-yogur": [0, 0, []], "guacamole-fit": [1.5, 0.5, []], "tarta-chocolate": [5.5, 0, []], "coulant-fit": [4.5, 0, []], "tiramisu-fit": [4.6, 0, []], "arroz-con-leche": [0.3, 0, []], "manzana-asada": [4.8, 2, []], "mugcake-pro": [3.5, 0, []], "brownie-pro": [3.3, 0.5, []], "tiramisu-pro": [4.6, 0, []]
 };
 const nutri = r => NUTRI[r.id] || [0, 0, []];
 // Recetas con bastante sal (salmón ahumado, caldo de brik)
@@ -2122,7 +2171,7 @@ const NIVEL = {
   "revuelto-claras": 2, "pavo-verduras": 2, "tortitas": 2, "caldo-pollo": 2, "pasta-atun": 2, "garbanzos-espinacas": 2, "pollo": 2, "merluza": 2, "salmon-patata": 2, "brochetas-pollo": 2, "sepia-plancha": 2,
   "crema-calabacin": 2, "merluza-coliflor": 2, "bizcocho-yogur": 2, "brownie-fit": 2, "galletas-avena": 2, "albondigas-pollo": 2, "pollo-curry": 2, "arroz-pollo": 2, "lentejas": 2, "hamburguesas": 2, "pescado-pisto": 2,
   "natillas": 3, "tortilla": 3, "tortilla-calabacin": 3, "cheesecake-nevera": 3, "cheesecake-airfryer": 3, "mousse": 3,
-  "cookies-avena": 2, "cookies-pro": 2, "tortitas-pro": 2, "overnight-pro": 1, "mousse-pro": 3, "batido-pro": 1, "cheesecake-pro": 3, "natillas-pro": 3, "bizcocho-pro": 2, "helado-pro": 1, "cheesecake-blanco": 3, "crema-cacao": 2, "cookies-rellenas": 3, "cookies-cacahuete": 2, "crema-cacao-pro": 2, "crema-cacao-expres": 1, "crema-choco-cacahuete": 1, "salsa-yogur": 1, "salsa-pimienta": 2, "salsa-queso": 2, "salsa-barbacoa": 1, "alioli-yogur": 1, "guacamole-fit": 1, "tarta-chocolate": 3, "coulant-fit": 3, "tiramisu-fit": 1, "arroz-con-leche": 2, "manzana-asada": 1
+  "cookies-avena": 2, "cookies-pro": 2, "tortitas-pro": 2, "overnight-pro": 1, "mousse-pro": 3, "batido-pro": 1, "cheesecake-pro": 3, "natillas-pro": 3, "bizcocho-pro": 2, "helado-pro": 1, "cheesecake-blanco": 3, "crema-cacao": 2, "cookies-rellenas": 3, "cookies-cacahuete": 2, "crema-cacao-pro": 2, "crema-cacao-expres": 1, "crema-choco-cacahuete": 1, "salsa-yogur": 1, "salsa-pimienta": 2, "salsa-queso": 2, "salsa-barbacoa": 1, "alioli-yogur": 1, "guacamole-fit": 1, "tarta-chocolate": 3, "coulant-fit": 3, "tiramisu-fit": 1, "arroz-con-leche": 2, "manzana-asada": 1, "mugcake-pro": 1, "brownie-pro": 2, "tiramisu-pro": 1
 };
 const NIVEL_TXT = { 1: "Muy fácil", 2: "Fácil", 3: "Con un poco de mano" };
 const nivel = r => NIVEL[r.id] || 2;
@@ -2195,6 +2244,9 @@ const UTENSILIOS = {
   "tiramisu-fit": [["Vaso o tarro"], ["Colador pequeño (para el cacao)", "Espolvoréalo con los dedos, poco a poco."]],
   "arroz-con-leche": [["Cazo mediano, mejor de fondo grueso", "En uno fino, fuego más bajo y remover más a menudo."], ["Cuchara de madera"]],
   "manzana-asada": [["Freidora de aire", AF_HORNO("unos 195 °C y 20–25 min") + " O en el microondas: 4–5 min tapada, queda más blanda y menos tostada."], ["Fuente pequeña apta para horno"], ["Cuchillo pequeño o descorazonador"]],
+  "mugcake-pro": [["Microondas", "En la airfryer: en un ramequín, precalentada, a 170 °C 8–10 min."], ["Taza grande apta para microondas (350 ml o más)", "Un bol pequeño apto para microondas."], ["Batidora o picadora (para la harina de avena)", "Harina de avena comprada."], ["Tenedor"]],
+  "brownie-pro": [["Freidora de aire", AF_HORNO("unos 180 °C y 20–22 min")], ["Molde cuadrado de 15–18 cm y papel de horno", "Un molde redondo o una fuente pequeña sirve igual."], ["Batidora o picadora (para la avena)", "Harina de avena comprada."], ["Tenedor (para el plátano)"]],
+  "tiramisu-pro": [["Vaso o tarro"], ["Tenedor o varillas pequeñas"], ["Colador pequeño (para el cacao)", "Espolvoréalo con los dedos, poco a poco."]],
   "cheesecake-blanco": [BASCULA("300 g de queso batido son unas 20 cucharadas soperas; 30 g de proteína, un cacito."), ["Molde de 10–12 cm", "Un vaso ancho, una taza grande o un táper redondo."], ["Bol y varillas"], ["Microondas (para la leche)", "Un cazo pequeño."]],
   "helado-pro": [["Batidora potente o picadora", "Sin batidora: frutos rojos descongelados 20 min y chafados, mezclados con el queso batido y la proteína. Queda tipo yogur helado con trozos."]],
   "bol-queso-fruta": [["Bol y cuchillo"], BASCULA("200 g de queso batido son unas 13 cucharadas soperas, o 2/5 de una tarrina de 500 g.")]
@@ -2441,7 +2493,7 @@ const EXTRA_ING = {
 const PASILLOS = ["Fruta y verdura", "Carne y pescado", "Lácteos y huevos", "Congelados", "Despensa", "Otros"];
 
 /* ===================== CONFIGURACIÓN ===================== */
-const SABOR = { "tortitas": "avena", "cheesecake-nevera": "frambuesa", "cheesecake-airfryer": "melocoton", "mousse": "cacao", "natillas": "vainilla", "tortilla": "espinaca", "pollo": "melocoton", "merluza": "vainilla", "hamburguesas": "espinaca", "tostada-aguacate": "espinaca", "revuelto-claras": "melocoton", "overnight-oats": "frambuesa", "batido-platano": "vainilla", "crema-calabacin": "espinaca", "merluza-coliflor": "vainilla", "pavo-verduras": "melocoton", "caldo-pollo": "avena", "lentejas": "cacao", "salmon-patata": "melocoton", "arroz-pollo": "avena", "pasta-atun": "frambuesa", "garbanzos-espinacas": "espinaca", "fruta-frutos-secos": "avena", "bocadillo-pavo": "melocoton", "bol-queso-fruta": "frambuesa", "porridge-manzana": "avena", "tostada-salmon": "melocoton", "bizcocho-yogur": "vainilla", "brownie-fit": "cacao", "galletas-avena": "avena", "helado-frutos-rojos": "frambuesa", "pollo-curry": "vainilla", "albondigas-pollo": "melocoton", "pescado-pisto": "espinaca", "brochetas-pollo": "melocoton", "sepia-plancha": "vainilla", "tortilla-calabacin": "espinaca", "cookies-avena": "cacao", "cookies-pro": "cacao", "tortitas-pro": "avena", "overnight-pro": "frambuesa", "mousse-pro": "cacao", "batido-pro": "vainilla", "cheesecake-pro": "melocoton", "natillas-pro": "vainilla", "bizcocho-pro": "vainilla", "helado-pro": "frambuesa", "cheesecake-blanco": "frambuesa", "crema-cacao": "cacao", "cookies-rellenas": "cacao", "cookies-cacahuete": "melocoton", "crema-cacao-pro": "cacao", "crema-cacao-expres": "cacao", "crema-choco-cacahuete": "cacao", "salsa-yogur": "espinaca", "salsa-pimienta": "vainilla", "salsa-queso": "avena", "salsa-barbacoa": "melocoton", "alioli-yogur": "vainilla", "guacamole-fit": "espinaca", "tarta-chocolate": "cacao", "coulant-fit": "cacao", "tiramisu-fit": "avena", "arroz-con-leche": "vainilla", "manzana-asada": "melocoton" };
+const SABOR = { "tortitas": "avena", "cheesecake-nevera": "frambuesa", "cheesecake-airfryer": "melocoton", "mousse": "cacao", "natillas": "vainilla", "tortilla": "espinaca", "pollo": "melocoton", "merluza": "vainilla", "hamburguesas": "espinaca", "tostada-aguacate": "espinaca", "revuelto-claras": "melocoton", "overnight-oats": "frambuesa", "batido-platano": "vainilla", "crema-calabacin": "espinaca", "merluza-coliflor": "vainilla", "pavo-verduras": "melocoton", "caldo-pollo": "avena", "lentejas": "cacao", "salmon-patata": "melocoton", "arroz-pollo": "avena", "pasta-atun": "frambuesa", "garbanzos-espinacas": "espinaca", "fruta-frutos-secos": "avena", "bocadillo-pavo": "melocoton", "bol-queso-fruta": "frambuesa", "porridge-manzana": "avena", "tostada-salmon": "melocoton", "bizcocho-yogur": "vainilla", "brownie-fit": "cacao", "galletas-avena": "avena", "helado-frutos-rojos": "frambuesa", "pollo-curry": "vainilla", "albondigas-pollo": "melocoton", "pescado-pisto": "espinaca", "brochetas-pollo": "melocoton", "sepia-plancha": "vainilla", "tortilla-calabacin": "espinaca", "cookies-avena": "cacao", "cookies-pro": "cacao", "tortitas-pro": "avena", "overnight-pro": "frambuesa", "mousse-pro": "cacao", "batido-pro": "vainilla", "cheesecake-pro": "melocoton", "natillas-pro": "vainilla", "bizcocho-pro": "vainilla", "helado-pro": "frambuesa", "cheesecake-blanco": "frambuesa", "crema-cacao": "cacao", "cookies-rellenas": "cacao", "cookies-cacahuete": "melocoton", "crema-cacao-pro": "cacao", "crema-cacao-expres": "cacao", "crema-choco-cacahuete": "cacao", "salsa-yogur": "espinaca", "salsa-pimienta": "vainilla", "salsa-queso": "avena", "salsa-barbacoa": "melocoton", "alioli-yogur": "vainilla", "guacamole-fit": "espinaca", "tarta-chocolate": "cacao", "coulant-fit": "cacao", "tiramisu-fit": "avena", "arroz-con-leche": "vainilla", "manzana-asada": "melocoton", "mugcake-pro": "cacao", "brownie-pro": "cacao", "tiramisu-pro": "avena" };
 const SABOR_MOMENTO = { Salsa: "vainilla", Tentempié: "avena", Desayuno: "avena", Comida: "melocoton", Merienda: "frambuesa", Postre: "frambuesa", Cena: "espinaca" };
 const sabor = r => r.sabor || SABOR[r.id] || SABOR_MOMENTO[r.cat[0]] || "avena";
 const CATS = ["Desayuno", "Tentempié", "Comida", "Merienda", "Postre", "Cena", "Salsa"];
