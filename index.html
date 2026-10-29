@@ -117,6 +117,7 @@ main { padding-block: 6px 64px; }
 .sheet-foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
 .btn-text { border: 0; background: none; color: var(--accent); font-weight: 700; cursor: pointer; padding: 6px 0; }
 
+.prorow { display: flex; align-items: center; gap: 8px 12px; flex-wrap: wrap; margin: 16px 2px 0; font-size: .92rem; font-weight: 700; }
 .listhead { display: flex; justify-content: space-between; align-items: baseline; gap: 8px 16px; flex-wrap: wrap; margin: 18px 2px 12px; }
 .listhead p { color: var(--ink-soft); font-size: .92rem; }
 .sortline { display: flex; align-items: center; gap: 6px; font-size: .92rem; color: var(--ink-soft); }
@@ -593,7 +594,6 @@ tr.hl td { background: var(--ok-bg); }
         <div class="range"><label for="r-g">Máximo de grasa <b id="r-g-v"></b></label><input type="range" id="r-g" min="1" max="20" step="1"></div>
       </div>
       <div class="fgroup"><span>Tiempo</span><div id="f-tiempo"></div></div>
-      <div class="fgroup"><span>Proteína en polvo</span><div class="chips"><button type="button" class="chip" id="ver-pro" aria-pressed="false">Mostrar recetas con proteína en polvo</button></div><small class="muted">Variantes de algunas recetas con un cacito de proteína (whey). Ocúltalas si no tienes.</small></div>
       <div class="fgroup"><span>Valores en las fichas</span><div class="chips" id="f-base">
         <button type="button" class="chip" data-base="racion">Por ración</button>
         <button type="button" class="chip" data-base="completa">Receta completa</button>
@@ -604,6 +604,11 @@ tr.hl td { background: var(--ok-bg); }
       <div class="tengo-head"><b>¿Qué tienes en casa?</b><span class="muted">Marca lo que tienes y las recetas se ordenan por lo que te falta. Lo básico (aceite, especias, ajo, limón, edulcorante…) se da por hecho.</span></div>
       <div id="tengo-chips"></div>
       <div class="rowbtns"><button type="button" class="pbtn acc" id="tengo-on" aria-pressed="false">Ordenar por lo que me falta</button><button type="button" class="btn-text" id="tengo-clear">Desmarcar todo</button></div>
+    </div>
+    <div class="prorow"><span>Proteína en polvo</span>
+      <div class="views" role="group" aria-label="Recetas con proteína en polvo">
+        <button type="button" data-pro="sin">Sin ella</button><button type="button" data-pro="todas">Todas</button><button type="button" data-pro="solo">Solo con ella</button>
+      </div>
     </div>
     <div class="listhead">
       <p id="count"></p>
@@ -2555,7 +2560,7 @@ const state = {
   q: "", cat: new Set(), met: new Set(), ext: new Set(),
   maxK: LIM.kcal, minP: LIM.p, maxG: LIM.g, tAct: null, tEsp: null, tTot: null,
   sort: prefs.get("sort", "kcal"), dir: prefs.get("dir", "asc"), base: prefs.get("base", "racion"),
-  view: prefs.get("view", "mosaico"), verPro: prefs.get("verPro", false), opcion: "B", mult: 1, abierta: null, cookIdx: 0, semana: null, tengoOn: false
+  view: prefs.get("view", "mosaico"), proModo: prefs.get("proModo", prefs.get("verPro", false) ? "todas" : "sin"), opcion: "B", mult: 1, abierta: null, cookIdx: 0, semana: null, tengoOn: false
 };
 
 /* ===================== UTILIDADES ===================== */
@@ -2834,9 +2839,12 @@ function chipGroup(el, list, set, cls) {
   });
 }
 // Las recetas con proteína en polvo solo se ven si el usuario las activa
-const visible = r => !r.pro || state.verPro;
+// Proteína en polvo: «sin» oculta esas recetas en todas partes; «solo» solo afecta a la lista de recetas
+// (el plan y «Con lo que tengo» siguen ofreciendo todas)
+const visible = r => !r.pro || state.proModo !== "sin";
 function matches(r) {
   if (!visible(r)) return false;
+  if (state.proModo === "solo" && !r.pro) return false;
   if (state.cat.size && !r.cat.some(c => state.cat.has(c))) return false;
   if (state.met.size && !r.met.some(c => state.met.has(c))) return false;
   for (const x of state.ext) {
@@ -2877,8 +2885,8 @@ function renderGrid() {
   });
   const n = state.met.size + state.ext.size + (state.base === "completa" ? 1 : 0) + (state.maxK < LIM.kcal) + (state.minP > LIM.p) + (state.maxG < LIM.g) + TFILTROS.filter(([k]) => state[k] != null).length;
   $("#nfilters").hidden = !n; $("#nfilters").textContent = n;
-  const nPro = RECETAS.filter(r => r.pro).length, total = RECETAS.filter(visible).length;
-  const ocultas = !state.verPro && nPro ? ` (+${nPro} con proteína en polvo, ocultas)` : "";
+  const nPro = RECETAS.filter(r => r.pro).length, total = state.proModo === "solo" ? nPro : RECETAS.filter(visible).length;
+  const ocultas = state.proModo === "sin" && nPro ? ` (+${nPro} con proteína en polvo, ocultas)` : "";
   $("#count").textContent = (state.tengoOn ? `${list.length} recetas, primero las que tienes casi todo` : list.length === total ? `${list.length} recetas, valores ${state.base === "racion" ? "por ración" : "de la receta completa"}` : `${list.length} de ${total} recetas`) + ocultas;
   $("#dir").textContent = state.dir === "asc" ? "↑" : "↓";
   $("#dir").setAttribute("aria-label", state.dir === "asc" ? "De menor a mayor. Pulsa para invertir" : "De mayor a menor. Pulsa para invertir");
@@ -3003,7 +3011,7 @@ function renderDetail(r) {
       <section><h3>Ingredientes</h3><div id="ings">${ingHTML(r, m)}</div></section>
       <section><h3>Cómo se hace</h3><div class="before">${ANTES}</div><ol class="steps">${r.pasos.map((p, i) => `<li><div>${timersIn(refs(glos(p)), r.corto + ", paso " + (i + 1))}</div></li>`).join("")}</ol><p class="note">Las palabras subrayadas con puntos se explican si las tocas.</p></section>
       <section><h3>Valores aproximados</h3><div class="tbl-wrap"><table>${head}${body}</table></div>${r.notaTabla ? `<p class="note">${r.notaTabla}</p>` : ""}${m !== 1 ? `<p class="note">Con ${fmtQ(racTot)} ${racTot === 1 ? "ración" : "raciones"}, todo junto son unas ${fmt(Math.round(vc.kcal * m))} kcal. Cada ración sigue teniendo lo mismo.</p>` : ""}</section>
-      ${state.verPro && RECETAS.some(x => x.base === r.id) ? `<div class="buy"><b>Versión con proteína en polvo</b><div class="links">${RECETAS.filter(x => x.base === r.id).map(x => `<a href="#${x.id}" data-goto="${x.id}">${x.nombre} (${fmt(valores(x, "racion").p)} g de proteína por ración)</a>`).join("")}</div></div>` : ""}
+      ${state.proModo !== "sin" && RECETAS.some(x => x.base === r.id) ? `<div class="buy"><b>Versión con proteína en polvo</b><div class="links">${RECETAS.filter(x => x.base === r.id).map(x => `<a href="#${x.id}" data-goto="${x.id}">${x.nombre} (${fmt(valores(x, "racion").p)} g de proteína por ración)</a>`).join("")}</div></div>` : ""}
       ${r.tips.length || SAL[r.id] ? `<div class="tip">${SAL[r.id] ? `<p><b>Sal:</b> ${SAL[r.id]}</p>` : ""}${r.tips.map(x => `<p>${refs(x)}</p>`).join("")}</div>` : ""}
       <section><h3>Conservación e intolerancias</h3><div class="facts2">
         <div><b>Nevera</b><p>${r.conserva.nevera}</p></div>
@@ -4084,8 +4092,11 @@ function clearFilters() {
   renderGrid();
 }
 const toggleFilters = show => { $("#filters").hidden = !show; $("#toggle-filters").setAttribute("aria-expanded", show); };
-function syncPro() { $("#ver-pro").setAttribute("aria-pressed", state.verPro); }
-$("#ver-pro").addEventListener("click", () => { state.verPro = !state.verPro; prefs.set("verPro", state.verPro); syncPro(); renderGrid(); renderPlan(); renderTengo(); toast(state.verPro ? "Recetas con proteína en polvo visibles" : "Recetas con proteína en polvo ocultas"); });
+function syncPro() { document.querySelectorAll("[data-pro]").forEach(b => b.setAttribute("aria-pressed", b.dataset.pro === state.proModo)); }
+document.querySelector(".prorow").addEventListener("click", e => {
+  const b = e.target.closest("[data-pro]"); if (!b || b.dataset.pro === state.proModo) return;
+  state.proModo = b.dataset.pro; prefs.set("proModo", state.proModo); syncPro(); renderGrid(); renderPlan(); renderTengo();
+});
 syncPro();
 $("#toggle-filters").addEventListener("click", () => toggleFilters($("#filters").hidden));
 $("#close-filters").addEventListener("click", () => toggleFilters(false));
